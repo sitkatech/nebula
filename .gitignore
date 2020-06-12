@@ -1,0 +1,9 @@
+Hotfixes
+/Source/_ReSharper.Caches
+
+Source/Nebula.Web/src/assets/config.json
+Source/Nebula.API/appsecrets.json
+/Source/Nebula.GeoServer/data_dir/geoserver-environment.properties
+/Source/Nebula.GeoServer/data_dir/.updatepassword.lock
+/Source/Nebula.GeoServer/data_dir/security/*
+/Source/Nebula.Web/.vscode
