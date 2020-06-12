@@ -1,0 +1,15 @@
+<layer>
+  <name>Watersheds</name>
+  <id>LayerInfoImpl--768556f4:171a7e02c27:-7ff8</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--1a26ec42:17253501f21:3805</id>
+  </defaultStyle>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl--768556f4:171a7e02c27:-7ff9</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>

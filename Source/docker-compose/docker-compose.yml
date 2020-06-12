@@ -1,0 +1,8 @@
+version: '3.5'
+
+services:
+  nebula.api:
+    image: sitkacontainers.azurecr.io/nebula/api
+    build:
+      context: ..
+      dockerfile: Nebula.API/Dockerfile
