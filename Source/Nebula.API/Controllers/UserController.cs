@@ -39,16 +39,16 @@ namespace Nebula.API.Controllers
             }
 
             var applicationName = $"{_nebulaConfiguration.PlatformLongName}";
-            var nebulaBravoWaterStorageDistrict = $"{_nebulaConfiguration.LeadOrganizationLongName}";
+            var leadOrganizationLongName = $"{_nebulaConfiguration.LeadOrganizationLongName}";
             var inviteModel = new KeystoneService.KeystoneInviteModel
             {
                 FirstName = inviteDto.FirstName,
                 LastName = inviteDto.LastName,
                 Email = inviteDto.Email,
                 Subject = $"Invitation to the {applicationName}",
-                WelcomeText = $"You are receiving this notification because an administrator of the {applicationName}, an online service of the {nebulaBravoWaterStorageDistrict}, has invited you to create an account.",
+                WelcomeText = $"You are receiving this notification because an administrator of the {applicationName}, an online service of the {leadOrganizationLongName}, has invited you to create an account.",
                 SiteName = applicationName,
-                SignatureBlock = $"{nebulaBravoWaterStorageDistrict}<br /><a href='mailto:{_nebulaConfiguration.LeadOrganizationEmail}'>{_nebulaConfiguration.LeadOrganizationEmail}</a><a href='{_nebulaConfiguration.LeadOrganizationHomeUrl}'>{_nebulaConfiguration.LeadOrganizationHomeUrl}</a>",
+                SignatureBlock = $"{leadOrganizationLongName}<br /><a href='mailto:{_nebulaConfiguration.LeadOrganizationEmail}'>{_nebulaConfiguration.LeadOrganizationEmail}</a><a href='{_nebulaConfiguration.LeadOrganizationHomeUrl}'>{_nebulaConfiguration.LeadOrganizationHomeUrl}</a>",
                 RedirectURL = _nebulaConfiguration.KEYSTONE_REDIRECT_URL
             };
 
