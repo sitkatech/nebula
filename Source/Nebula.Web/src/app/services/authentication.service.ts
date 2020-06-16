@@ -32,7 +32,7 @@ export class AuthenticationService {
     private alertService: AlertService) {
     this.router.events
       .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe(() => {
+      .subscribe((e: NavigationEnd) => {
         if (this.isAuthenticated()) {
           var claims = this.oauthService.getIdentityClaims();
           var globalID = claims["sub"];
@@ -70,7 +70,7 @@ export class AuthenticationService {
     // check for a currentUser at NavigationStart so that authorization-based guards can work with promises.
     this.router.events
       .pipe(filter(e => e instanceof NavigationStart))
-      .subscribe(() => {
+      .subscribe((e: NavigationStart) => {
         if (this.isAuthenticated() && !this.currentUser) {
           var claims = this.oauthService.getIdentityClaims();
           var globalID = claims["sub"];
