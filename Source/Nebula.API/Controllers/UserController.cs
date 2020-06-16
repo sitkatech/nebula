@@ -147,7 +147,14 @@ namespace Nebula.API.Controllers
             }
 
             var userDto = Nebula.EFModels.Entities.User.GetByUserGuid(_dbContext, globalIDAsGuid);
-            return RequireNotNullThrowNotFound(userDto, "User", globalIDAsGuid);
+            if (userDto == null)
+            {
+                var notFoundMessage = $"User with GUID {globalIDAsGuid} does not exist!";
+                _logger.LogError(notFoundMessage);
+                return NotFound(notFoundMessage);
+            }
+
+            return Ok(userDto);
         }
 
         [HttpPut("users/{userID}")]

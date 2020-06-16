@@ -48,11 +48,19 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                             });
                         }
                         if (error.status == 404) {
-                            this.router.navigateByUrl("/not-found", { replaceUrl: false}).then(x => {
-                                if(typeof error.error === "string") {
-                                    this.alertService.pushAlert(new Alert(error.error, AlertContext.Danger));
-                                }
-                            });
+                            if(error.error.includes("User with GUID "))
+                            {
+                                // we want the login-callback to create the user to trigger so we just let it pass through and have authentication-service handle it
+                                return throwError(error);
+                            }
+                            else
+                            {
+                                this.router.navigateByUrl("/not-found", { replaceUrl: false}).then(x => {
+                                    if(typeof error.error === "string") {
+                                        this.alertService.pushAlert(new Alert(error.error, AlertContext.Danger));
+                                    }
+                                });
+                            }
                         }
                     }
                 }
