@@ -1,4 +1,4 @@
-Welcome to the Upper Big Blue Water Pooling Platform.
+Welcome to the Smart Watershed Network Platform.
 
 Please contact support@sitkatech.com with any questions about this project.
 
@@ -24,7 +24,7 @@ Please contact support@sitkatech.com with any questions about this project.
 2. Create an empty database called NebulaDB and create a user for it. Give the user the owner role.
 3. Copy [repo root dir]\Source\docker-compose\.env.template to [repo root dir]\Source\docker-compose\.env
 4. Update the values in the new .env file
-5. Add an entry to your hosts file pointing RIO_WEB_URL from the .env file to 127.0.0.1
+5. Add an entry to your hosts file pointing WEB_URL from the .env file to 127.0.0.1
 6. Open the solution in VS19 and set docker-compose as the startup project
 7. Press the green "play" triangle to start the API server
 
