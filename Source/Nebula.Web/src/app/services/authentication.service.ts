@@ -11,6 +11,7 @@ import { AlertService } from '../shared/services/alert.service';
 import { Alert } from '../shared/models/alert';
 import { AlertContext } from '../shared/models/enums/alert-context.enum';
 import { UserCreateDto } from '../shared/models/user/user-create-dto';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -105,6 +106,12 @@ export class AuthenticationService {
 
   public login() {
     this.oauthService.initImplicitFlow();
+  }
+
+  public createAccount() {
+    localStorage.setItem("loginOnReturn", "true");
+    const redirectUrl = encodeURIComponent(environment.createAccountRedirectUrl);
+    window.location.href = `${environment.createAccountUrl}${redirectUrl}`;
   }
 
   public logout() {

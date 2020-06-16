@@ -57,6 +57,10 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     public login(): void {
         this.authenticationService.login();
     }
+    
+    public createAccount(): void{
+        this.authenticationService.createAccount();
+    }
 
     public forgotPasswordUrl() :string{
         return `${environment.keystoneSupportBaseUrl}/ForgotPassword`;
