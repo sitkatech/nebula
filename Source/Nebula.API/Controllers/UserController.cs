@@ -146,7 +146,7 @@ namespace Nebula.API.Controllers
                 return BadRequest();
             }
 
-            var userDto = Nebula.EFModels.Entities.User.GetByUserGuid(_dbContext, globalIDAsGuid);
+            var userDto = EFModels.Entities.User.GetByUserGuid(_dbContext, globalIDAsGuid);
             if (userDto == null)
             {
                 var notFoundMessage = $"User with GUID {globalIDAsGuid} does not exist!";
