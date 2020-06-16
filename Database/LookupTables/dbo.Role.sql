@@ -1,7 +1,7 @@
 ﻿MERGE INTO dbo.Role AS Target
 USING (VALUES
 (1, 'Admin', 'Administrator', '', 30),
-(2, 'Normal', 'Landowner', '', 20),
+(2, 'Data Explorer', 'Data Explorer', '', 20),
 (3, 'Unassigned', 'Unassigned', '', 10),
 (4, 'Disabled', 'Disabled', '', 40)
 )
