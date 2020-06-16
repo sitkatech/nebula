@@ -1,18 +1,22 @@
-<nav aria-label="breadcrumb" *ngIf="user">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page">
-            <a routerLink="/users" *ngIf="currentUserIsAdmin()">Users</a>
-            <span *ngIf="!currentUserIsAdmin()">Users</span>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-            {{user?.FullName ||  ((user?.FirstName || user?.LastName) ? (user?.FirstName + ' ' + user?.LastName) : null)}}
-        </li>
-    </ol>
-</nav>
+<div class="breadcrumb-container">
+    <div class="container">
+        <nav aria-label="breadcrumb" *ngIf="user">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item" aria-current="page">
+                    <a routerLink="/users" *ngIf="currentUserIsAdmin()">Users</a>
+                    <span *ngIf="!currentUserIsAdmin()">Users</span>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{user?.FullName ||  ((user?.FirstName || user?.LastName) ? (user?.FirstName + ' ' + user?.LastName) : null)}}
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
 <div class="container mt-sm-4" *ngIf="user">
     <div style="margin: 1rem 0 1rem 0;" *ngIf="user.UserGuid === null">
         <a class="float-right btn btn-nebula btn-sm mr-3" routerLink="/invite-user/{{user.UserID}}">Invite User</a>
-    </div>  
+    </div>
     <h2 class="d-inline-block">
         {{user?.FullName ||  ((user?.FirstName || user?.LastName) ? (user?.FirstName + ' ' + user?.LastName) : null)}}
     </h2>
@@ -71,7 +75,8 @@
                             <em *ngIf="!user?.Role?.RoleDisplayName" class="text-muted">Not Available</em>
                         </dd>
 
-                        <dt class="text-sm-right col-sm-5 col-xs-12" *ngIf="user.Role.RoleID === 1">Receives System Communications</dt>
+                        <dt class="text-sm-right col-sm-5 col-xs-12" *ngIf="user.Role.RoleID === 1">Receives System
+                            Communications</dt>
                         <dd class="col-sm-7 col-xs-12" *ngIf="user.Role.RoleID === 1">
                             {{user?.ReceiveSupportEmails == true ? "Yes" : "No"}}
                             <em *ngIf="!user" class="text-muted">Not Available</em>

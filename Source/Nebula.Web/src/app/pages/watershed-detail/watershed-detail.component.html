@@ -1,13 +1,17 @@
-<nav aria-label="breadcrumb" *ngIf="watershed">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item" aria-current="page">
-      <a routerLink="/watersheds">Watersheds</a>
-    </li>
-    <li class="breadcrumb-item active" aria-current="page">
-      {{watershed.WatershedName}}
-    </li>
-  </ol>
-</nav>
+<div class="breadcrumb-container">
+  <div class="container">
+    <nav aria-label="breadcrumb" *ngIf="watershed">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item" aria-current="page">
+          <a routerLink="/watersheds">Watersheds</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          {{watershed.WatershedName}}
+        </li>
+      </ol>
+    </nav>
+  </div>
+</div>
 <div class="container mt-sm-4" *ngIf="watershed">
   <h2 class="d-inline-block">
     {{watershed.WatershedName}}
@@ -21,7 +25,9 @@
         </div>
         <div class="card-body">
           <dl class="row">
-            <dt class="text-sm-right col-sm-6 col-xs-12"><field-definition [fieldDefinitionType]="'Name'"></field-definition></dt>
+            <dt class="text-sm-right col-sm-6 col-xs-12">
+              <field-definition [fieldDefinitionType]="'Name'"></field-definition>
+            </dt>
             <dd class="col-sm-6 col-xs-12">
               {{watershed.WatershedName}}
             </dd>
@@ -37,10 +43,8 @@
         <div class="card-body">
           <div class="row">
             <div class="col-sm-12" *ngIf="watershed">
-              <watershed-map mapID="watershedsMapForWatershed" 
-              [selectedWatershedIDs]="getSelectedWatershedIDs()" 
-              [disableDefaultClick]="true"
-              mapHeight="500px">
+              <watershed-map mapID="watershedsMapForWatershed" [selectedWatershedIDs]="getSelectedWatershedIDs()"
+                [disableDefaultClick]="true" mapHeight="500px">
               </watershed-map>
             </div>
           </div>

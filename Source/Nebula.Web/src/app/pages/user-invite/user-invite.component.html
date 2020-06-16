@@ -1,21 +1,25 @@
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item" aria-current="page">
-            <a routerLink="/users" *ngIf="currentUserIsAdmin()">Users</a>
-            <span *ngIf="!currentUserIsAdmin()">Users</span>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">
-            Invite User
-        </li>
-    </ol>
-</nav>
+<div class="breadcrumb-container">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item" aria-current="page">
+                    <a routerLink="/users" *ngIf="currentUserIsAdmin()">Users</a>
+                    <span *ngIf="!currentUserIsAdmin()">Users</span>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    Invite User
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
 <div class="container">
     <h2>Invite User</h2>
     <p class="lead">
         This page lets you proactively invite users to the {{platformShortName()}}. After clicking Invite, the user will
         be added
         to the User list and you can assign appropriate roles to the user account.
-        
+
         If the user does not already have an account they will receive an email with a link to verify their
         account. Clicking this link will display a Keystone webpage where the user can set their password.</p>
 </div>
@@ -75,8 +79,7 @@
                 <i class="fas fa-bolt"></i> Required field
             </div>
             <div class="col-xs-12 col-sm-10 text-right">
-                <button type="submit" class="btn btn-nebula"
-                    [disabled]="isLoadingSubmit">
+                <button type="submit" class="btn btn-nebula" [disabled]="isLoadingSubmit">
                     <span *ngIf="isLoadingSubmit" class="fa fa-spinner loading-spinner"></span>
                     Invite
                 </button>
