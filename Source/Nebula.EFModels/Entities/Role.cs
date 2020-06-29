@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
-using Nebula.Models.DataTransferObjects.Role;
+using Nebula.Models.DataTransferObjects;
 
 namespace Nebula.EFModels.Entities
 {

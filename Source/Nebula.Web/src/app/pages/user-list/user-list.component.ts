@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
-import { UserDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ColDef } from 'ag-grid-community';
 import { LinkRendererComponent } from 'src/app/shared/components/ag-grid/link-renderer/link-renderer.component';
@@ -24,7 +23,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   @ViewChild('unassignedUsersGrid') unassignedUsersGrid: AgGridAngular;
 
   private watchUserChangeSubscription: any;
-  private currentUser: UserDto;
+  private currentUser: UserDetailedDto;
 
   public rowData = [];
   columnDefs: ColDef[];
@@ -42,8 +41,7 @@ export class UserListComponent implements OnInit, OnDestroy {
         this.rowData = users;
         this.usersGrid.api.hideOverlay();
         this.users = users;
-        
-        this.unassignedUsers = users.filter(u =>{ return u.RoleID === RoleEnum.Unassigned});
+        this.unassignedUsers = users.filter(u =>{ return u.Role.RoleID === RoleEnum.Unassigned});
 
         this.cdr.detectChanges();
       });
@@ -72,7 +70,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             sortable: true, filter: true, width: 170
           },
           { headerName: 'Email', field: 'Email', sortable: true, filter: true },
-          { headerName: 'Role', field: 'RoleDisplayName', sortable: true, filter: true, width: 100 },
+          { headerName: 'Role', field: 'Role.RoleDisplayName', sortable: true, filter: true, width: 100 },
           { headerName: 'Receives System Communications?', field: 'ReceiveSupportEmails', valueGetter: function (params) { return params.data.ReceiveSupportEmails ? "Yes" : "No";}, sortable: true, filter: true, width: 250 },
         ];
         
@@ -83,7 +81,6 @@ export class UserListComponent implements OnInit, OnDestroy {
   }
 
   private refreshView(){
-    debugger;
     this.unassignedUsersGrid.api.refreshView();
   }
 

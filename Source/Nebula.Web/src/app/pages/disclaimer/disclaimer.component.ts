@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service'
-import { UserDto } from 'src/app/shared/models';
+import { UserDetailedDto } from 'src/app/shared/models';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 
 @Component({
@@ -13,7 +13,7 @@ import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text
 export class DisclaimerComponent implements OnInit {
 
   private watchUserChangeSubscription : any;
-  private currentUser : UserDto;
+  private currentUser : UserDetailedDto;
   private forced : boolean = true;
   public richTextTypeID : number = CustomRichTextType.Disclaimer;
 

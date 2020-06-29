@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
 import { CustomRichTextService } from '../../services/custom-rich-text.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserDto } from '../../models/user/user-dto';
-import { CustomRichTextDto } from '../../models/custom-rich-text-dto';
+import { UserDetailedDto } from '../../models/user/user-detailed-dto';
+import { CustomRichTextDetailedDto } from '../../models/custom-rich-text-detailed-dto';
 import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
 import { AlertContext } from '../../models/enums/alert-context.enum';
@@ -25,7 +25,7 @@ export class CustomRichTextComponent implements OnInit {
   public editedContent: string;
   public editor;
 
-  currentUser: UserDto;
+  currentUser: UserDetailedDto;
 
   public ckConfig = {"removePlugins": ["MediaEmbed"]}
 
@@ -78,7 +78,7 @@ export class CustomRichTextComponent implements OnInit {
   public saveEdit(): void {
     this.isEditing = false;
     this.isLoading = true;
-    const updateDto = new CustomRichTextDto({ CustomRichTextContent: this.editedContent });
+    const updateDto = new CustomRichTextDetailedDto({ CustomRichTextContent: this.editedContent });
     console.log(updateDto);
     this.customRichTextService.updateCustomRichText(this.customRichTextTypeID, updateDto).subscribe(x => {
       this.customRichTextContent = x.CustomRichTextContent;

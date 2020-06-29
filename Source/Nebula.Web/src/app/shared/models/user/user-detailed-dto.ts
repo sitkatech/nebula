@@ -1,21 +1,10 @@
-export class UserDetailedDto {
-    UserID: number;
-    UserGuid: string;
+import {UserDto} from '../generated/user-dto'
 
-    FirstName: string;
-    LastName: string;
-    FullName: string;
-
-    Email: string;
-    Phone: string;
-    LoginName: string;
-
-    RoleID: number;
-    RoleDisplayName: string;
-
-    ReceiveSupportEmails: boolean;
+export class UserDetailedDto extends UserDto {
+    FullName : string;
 
     constructor(obj?: any) {
+        super()
         Object.assign(this, obj);
     }
 }

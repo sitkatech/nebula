@@ -11,6 +11,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using Microsoft.Extensions.DependencyInjection;
+using Nebula.Models.DataTransferObjects;
 
 namespace Nebula.API.Controllers
 {
@@ -114,7 +115,7 @@ namespace Nebula.API.Controllers
 
         [HttpGet("users")]
         [AdminFeature]
-        public ActionResult<IEnumerable<UserDetailedDto>> List()
+        public ActionResult<IEnumerable<UserDto>> List()
         {
             var userDtos = EFModels.Entities.User.List(_dbContext);
             return Ok(userDtos);

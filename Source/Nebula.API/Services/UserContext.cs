@@ -2,6 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Http;
 using Nebula.EFModels.Entities;
+using Nebula.Models.DataTransferObjects;
 using Nebula.Models.DataTransferObjects.User;
 
 namespace Nebula.API.Services

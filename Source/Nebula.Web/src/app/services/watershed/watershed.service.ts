@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from 'src/app/shared/services';
 import { Observable } from 'rxjs';
-import { WatershedDto } from 'src/app/shared/models/watershed/watershed-dto';
+import { WatershedDto } from 'src/app/shared/models/generated/watershed-dto';
 import { BoundingBoxDto } from 'src/app/shared/models/bounding-box-dto';
 
 @Injectable({

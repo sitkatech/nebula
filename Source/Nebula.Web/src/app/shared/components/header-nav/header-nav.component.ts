@@ -1,7 +1,7 @@
 import { Component, OnInit, HostListener, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { CookieStorageService } from '../../services/cookies/cookie-storage.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserDto } from '../../models';
+import { UserDetailedDto } from '../../models';
 import { UserService } from 'src/app/services/user/user.service';
 import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
@@ -16,7 +16,7 @@ import { AlertContext } from '../../models/enums/alert-context.enum';
 
 export class HeaderNavComponent implements OnInit, OnDestroy {
     private watchUserChangeSubscription: any;
-    private currentUser: UserDto;
+    private currentUser: UserDetailedDto;
 
     windowWidth: number;
 

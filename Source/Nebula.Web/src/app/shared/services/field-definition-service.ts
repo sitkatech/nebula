@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiService } from '.';
 import { Observable } from 'rxjs';
-import { FieldDefinitionDto } from '../models/field-definition-dto';
+import { FieldDefinitionDto } from '../models/generated/field-definition-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +19,6 @@ export class FieldDefinitionService {
   }
 
   public updateFieldDefinition(fieldDefinition: FieldDefinitionDto): Observable<FieldDefinitionDto> {
-    return this.apiService.putToApi(`fieldDefinitions/${fieldDefinition.FieldDefinitionTypeID}`, fieldDefinition);
+    return this.apiService.putToApi(`fieldDefinitions/${fieldDefinition.FieldDefinitionType.FieldDefinitionTypeID}`, fieldDefinition);
   }
 }

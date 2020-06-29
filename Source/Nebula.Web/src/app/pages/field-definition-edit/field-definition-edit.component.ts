@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FieldDefinitionService } from 'src/app/shared/services/field-definition-service';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { UserDto } from 'src/app/shared/models';
-import { FieldDefinitionDto } from 'src/app/shared/models/field-definition-dto';
+import { UserDetailedDto } from 'src/app/shared/models';
+import { FieldDefinitionDto } from 'src/app/shared/models/generated/field-definition-dto';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Alert } from 'src/app/shared/models/alert';
@@ -16,7 +16,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 })
 export class FieldDefinitionEditComponent implements OnInit {
   private watchUserChangeSubscription: any;
-  private currentUser: UserDto;
+  private currentUser: UserDetailedDto;
 
   public fieldDefinition: FieldDefinitionDto;
   public Editor = ClassicEditor;
@@ -70,7 +70,7 @@ export class FieldDefinitionEditComponent implements OnInit {
       .subscribe(response => {
         this.isLoadingSubmit = false;
         this.router.navigateByUrl("/labels-and-definitions").then(x => {
-          this.alertService.pushAlert(new Alert(`The definition for ${this.fieldDefinition.DisplayName} was successfully updated.`, AlertContext.Success));
+          this.alertService.pushAlert(new Alert(`The definition for ${this.fieldDefinition.FieldDefinitionType.FieldDefinitionTypeDisplayName} was successfully updated.`, AlertContext.Success));
         });
       }
         ,

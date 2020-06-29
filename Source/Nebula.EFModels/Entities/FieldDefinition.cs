@@ -29,7 +29,7 @@ namespace Nebula.EFModels.Entities
                 .SingleOrDefault(x => x.FieldDefinitionTypeID == FieldDefinitionTypeID);
 
             // null check occurs in calling endpoint method.
-            fieldDefinition.FieldDefinitionValue = FieldDefinitionUpdateDto.Definition;
+            fieldDefinition.FieldDefinitionValue = FieldDefinitionUpdateDto.FieldDefinitionValue;
 
             dbContext.SaveChanges();
 

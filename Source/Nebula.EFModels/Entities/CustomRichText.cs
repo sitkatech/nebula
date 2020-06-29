@@ -1,5 +1,6 @@
 ﻿using Nebula.Models.DataTransferObjects;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Nebula.EFModels.Entities
 {
@@ -8,6 +9,7 @@ namespace Nebula.EFModels.Entities
         public static CustomRichTextDto GetByCustomRichTextTypeID(NebulaDbContext dbContext, int customRichTextTypeID)
         {
             var customRichText = dbContext.CustomRichText
+                .Include(x => x.CustomRichTextType)
                 .SingleOrDefault(x => x.CustomRichTextTypeID == customRichTextTypeID);
 
             return customRichText?.AsDto();

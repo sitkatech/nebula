@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
-import { UserDto } from 'src/app/shared/models';
+import { UserDetailedDto } from 'src/app/shared/models';
 import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { DecimalPipe } from '@angular/common';
@@ -20,7 +20,7 @@ export class WatershedListComponent implements OnInit, OnDestroy {
   @ViewChild('watershedsGrid') watershedsGrid: AgGridAngular;
 
   private watchUserChangeSubscription: any;
-  private currentUser: UserDto;
+  private currentUser: UserDetailedDto;
 
   public richTextTypeID : number = CustomRichTextType.WatershedList;
   public gridOptions: GridOptions;

@@ -35,28 +35,10 @@ namespace Nebula.EFModels.Entities
             return GetByUserID(dbContext, user.UserID);
         }
 
-        public static IEnumerable<UserDetailedDto> List(NebulaDbContext dbContext)
+        public static IEnumerable<UserDto> List(NebulaDbContext dbContext)
         {
             // right now we are assuming a parcel can only be associated to one user
-            var parcels = dbContext.User.Include(x => x.Role).AsNoTracking().OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToList()
-                .Select(user =>
-                {
-                    var userDetailedDto = new UserDetailedDto()
-                    {
-                        UserID = user.UserID,
-                        UserGuid = user.UserGuid,
-                        FirstName = user.FirstName,
-                        LastName = user.LastName,
-                        Email = user.Email,
-                        LoginName = user.LoginName,
-                        RoleID = user.RoleID,
-                        RoleDisplayName = user.Role.RoleDisplayName,
-                        Phone = user.Phone,
-                        ReceiveSupportEmails = user.ReceiveSupportEmails
-                    };
-                    return userDetailedDto;
-                }).ToList();
-            return parcels;
+            return dbContext.User.Include(x => x.Role).AsNoTracking().OrderBy(x => x.LastName).ThenBy(x => x.FirstName).Select(x => x.AsDto()).AsEnumerable();
         }
 
         public static IEnumerable<UserDto> ListByRole(NebulaDbContext dbContext, RoleEnum roleEnum)
