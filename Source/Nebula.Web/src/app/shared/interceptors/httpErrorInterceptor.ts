@@ -68,11 +68,11 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                 // If you want to return a new response:
                 //return of(new HttpResponse({body: [{name: "Default value..."}]}));
 
-                // If you want to return the error on the upper level:
-                //return throwError(error);
+                // If you want to return nothing:
+                //return EMPTY;
 
-                // or just return nothing:
-                return EMPTY;
+                // Otherwise pass it on to the upper level and let them take care of it:
+                return throwError(error);
             })
         );
     }
