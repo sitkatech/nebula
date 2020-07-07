@@ -1,0 +1,89 @@
+<div class="breadcrumb-container">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-empty">
+                <li class="breadcrumb-item active" aria-current="page">Data Download</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="container">
+
+    <app-alert-display></app-alert-display>
+
+    <div class="row">
+        <div class="col">
+            <h2 class="d-inline-block">Data Download</h2>
+        </div>
+    </div>
+    <div class="row mt-1 mb-2">
+        <div class="col">
+            <!-- <custom-rich-text [customRichTextTypeID]="richTextTypeID"></custom-rich-text> -->
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="row mt-sm-4">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    Gage Selection
+                </div>
+                <div class="card-body table-responsive">
+                    <div class="row">
+                        <div class="col-sm-8">
+                            <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight" style="height:100%"></div>
+                        </div>
+                        <div class="col-sm-4">
+                            <ng-container *ngIf="!selectedOutfallProperties">
+                                <p>Click a station on the map to get started</p>
+                            </ng-container>
+                            <ng-container *ngIf="selectedOutfallProperties">
+                                <dl class="row" *ngFor="let item of selectedOutfallProperties | keyvalue">
+                                    <dt class="text-sm-right col-sm-6 col-xs-12">{{item.key | titlecase}}:</dt>
+                                    <dd class="col-sm-6 col-xs-12">
+                                        {{item.value}}
+                                    </dd>
+                                </dl>
+                                <div class="text-center">
+                                    
+                                <button class="btn btn-nebula">View Timeseries Data</button>
+                                </div>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-sm-4">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    Selected Data
+                </div>
+                <div class="card-body table-responsive">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-sm-4">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    Timeseries View and Download
+                </div>
+                <div class="card-body table-responsive">
+                    <div class="row">
+                        <div class="col-5">
+
+                        </div>
+                        <div class="col-7">
+                            <div id="vis"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

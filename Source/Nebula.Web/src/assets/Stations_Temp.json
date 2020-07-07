@@ -1,0 +1,2461 @@
+{
+  "error_num": 0,
+  "buff_required": 35722,
+  "_return": {
+    "features": [
+      {
+        "properties": {
+          "shortname": "Agua Chinon @ El Tor",
+          "stname": "Agua Chinon @ El Toro",
+          "longitude": "-117.720833330",
+          "station": "AGUACHINON_TORO",
+          "latitude": "33.688611110",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.72083333,
+            33.68861111
+          ],
+          "type": "Point"
+        },
+        "id": "AGUACHINON_TORO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Alameda Storm Ch.",
+          "stname": "Alameda Storm Ch.",
+          "longitude": "-117.802137000",
+          "station": "ALAMEDA",
+          "latitude": "33.806209000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.802137,
+            33.806209
+          ],
+          "type": "Point"
+        },
+        "id": "ALAMEDA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Aliso Cr @ Jeronimo",
+          "stname": "Aliso Creek @ Jeronimo",
+          "longitude": "-117.686262000",
+          "station": "ALISO_JERONIMO",
+          "latitude": "33.625478000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.686262,
+            33.625478
+          ],
+          "type": "Point"
+        },
+        "id": "ALISO_JERONIMO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Aliso Cr @ Sewage Tr",
+          "stname": "Aliso Creek @ Sewage Treatment Plant",
+          "longitude": "-117.737435000",
+          "station": "ALISO_STP",
+          "latitude": "33.517686000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.737435,
+            33.517686
+          ],
+          "type": "Point"
+        },
+        "id": "ALISO_STP",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Anaheim - Barber Cit",
+          "stname": "Anaheim - Barber City",
+          "longitude": "-118.036025000",
+          "station": "ANAHEIM_BARBER",
+          "latitude": "33.754872000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.036025,
+            33.754872
+          ],
+          "type": "Point"
+        },
+        "id": "ANAHEIM_BARBER",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Camp Angelus",
+          "stname": "Camp Angelus",
+          "longitude": "-116.977777780",
+          "station": "ANGELUS",
+          "latitude": "34.150000000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -116.97777778,
+            34.15
+          ],
+          "type": "Point"
+        },
+        "id": "ANGELUS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Arroyo Trabuco",
+          "stname": "Arroyo Trabuco Creek (TCO L02)",
+          "longitude": "-117.665000000",
+          "station": "ARROYO_TRABUCO",
+          "latitude": "33.498333000",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            -117.665,
+            33.498333
+          ],
+          "type": "Point"
+        },
+        "id": "ARROYO_TRABUCO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Bee Canyon",
+          "stname": "Bee Canyon",
+          "longitude": "-117.708000000",
+          "station": "BEE",
+          "latitude": "33.726880000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.708,
+            33.72688
+          ],
+          "type": "Point"
+        },
+        "id": "BEE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Bolsa Chica Ch",
+          "stname": "Bolsa Chica Channel",
+          "longitude": "-118.043078000",
+          "station": "BOLSACHICA",
+          "latitude": "33.759564000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.043078,
+            33.759564
+          ],
+          "type": "Point"
+        },
+        "id": "BOLSACHICA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santiago Cr @ Gravel",
+          "stname": "Santiago Creek @ Gravel Pits",
+          "longitude": "-117.802222220",
+          "station": "BONDPITS",
+          "latitude": "33.799722220",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.80222222,
+            33.79972222
+          ],
+          "type": "Point"
+        },
+        "id": "BONDPITS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Bonita Canyon Ch",
+          "stname": "Bonita Canyon Channel",
+          "longitude": "-117.861023000",
+          "station": "BONITA",
+          "latitude": "33.641149000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.861023,
+            33.641149
+          ],
+          "type": "Point"
+        },
+        "id": "BONITA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Brea",
+          "stname": "Brea",
+          "longitude": "-117.902378000",
+          "station": "BREA",
+          "latitude": "33.920984000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.902378,
+            33.920984
+          ],
+          "type": "Point"
+        },
+        "id": "BREA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Brea Dam",
+          "stname": "Brea Dam(Nws-154)",
+          "longitude": "0.000000000",
+          "station": "BREA_DAM",
+          "latitude": "0.000000000",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            0,
+            0
+          ],
+          "type": "Point"
+        },
+        "id": "BREA_DAM",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Brea Olinda",
+          "stname": "Brea Olinda",
+          "longitude": "-117.842033000",
+          "station": "BREAOLINDA",
+          "latitude": "33.932377000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.842033,
+            33.932377
+          ],
+          "type": "Point"
+        },
+        "id": "BREAOLINDA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Brookhurst Tide",
+          "stname": "Brookhurst Tide",
+          "longitude": "-117.953333330",
+          "station": "BROOKHURST",
+          "latitude": "33.636666670",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.95333333,
+            33.63666667
+          ],
+          "type": "Point"
+        },
+        "id": "BROOKHURST",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Buena Park",
+          "stname": "Buena Park(Coop-5)",
+          "longitude": "-117.991388890",
+          "station": "BUENA",
+          "latitude": "33.857777780",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.99138889,
+            33.85777778
+          ],
+          "type": "Point"
+        },
+        "id": "BUENA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Carbon Creek",
+          "stname": "Carbon Creek Channel",
+          "longitude": "-118.064366000",
+          "station": "CARBON_CREEK",
+          "latitude": "33.815157000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.064366,
+            33.815157
+          ],
+          "type": "Point"
+        },
+        "id": "CARBON_CREEK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Carbon Cyn Dam",
+          "stname": "Carbon Canyon Dam - ACOE",
+          "longitude": "0.000000000",
+          "station": "CARBON_CYN_DAM",
+          "latitude": "0.000000000",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            0,
+            0
+          ],
+          "type": "Point"
+        },
+        "id": "CARBON_CYN_DAM",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "CC Gilman(NWS)",
+          "stname": "Carbon Canyon Gilman(Nws-185)",
+          "longitude": "-117.775277780",
+          "station": "CARBON_CYN_GIL",
+          "latitude": "33.923333330",
+          "stntype": "NWS"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.77527778,
+            33.92333333
+          ],
+          "type": "Point"
+        },
+        "id": "CARBON_CYN_GIL",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "CC Workman(NWS)",
+          "stname": "Carbon Canyon Workman(Nws-188)",
+          "longitude": "-117.778333330",
+          "station": "CARBON_CYN_WORK",
+          "latitude": "33.958333330",
+          "stntype": "NWS"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.77833333,
+            33.95833333
+          ],
+          "type": "Point"
+        },
+        "id": "CARBON_CYN_WORK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Central Irvine",
+          "stname": "Central Irvine Channel (F25) u/s of Peters Canyon Wash",
+          "longitude": "-117.789285000",
+          "station": "CENTRAL_IRVINE",
+          "latitude": "33.716137000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.789285,
+            33.716137
+          ],
+          "type": "Point"
+        },
+        "id": "CENTRAL_IRVINE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Chino Cr",
+          "stname": "Chino Creek",
+          "longitude": "-117.729722220",
+          "station": "CHINO",
+          "latitude": "34.011944440",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            -117.72972222,
+            34.01194444
+          ],
+          "type": "Point"
+        },
+        "id": "CHINO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Corona Del Mar",
+          "stname": "Corona Del Mar(Coop-169)",
+          "longitude": "-117.857869000",
+          "station": "CORONA",
+          "latitude": "33.613165000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.857869,
+            33.613165
+          ],
+          "type": "Point"
+        },
+        "id": "CORONA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Costa Mesa",
+          "stname": "Costa Mesa(Coop-165)",
+          "longitude": "-117.893153000",
+          "station": "COSTAMESA",
+          "latitude": "33.669797000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.893153,
+            33.669797
+          ],
+          "type": "Point"
+        },
+        "id": "COSTAMESA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Costa Mesa G02",
+          "stname": "Costa Mesa Channel (G02) at Westcliff Dr.",
+          "longitude": "-117.901329000",
+          "station": "COSTAMESA_CH",
+          "latitude": "33.624020000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.901329,
+            33.62402
+          ],
+          "type": "Point"
+        },
+        "id": "COSTAMESA_CH",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Costa Mesa @ CMWD",
+          "stname": "Costa Mesa @ Costa Mesa Water District(Coop-219)",
+          "longitude": "-117.933603000",
+          "station": "COSTAMESA_CMWD",
+          "latitude": "33.645276000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.933603,
+            33.645276
+          ],
+          "type": "Point"
+        },
+        "id": "COSTAMESA_CMWD",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Coto De Caza",
+          "stname": "Coto De Caza",
+          "longitude": "-117.581297000",
+          "station": "COTODECAZA",
+          "latitude": "33.593088000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.581297,
+            33.593088
+          ],
+          "type": "Point"
+        },
+        "id": "COTODECAZA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Coyote Creek",
+          "stname": "Coyote Creek Channel",
+          "longitude": "-118.027445000",
+          "station": "COYOTE_CREEK",
+          "latitude": "33.871001000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.027445,
+            33.871001
+          ],
+          "type": "Point"
+        },
+        "id": "COYOTE_CREEK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Cypress Pump Station",
+          "stname": "Cypress Pump Station",
+          "longitude": "-118.058888890",
+          "station": "CYPRESS",
+          "latitude": "33.818611110",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.05888889,
+            33.81861111
+          ],
+          "type": "Point"
+        },
+        "id": "CYPRESS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Dana Point",
+          "stname": "Dana Point Harbor",
+          "longitude": "-117.706195000",
+          "station": "DANAPOINT",
+          "latitude": "33.461247000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.706195,
+            33.461247
+          ],
+          "type": "Point"
+        },
+        "id": "DANAPOINT",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "LE GardenGroveBridge",
+          "stname": "Lower East Garden Grove Wintersburg @ Gothard Bridge",
+          "longitude": "-117.999338000",
+          "station": "EASTGARDEN",
+          "latitude": "33.717427000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.999338,
+            33.717427
+          ],
+          "type": "Point"
+        },
+        "id": "EASTGARDEN",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "El Cariso Guard Stat",
+          "stname": "El Cariso Guard Station",
+          "longitude": "-117.413659000",
+          "station": "ELCARISO",
+          "latitude": "33.650826000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.413659,
+            33.650826
+          ],
+          "type": "Point"
+        },
+        "id": "ELCARISO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "El Modena - Irvine @",
+          "stname": "El Modena - Irvine @ Michelle",
+          "longitude": "-117.798961000",
+          "station": "ELMODENA",
+          "latitude": "33.720135000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.798961,
+            33.720135
+          ],
+          "type": "Point"
+        },
+        "id": "ELMODENA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "El Toro - Sta. 176",
+          "stname": "El Toro - Sta. 176",
+          "longitude": "-117.690939000",
+          "station": "ELTORO",
+          "latitude": "33.627625000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.690939,
+            33.627625
+          ],
+          "type": "Point"
+        },
+        "id": "ELTORO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Fullerton Airport",
+          "stname": "Fullerton Airport",
+          "longitude": "-117.973747000",
+          "station": "FULLERTON_AP",
+          "latitude": "33.873000000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.973747,
+            33.873
+          ],
+          "type": "Point"
+        },
+        "id": "FULLERTON_AP",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Fullerton Crk @ Beac",
+          "stname": "Fullerton Crk @ Beach",
+          "longitude": "-117.997947000",
+          "station": "FULLERTON_BEACH",
+          "latitude": "33.862384000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.997947,
+            33.862384
+          ],
+          "type": "Point"
+        },
+        "id": "FULLERTON_BEACH",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Fullerton Dam",
+          "stname": "Fullerton Dam, ACOE Station",
+          "longitude": "0.000000000",
+          "station": "FULLERTON_DAM",
+          "latitude": "0.000000000",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            0,
+            0
+          ],
+          "type": "Point"
+        },
+        "id": "FULLERTON_DAM",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Fullerton Hillcrest",
+          "stname": "Fullerton Hillcrest Res. - Sta. 96",
+          "longitude": "-117.892705000",
+          "station": "FULLERTON_RES",
+          "latitude": "33.862851000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.892705,
+            33.862851
+          ],
+          "type": "Point"
+        },
+        "id": "FULLERTON_RES",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Fullerton Cr",
+          "stname": "Fullerton Creek",
+          "longitude": "-117.932638000",
+          "station": "FULLERTON_RICH",
+          "latitude": "33.863057000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.932638,
+            33.863057
+          ],
+          "type": "Point"
+        },
+        "id": "FULLERTON_RICH",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Fullerton Creek",
+          "stname": "Fullerton Creek @ Valleyview",
+          "longitude": "-118.029666000",
+          "station": "FULLERTON_VLLYV",
+          "latitude": "33.864007000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.029666,
+            33.864007
+          ],
+          "type": "Point"
+        },
+        "id": "FULLERTON_VLLYV",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Garden Gve",
+          "stname": "Garden Grove(A-1175)",
+          "longitude": "-117.968772000",
+          "station": "GARDENGROVE",
+          "latitude": "33.791073000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.968772,
+            33.791073
+          ],
+          "type": "Point"
+        },
+        "id": "GARDENGROVE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Garden Gve Fire - St",
+          "stname": "Garden Grove Fire(Coop-229)",
+          "longitude": "-117.968762000",
+          "station": "GARDENGROVEFIRE",
+          "latitude": "33.791074000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.968762,
+            33.791074
+          ],
+          "type": "Point"
+        },
+        "id": "GARDENGROVEFIRE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Gavilan Hills",
+          "stname": "Gavilan Hills",
+          "longitude": "-117.396111110",
+          "station": "GAVILANHILLS",
+          "latitude": "33.789722220",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.39611111,
+            33.78972222
+          ],
+          "type": "Point"
+        },
+        "id": "GAVILANHILLS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Gilbert Retention Ba",
+          "stname": "Gilbert Retention Basin",
+          "longitude": "-117.961136000",
+          "station": "GILBERT",
+          "latitude": "33.839557000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.961136,
+            33.839557
+          ],
+          "type": "Point"
+        },
+        "id": "GILBERT",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Glassell",
+          "stname": "OCPW @ Glassell",
+          "longitude": "-117.851468000",
+          "station": "GLASSELL",
+          "latitude": "33.825974000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.851468,
+            33.825974
+          ],
+          "type": "Point"
+        },
+        "id": "GLASSELL",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Harbor @ Edinger SAR",
+          "stname": "Harbor at Edinger SAR Pump Station",
+          "longitude": "-117.920000000",
+          "station": "HARBOR_EDINGER",
+          "latitude": "33.718055560",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            -117.92,
+            33.71805556
+          ],
+          "type": "Point"
+        },
+        "id": "HARBOR_EDINGER",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Haster",
+          "stname": "Haster Basin",
+          "longitude": "-117.909922000",
+          "station": "HASTERBASIN",
+          "latitude": "33.778329000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.909922,
+            33.778329
+          ],
+          "type": "Point"
+        },
+        "id": "HASTERBASIN",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Hicks Cyn",
+          "stname": "Hicks Canyon",
+          "longitude": "-117.704030000",
+          "station": "HICKS_CYN",
+          "latitude": "33.745879830",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.70403,
+            33.74587983
+          ],
+          "type": "Point"
+        },
+        "id": "HICKS_CYN",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Holy Jim Canyon",
+          "stname": "Holy Jim Canyon",
+          "longitude": "-117.516605000",
+          "station": "HOLY_JIM_CYN",
+          "latitude": "33.678361000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.516605,
+            33.678361
+          ],
+          "type": "Point"
+        },
+        "id": "HOLY_JIM_CYN",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Horno Outlet",
+          "stname": "Horno Basin outlet riser",
+          "longitude": "-117.646525000",
+          "station": "HORNO_OUT",
+          "latitude": "33.529787000",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            -117.646525,
+            33.529787
+          ],
+          "type": "Point"
+        },
+        "id": "HORNO_OUT",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Huntington Beach Pum",
+          "stname": "Huntington Beach Pump Station",
+          "longitude": "-117.986808000",
+          "station": "HUNTINGTON",
+          "latitude": "33.671631000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.986808,
+            33.671631
+          ],
+          "type": "Point"
+        },
+        "id": "HUNTINGTON",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Irvine Ranch Jeffrey",
+          "stname": "Irvine Ranch at Jeffrey Road",
+          "longitude": "-117.723136000",
+          "station": "IRVINE_JEFFREY",
+          "latitude": "33.719983000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.723136,
+            33.719983
+          ],
+          "type": "Point"
+        },
+        "id": "IRVINE_JEFFREY",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Irvine Lake Dam",
+          "stname": "Irvine Lake Dam",
+          "longitude": "-117.727213000",
+          "station": "IRVINELAKE",
+          "latitude": "33.786548000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.727213,
+            33.786548
+          ],
+          "type": "Point"
+        },
+        "id": "IRVINELAKE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "J01P27",
+          "stname": "J01P27 90 inch pipe",
+          "longitude": "-117.716659000",
+          "station": "J01P27",
+          "latitude": "33.572510000",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            -117.716659,
+            33.57251
+          ],
+          "type": "Point"
+        },
+        "id": "J01P27",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Katella Yard",
+          "stname": "Katella Yard",
+          "longitude": "-117.876111110",
+          "station": "KATELLAYARD",
+          "latitude": "33.803055560",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.87611111,
+            33.80305556
+          ],
+          "type": "Point"
+        },
+        "id": "KATELLAYARD",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Lacouaque",
+          "stname": "Lacouaque",
+          "longitude": "-117.631944440",
+          "station": "LACOUAQUE",
+          "latitude": "33.509166670",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.63194444,
+            33.50916667
+          ],
+          "type": "Point"
+        },
+        "id": "LACOUAQUE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Laguna Audubon",
+          "stname": "Laguna Audubon",
+          "longitude": "-117.751832000",
+          "station": "LAGUNA_AUDUBON",
+          "latitude": "33.589778000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.751832,
+            33.589778
+          ],
+          "type": "Point"
+        },
+        "id": "LAGUNA_AUDUBON",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Laguna_Cyn_Rptr",
+          "stname": "Laguna Canyon Repeater",
+          "longitude": "-117.780245000",
+          "station": "LAGUNA_CYN_RPTR",
+          "latitude": "33.554641000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.780245,
+            33.554641
+          ],
+          "type": "Point"
+        },
+        "id": "LAGUNA_CYN_RPTR",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Laguna Niguel Park",
+          "stname": "Laguna Niguel Park",
+          "longitude": "-117.709185000",
+          "station": "LAGUNA_NIGUEL",
+          "latitude": "33.548330000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.709185,
+            33.54833
+          ],
+          "type": "Point"
+        },
+        "id": "LAGUNA_NIGUEL",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Laguna Treatment",
+          "stname": "Laguna Beach Treatment Plant - Station 100",
+          "longitude": "-117.781388890",
+          "station": "LAGUNA_TREAT",
+          "latitude": "33.546944440",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.78138889,
+            33.54694444
+          ],
+          "type": "Point"
+        },
+        "id": "LAGUNA_TREAT",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Laguna Beach @ Woodl",
+          "stname": "Laguna Beach @ Woodland",
+          "longitude": "-117.776874000",
+          "station": "LAGUNA_WOODLAND",
+          "latitude": "33.552282000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.776874,
+            33.552282
+          ],
+          "type": "Point"
+        },
+        "id": "LAGUNA_WOODLAND",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Laguna Beach",
+          "stname": "Laguna Beach City Hall",
+          "longitude": "-117.780736000",
+          "station": "LAGUNABEACH",
+          "latitude": "33.545439000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.780736,
+            33.545439
+          ],
+          "type": "Point"
+        },
+        "id": "LAGUNABEACH",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Lambert Reservoir",
+          "stname": "Lambert Reservoir",
+          "longitude": "-117.710833330",
+          "station": "LAMBERT",
+          "latitude": "33.694722220",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.71083333,
+            33.69472222
+          ],
+          "type": "Point"
+        },
+        "id": "LAMBERT",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Lane Channel",
+          "stname": "Lane Channel (F08) at McCabe Way",
+          "longitude": "-117.843985000",
+          "station": "LANE",
+          "latitude": "33.677778000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.843985,
+            33.677778
+          ],
+          "type": "Point"
+        },
+        "id": "LANE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Loma Ridge",
+          "stname": "Loma Ridge",
+          "longitude": "-117.746298000",
+          "station": "LOMARIDGE",
+          "latitude": "33.764979000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.746298,
+            33.764979
+          ],
+          "type": "Point"
+        },
+        "id": "LOMARIDGE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Los Alamitos Pump",
+          "stname": "Los Alamitos Pump",
+          "longitude": "-118.761944440",
+          "station": "LOSALAMITOS",
+          "latitude": "33.756666670",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.76194444,
+            33.75666667
+          ],
+          "type": "Point"
+        },
+        "id": "LOSALAMITOS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "L Oso Cr",
+          "stname": "Lower Oso Creek",
+          "longitude": "-117.675009000",
+          "station": "LOWEROSO",
+          "latitude": "33.541820000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.675009,
+            33.54182
+          ],
+          "type": "Point"
+        },
+        "id": "LOWEROSO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "L Silverado Canyon",
+          "stname": "Lower Silverado Canyon",
+          "longitude": "-117.659423000",
+          "station": "LOWERSILVERADO",
+          "latitude": "33.742967000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.659423,
+            33.742967
+          ],
+          "type": "Point"
+        },
+        "id": "LOWERSILVERADO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Magnolia Tide",
+          "stname": "Magnolia Tide",
+          "longitude": "-117.969444440",
+          "station": "MAGNOLIA",
+          "latitude": "33.641666670",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.96944444,
+            33.64166667
+          ],
+          "type": "Point"
+        },
+        "id": "MAGNOLIA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Marshburn Ch @ Trabu",
+          "stname": "Marshburn Channel @ Trabuco",
+          "longitude": "-117.753888890",
+          "station": "MARSHBURN",
+          "latitude": "33.685277780",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.75388889,
+            33.68527778
+          ],
+          "type": "Point"
+        },
+        "id": "MARSHBURN",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Miller Basin",
+          "stname": "Miller Basin",
+          "longitude": "-117.853475000",
+          "station": "MILLER",
+          "latitude": "33.864969000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.853475,
+            33.864969
+          ],
+          "type": "Point"
+        },
+        "id": "MILLER",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Modjeska Canyon",
+          "stname": "Modjeska Canyon",
+          "longitude": "-117.636330000",
+          "station": "MODJESKA_CANYON",
+          "latitude": "33.708821000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.63633,
+            33.708821
+          ],
+          "type": "Point"
+        },
+        "id": "MODJESKA_CANYON",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Moulton Pk Rptr",
+          "stname": "Moulton Peak Repeater",
+          "longitude": "-117.743866000",
+          "station": "MOULTON_PEAK",
+          "latitude": "33.574856000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.743866,
+            33.574856
+          ],
+          "type": "Point"
+        },
+        "id": "MOULTON_PEAK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Newport Coast",
+          "stname": "Newport Coast",
+          "longitude": "-117.801386000",
+          "station": "NEWPORT_COAST",
+          "latitude": "33.605521000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.801386,
+            33.605521
+          ],
+          "type": "Point"
+        },
+        "id": "NEWPORT_COAST",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Newport Beach Harbor",
+          "stname": "Newport Beach Harbor Master - Sta. 88",
+          "longitude": "-117.883966000",
+          "station": "NEWPORTBEACH",
+          "latitude": "33.602921000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.883966,
+            33.602921
+          ],
+          "type": "Point"
+        },
+        "id": "NEWPORTBEACH",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Oak Flat",
+          "stname": "Oak Flat",
+          "longitude": "-117.638611110",
+          "station": "OAKFLAT",
+          "latitude": "33.829444440",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.63861111,
+            33.82944444
+          ],
+          "type": "Point"
+        },
+        "id": "OAKFLAT",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Ocean Institute",
+          "stname": "Dana Point Ocean Institute",
+          "longitude": "-117.706188000",
+          "station": "OCEANINSTITUTE",
+          "latitude": "33.461272000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.706188,
+            33.461272
+          ],
+          "type": "Point"
+        },
+        "id": "OCEANINSTITUTE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Oceanview",
+          "stname": "Oceanview",
+          "longitude": "-117.932785000",
+          "station": "OCEANVIEW",
+          "latitude": "33.719965000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.932785,
+            33.719965
+          ],
+          "type": "Point"
+        },
+        "id": "OCEANVIEW",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Orange - Hardacre -",
+          "stname": "Orange - Hardacre - Sta. 222",
+          "longitude": "-117.822222220",
+          "station": "ORANGE",
+          "latitude": "33.814722220",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.82222222,
+            33.81472222
+          ],
+          "type": "Point"
+        },
+        "id": "ORANGE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Orange Res(NWs)",
+          "stname": "Orange Reservoir(Nws-144)",
+          "longitude": "-117.882777780",
+          "station": "ORANGE_RES",
+          "latitude": "33.935277780",
+          "stntype": "NWS"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.88277778,
+            33.93527778
+          ],
+          "type": "Point"
+        },
+        "id": "ORANGE_RES",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Oso Cr @ Crown V",
+          "stname": "Oso Creek @ Crown Valley",
+          "longitude": "-117.676706000",
+          "station": "OSO_CROWN",
+          "latitude": "33.558164000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.676706,
+            33.558164
+          ],
+          "type": "Point"
+        },
+        "id": "OSO_CROWN",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Palisades Reservoir",
+          "stname": "Palisades Reservoir - Sta. 186",
+          "longitude": "-117.650894000",
+          "station": "PALISADES",
+          "latitude": "33.462979000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.650894,
+            33.462979
+          ],
+          "type": "Point"
+        },
+        "id": "PALISADES",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "PCW at Barranca",
+          "stname": "Peters Canyon Wash @ Barranca",
+          "longitude": "-117.823726000",
+          "station": "PETERS",
+          "latitude": "33.691333000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.823726,
+            33.691333
+          ],
+          "type": "Point"
+        },
+        "id": "PETERS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Pico Retarding Basin",
+          "stname": "Pico Retarding Basin-San Clemente",
+          "longitude": "-117.596061000",
+          "station": "PICO",
+          "latitude": "33.457587000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.596061,
+            33.457587
+          ],
+          "type": "Point"
+        },
+        "id": "PICO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Portola Park",
+          "stname": "Portola Park",
+          "longitude": "-117.844396000",
+          "station": "PORTOLA",
+          "latitude": "33.765437000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.844396,
+            33.765437
+          ],
+          "type": "Point"
+        },
+        "id": "PORTOLA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Prado Dam(NWS)",
+          "stname": "Prado Dam(Nws-145)",
+          "longitude": "-117.636111110",
+          "station": "PRADO_DAM",
+          "latitude": "33.890277780",
+          "stntype": "NWS"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.63611111,
+            33.89027778
+          ],
+          "type": "Point"
+        },
+        "id": "PRADO_DAM",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Prado Dam Outflow",
+          "stname": "Prado Dam Outflow",
+          "longitude": "-117.644166670",
+          "station": "PRADO_OUTFLOW",
+          "latitude": "33.883333330",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.64416667,
+            33.88333333
+          ],
+          "type": "Point"
+        },
+        "id": "PRADO_OUTFLOW",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Prado Dam Level",
+          "stname": "Prado Dam Level",
+          "longitude": "0.000000000",
+          "station": "PRADODAM",
+          "latitude": "0.000000000",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            0,
+            0
+          ],
+          "type": "Point"
+        },
+        "id": "PRADODAM",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Prima Desheca",
+          "stname": "Prima Desheca (M01)",
+          "longitude": "-117.644279000",
+          "station": "PRIMADESHECHA",
+          "latitude": "33.445317000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.644279,
+            33.445317
+          ],
+          "type": "Point"
+        },
+        "id": "PRIMADESHECHA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Raymond Basin",
+          "stname": "Raymond Basin",
+          "longitude": "-117.907819000",
+          "station": "RAYMOND",
+          "latitude": "33.849390000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.907819,
+            33.84939
+          ],
+          "type": "Point"
+        },
+        "id": "RAYMOND",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Riverside Flood Cont",
+          "stname": "Riverside Flood Control",
+          "longitude": "-117.363055560",
+          "station": "RIVERSIDE",
+          "latitude": "33.980277780",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.36305556,
+            33.98027778
+          ],
+          "type": "Point"
+        },
+        "id": "RIVERSIDE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Rossmore Pump Statio",
+          "stname": "Rossmore Pump Station",
+          "longitude": "-118.086666670",
+          "station": "ROSSMORE",
+          "latitude": "33.801111110",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.08666667,
+            33.80111111
+          ],
+          "type": "Point"
+        },
+        "id": "ROSSMORE",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Salt Creek Ch",
+          "stname": "Salt Creek Ch",
+          "longitude": "-117.707488000",
+          "station": "SALTCRK",
+          "latitude": "33.505941000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.707488,
+            33.505941
+          ],
+          "type": "Point"
+        },
+        "id": "SALTCRK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "San Antonio Dam",
+          "stname": "San Antonio Dam",
+          "longitude": "-117.681666670",
+          "station": "SANANTONIO",
+          "latitude": "34.156388890",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.68166667,
+            34.15638889
+          ],
+          "type": "Point"
+        },
+        "id": "SANANTONIO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Sand Canyon",
+          "stname": "Sand Canyon",
+          "longitude": "-117.756682000",
+          "station": "SANDCANYON",
+          "latitude": "33.673843000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.756682,
+            33.673843
+          ],
+          "type": "Point"
+        },
+        "id": "SANDCANYON",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Sand Canyon Ch",
+          "stname": "Sand Canyon Channel",
+          "longitude": "-117.827500000",
+          "station": "SANDCANYON_CH",
+          "latitude": "33.656944440",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.8275,
+            33.65694444
+          ],
+          "type": "Point"
+        },
+        "id": "SANDCANYON_CH",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "San Diego Crk. @ Cam",
+          "stname": "San Diego Crk. @ Campus",
+          "longitude": "-117.845964000",
+          "station": "SANDIEGO_CAMPUS",
+          "latitude": "33.655616000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.845964,
+            33.655616
+          ],
+          "type": "Point"
+        },
+        "id": "SANDIEGO_CAMPUS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "San Diego Cr @ Culve",
+          "stname": "San Diego Creek @ Culver",
+          "longitude": "-117.809602000",
+          "station": "SANDIEGO_CULVER",
+          "latitude": "33.682107000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.809602,
+            33.682107
+          ],
+          "type": "Point"
+        },
+        "id": "SANDIEGO_CULVER",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "San Juan Cr",
+          "stname": "San Juan Creek",
+          "longitude": "-117.648400000",
+          "station": "SANJUAN_CAP",
+          "latitude": "33.502498000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.6484,
+            33.502498
+          ],
+          "type": "Point"
+        },
+        "id": "SANJUAN_CAP",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "San Juan Guard",
+          "stname": "San Juan Guard",
+          "longitude": "-117.513717000",
+          "station": "SANJUAN_GUARD",
+          "latitude": "33.592164000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.513717,
+            33.592164
+          ],
+          "type": "Point"
+        },
+        "id": "SANJUAN_GUARD",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santa Ana - Delhi Ch",
+          "stname": "Santa Ana - Delhi Channel",
+          "longitude": "-117.880277780",
+          "station": "SANTAANA_DELHI",
+          "latitude": "33.660000000",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.88027778,
+            33.66
+          ],
+          "type": "Point"
+        },
+        "id": "SANTAANA_DELHI",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santa Ana Engineerin",
+          "stname": "Santa Ana Engineering",
+          "longitude": "-117.870932000",
+          "station": "SANTAANA_ENG",
+          "latitude": "33.751261000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.870932,
+            33.751261
+          ],
+          "type": "Point"
+        },
+        "id": "SANTAANA_ENG",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santa Ana - Sta. 121",
+          "stname": "Santa Ana (Coop-121)",
+          "longitude": "-117.876752000",
+          "station": "SANTANA",
+          "latitude": "33.747636000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.876752,
+            33.747636
+          ],
+          "type": "Point"
+        },
+        "id": "SANTANA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santiago Cr Santa An",
+          "stname": "Santiago Creek Santa Ana",
+          "longitude": "-117.884581000",
+          "station": "SANTIAGO_ANA",
+          "latitude": "33.769267000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.884581,
+            33.769267
+          ],
+          "type": "Point"
+        },
+        "id": "SANTIAGO_ANA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santiago Dam(NWS)",
+          "stname": "Santiago Dam(Nws-118)",
+          "longitude": "-117.721111110",
+          "station": "SANTIAGO_DAM",
+          "latitude": "33.786944440",
+          "stntype": "NWS"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.72111111,
+            33.78694444
+          ],
+          "type": "Point"
+        },
+        "id": "SANTIAGO_DAM",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santiago Cr @ E08",
+          "stname": "Santiago Creek @ E08",
+          "longitude": "-117.645102000",
+          "station": "SANTIAGO_E08",
+          "latitude": "33.713185000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.645102,
+            33.713185
+          ],
+          "type": "Point"
+        },
+        "id": "SANTIAGO_E08",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santiago Peak",
+          "stname": "Santiago Peak",
+          "longitude": "-117.534742000",
+          "station": "SANTIAGOPEAK",
+          "latitude": "33.709809000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.534742,
+            33.709809
+          ],
+          "type": "Point"
+        },
+        "id": "SANTIAGOPEAK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Santa Ana Mountains",
+          "stname": "Santa Ana Mountains Radar",
+          "longitude": "-117.636014000",
+          "station": "SARADAR",
+          "latitude": "33.817640000",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.636014,
+            33.81764
+          ],
+          "type": "Point"
+        },
+        "id": "SARADAR",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "SD Crk @ Culv New",
+          "stname": "San Diego Creek @ Culver New",
+          "longitude": "-117.816390000",
+          "station": "SD_CULVER_1196",
+          "latitude": "33.686390000",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            -117.81639,
+            33.68639
+          ],
+          "type": "Point"
+        },
+        "id": "SD_CULVER_1196",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Seal Beach Pump Stat",
+          "stname": "Seal Beach Pump Station",
+          "longitude": "-118.097621000",
+          "station": "SEALBEACH",
+          "latitude": "33.737519000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.097621,
+            33.737519
+          ],
+          "type": "Point"
+        },
+        "id": "SEALBEACH",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Segunda Desheca",
+          "stname": "Segunda Desheca",
+          "longitude": "-117.624824000",
+          "station": "SEGUNDADESHECA",
+          "latitude": "33.435539000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.624824,
+            33.435539
+          ],
+          "type": "Point"
+        },
+        "id": "SEGUNDADESHECA",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Seven Oaks Dam - ALE",
+          "stname": "Seven Oaks Dam - ALERT",
+          "longitude": "0.000000000",
+          "station": "SEVENOAKS",
+          "latitude": "0.000000000",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            0,
+            0
+          ],
+          "type": "Point"
+        },
+        "id": "SEVENOAKS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Silverado RS(NWS)",
+          "stname": "Silverado Ranger Station(Nws-119)",
+          "longitude": "-117.658055560",
+          "station": "SILVERADO_RS",
+          "latitude": "33.742777780",
+          "stntype": ""
+        },
+        "geometry": {
+          "coordinates": [
+            -117.65805556,
+            33.74277778
+          ],
+          "type": "Point"
+        },
+        "id": "SILVERADO_RS",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "S Park Pump Station",
+          "stname": "South Park Pump Station",
+          "longitude": "-117.932500000",
+          "station": "SOUTHPARK",
+          "latitude": "33.753055560",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.9325,
+            33.75305556
+          ],
+          "type": "Point"
+        },
+        "id": "SOUTHPARK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Sulphur Cr Dam - Sta",
+          "stname": "Sulphur Creek Dam - Sta. 216",
+          "longitude": "-117.706336000",
+          "station": "SULPHURCREEK",
+          "latitude": "33.549955000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.706336,
+            33.549955
+          ],
+          "type": "Point"
+        },
+        "id": "SULPHURCREEK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Trabuco Forestry - S",
+          "stname": "Trabuco Forestry - Sta. 206",
+          "longitude": "-117.592777780",
+          "station": "TRABUCO",
+          "latitude": "33.654166670",
+          "stntype": "ALE"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.59277778,
+            33.65416667
+          ],
+          "type": "Point"
+        },
+        "id": "TRABUCO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Trabuco Canyon(NWS)",
+          "stname": "Trabuco Canyon(Nws-133)",
+          "longitude": "-117.600000000",
+          "station": "TRABUCO_CANYON",
+          "latitude": "33.657222220",
+          "stntype": "NWS"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.6,
+            33.65722222
+          ],
+          "type": "Point"
+        },
+        "id": "TRABUCO_CANYON",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "TUCKER",
+          "stname": "Tucker Wildlife - Modjeska Canyon",
+          "longitude": "-117.620040000",
+          "station": "TUCKER",
+          "latitude": "33.710389000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.62004,
+            33.710389
+          ],
+          "type": "Point"
+        },
+        "id": "TUCKER",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Tustin - Irvine Ranc",
+          "stname": "Tustin - Irvine Ranch - Sta. 61",
+          "longitude": "-117.784688000",
+          "station": "TUSTIN",
+          "latitude": "33.731737000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.784688,
+            33.731737
+          ],
+          "type": "Point"
+        },
+        "id": "TUSTIN",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "TUSTIN I.2",
+          "stname": "Old Myford Road Tustin Irvine Ranch 0.01 Rain Gauge",
+          "longitude": "-117.784538000",
+          "station": "TUSTIN_I2",
+          "latitude": "33.731609000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.784538,
+            33.731609
+          ],
+          "type": "Point"
+        },
+        "id": "TUSTIN_I2",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "U E Garden Gve Winte",
+          "stname": "Upper East Garden Grove Wintersburg",
+          "longitude": "-117.902272000",
+          "station": "UEGARDEN",
+          "latitude": "33.786110000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.902272,
+            33.78611
+          ],
+          "type": "Point"
+        },
+        "id": "UEGARDEN",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Upper Harding",
+          "stname": "Upper Harding Canyon",
+          "longitude": "-117.565859000",
+          "station": "UPPER_HARDING",
+          "latitude": "33.712030000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.565859,
+            33.71203
+          ],
+          "type": "Point"
+        },
+        "id": "UPPER_HARDING",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "U Aliso Cr",
+          "stname": "Upper Aliso Creek",
+          "longitude": "-117.670576000",
+          "station": "UPPERALISO",
+          "latitude": "33.638537000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.670576,
+            33.638537
+          ],
+          "type": "Point"
+        },
+        "id": "UPPERALISO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "U Oso Cr",
+          "stname": "Upper Oso Creek",
+          "longitude": "-117.655528000",
+          "station": "UPPEROSO",
+          "latitude": "33.594402000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.655528,
+            33.594402
+          ],
+          "type": "Point"
+        },
+        "id": "UPPEROSO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "U Silverado Canyon",
+          "stname": "Upper Silverado Canyon",
+          "longitude": "-117.543213000",
+          "station": "UPPERSILVERADO",
+          "latitude": "33.747573000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.543213,
+            33.747573
+          ],
+          "type": "Point"
+        },
+        "id": "UPPERSILVERADO",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Villa Park Dam",
+          "stname": "Villa Park Dam(Coop-173)",
+          "longitude": "-117.767597000",
+          "station": "VILLAPARK",
+          "latitude": "33.814795000",
+          "stntype": "COP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.767597,
+            33.814795
+          ],
+          "type": "Point"
+        },
+        "id": "VILLAPARK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Wminster C04",
+          "stname": "Westminster Channel @ Chestnut",
+          "longitude": "-118.003288000",
+          "station": "WESTMINSTER",
+          "latitude": "33.748296000",
+          "stntype": "ALW"
+        },
+        "geometry": {
+          "coordinates": [
+            -118.003288,
+            33.748296
+          ],
+          "type": "Point"
+        },
+        "id": "WESTMINSTER",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Yorba Park",
+          "stname": "Yorba Park",
+          "longitude": "-117.770699000",
+          "station": "YORBA_PARK",
+          "latitude": "33.866608000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.770699,
+            33.866608
+          ],
+          "type": "Point"
+        },
+        "id": "YORBA_PARK",
+        "type": "Feature"
+      },
+      {
+        "properties": {
+          "shortname": "Yorba Reservoir",
+          "stname": "Yorba Reservoir",
+          "longitude": "-117.811244000",
+          "station": "YORBA_RESERVOIR",
+          "latitude": "33.871930000",
+          "stntype": "ALP"
+        },
+        "geometry": {
+          "coordinates": [
+            -117.811244,
+            33.87193
+          ],
+          "type": "Point"
+        },
+        "id": "YORBA_RESERVOIR",
+        "type": "Feature"
+      }
+    ],
+    "type": "FeatureCollection"
+  },
+  "buff_supplied": 37508
+}

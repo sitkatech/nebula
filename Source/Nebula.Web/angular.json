@@ -30,13 +30,18 @@
             
             "styles": [
               "src/styles.scss",
-              "node_modules/leaflet.fullscreen/Control.FullScreen.css"
+              "node_modules/leaflet.fullscreen/Control.FullScreen.css",
+              "node_modules/leaflet-gesture-handling/dist/leaflet-gesture-handling.css",
+              "node_modules/leaflet-loading/src/Control.Loading.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.slim.min.js",
               "node_modules/popper.js/dist/umd/popper.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js",
-              "node_modules/iso8601-js-period/iso8601.js"
+              "node_modules/iso8601-js-period/iso8601.js",
+              "node_modules/vega/build/vega.min.js",
+              "node_modules/vega-lite/build/vega-lite.min.js",
+              "node_modules/vega-embed/build/vega-embed.min.js"
             ]
           },
           "configurations": {
