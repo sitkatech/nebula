@@ -8,8 +8,8 @@ import { CustomCompileService } from 'src/app/shared/services/custom-compile.ser
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
 import { WatershedService } from 'src/app/services/watershed/watershed.service';
-import { FeatureCollection } from 'geojson';
 import { SmartWatershedService } from 'src/app/services/smart-watershed.service.js';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 declare var $ : any;
 declare var vegaEmbed : any;
@@ -56,6 +56,19 @@ export class DataDownloadComponent implements OnInit {
   public selectedNeighborhoodWatershed: string;
   public selectedNeighborhoodWatershedMask: L.Layers;
 
+  public timeSeriesForm = new FormGroup({
+    startDate: new FormControl('', [Validators.required]),
+    endDate: new FormControl('', [Validators.required]),
+    interval: new FormControl('', [Validators.required]),
+    aggregationMode: new FormControl(''),
+    intervalMultiplier: new FormControl('', [Validators.min(1), Validators.max(2147483647)])
+  });
+
+  public hydstraAggregationModes = ["Total", "Average", "Maximum", "Minimum"];
+  public hydstraIntervals = ["Hourly", "Daily", "Monthly", "Yearly"];
+  public errorMessage: string = null;
+  public isPerformingAction: boolean = false;
+
   public areMetricsCollapsed: boolean = true;
   siteLocationLayer: any;
 
@@ -63,6 +76,7 @@ export class DataDownloadComponent implements OnInit {
   public selectedOutfallProperties: Object;
   public selectedOutfallID: string = null;
 
+  //Variable and file to be deleted once Lyra's CORS issues are solved
   public tempStationFile = require('../../../assets/Stations_Temp.json');
 
   constructor(
@@ -122,7 +136,7 @@ export class DataDownloadComponent implements OnInit {
       format: "image/png",
       tiled: true,
       pane: "nebulaOverlayPane"
-    })
+    } as L.WMSOptions);
 
 
 
@@ -134,6 +148,10 @@ export class DataDownloadComponent implements OnInit {
     })
 
     this.compileService.configure(this.appRef);
+  }
+
+  get f() {
+    return this.timeSeriesForm.controls;
   }
 
   public ngAfterViewInit(): void {
@@ -211,6 +229,7 @@ export class DataDownloadComponent implements OnInit {
       this.siteLocationLayer.addTo(this.map);
       this.siteLocationLayer.bringToFront();
 
+      //Just a stand in until the API is opened up. This should not make it  out of dev
       var yourVlSpec = {
         $schema: 'https://vega.github.io/schema/vega-lite/v2.0.json',
         description: 'A simple bar chart with embedded data.',
@@ -317,5 +336,23 @@ export class DataDownloadComponent implements OnInit {
   public setSearchingAndLoadScreen(searching: boolean) {
     this.currentlySearching = searching;
     this.map.fireEvent(this.currentlySearching ? 'dataloading' : 'dataload');
+  }
+
+  public onSubmit() {
+    console.log("submitted");
+  }
+
+  public catchExtraSymbols(event : KeyboardEvent) : void {
+    if (event.code === "KeyE" || event.code === "Equal" || event.code === "Minus" || event.code === "Plus") {
+      event.preventDefault();
+    }
+  }
+
+  public catchPastedSymbols(event : any) : void {
+    let val = event.clipboardData.getData('text/plain');
+    if (val && (val.includes("+") || val.includes("-") || val.includes("e") || val.includes("E"))) {
+      val = val.replace(/\+|\-|e|E/g, '');
+      event.preventDefault();
+    }
   }
 }

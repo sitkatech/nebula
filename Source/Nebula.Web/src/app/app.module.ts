@@ -22,7 +22,7 @@ import { DecimalPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer/link-renderer.component';
 
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ComboSeriesVerticalComponent } from './shared/components/combo-chart/combo-series-vertical.component'
 import { FontAwesomeIconLinkRendererComponent } from './shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
@@ -74,6 +74,7 @@ export function init_app(appLoadService: AppInitService) {
     OAuthModule.forRoot(),
     SharedModule.forRoot(),
     FormsModule,
+    ReactiveFormsModule,
     NgxChartsModule,
     BrowserAnimationsModule,
     AgGridModule.withComponents([]),

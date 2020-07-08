@@ -29,7 +29,7 @@
         <string>regional_subbasin</string>
         <string>regional_subbasin_wide</string>
       </availableStyles>
-      <defaultStyle>regional_subbasin</defaultStyle>
+      <defaultStyle>regional_subbasin_wide</defaultStyle>
     </styleParameterFilter>
   </parameterFilters>
   <gutter>0</gutter>
