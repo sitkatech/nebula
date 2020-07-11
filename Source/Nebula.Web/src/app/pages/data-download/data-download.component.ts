@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { SmartWatershedService } from 'src/app/services/smart-watershed.service.js';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { forkJoin } from 'rxjs';
 
 declare var $ : any;
 declare var vegaEmbed : any;
@@ -50,24 +51,26 @@ export class DataDownloadComponent implements OnInit {
   public activeSearchNotFound: boolean = false;
   public currentlySearching: boolean = false;
   public layerControlOpen: boolean = false;
+  public vegaSpec: Object = null;
 
   public selectedNeighborhoodProperties: any;
   public selectedNeighborhoodID: number;
   public selectedNeighborhoodWatershed: string;
   public selectedNeighborhoodWatershedMask: L.Layers;
 
-  public timeSeriesForm = new FormGroup({
-    startDate: new FormControl('', [Validators.required]),
-    endDate: new FormControl('', [Validators.required]),
-    interval: new FormControl('', [Validators.required]),
-    aggregationMode: new FormControl(''),
-    intervalMultiplier: new FormControl('', [Validators.min(1), Validators.max(2147483647)])
-  });
-
-  public hydstraAggregationModes = ["Total", "Average", "Maximum", "Minimum"];
-  public hydstraIntervals = ["Hourly", "Daily", "Monthly", "Yearly"];
+  public hydstraAggregationModes = [{display:"Total", value:"tot"}, {display:"Average", value:"mean"}, {display:"Maximum", value:"max"}, {display:"Minimum", value:"min"}];
+  public hydstraIntervals = [{display:"Hourly", value:"hour"}, {display:"Daily", value:"day"}, {display:"Monthly", value:"month"}, {display:"Yearly", value:"year"}];
   public errorMessage: string = null;
   public isPerformingAction: boolean = false;
+  public currentDate = new Date();
+
+  public timeSeriesForm = new FormGroup({
+    startDate: new FormControl({year:this.currentDate.getUTCFullYear()-5, month:this.currentDate.getUTCMonth(), day:this.currentDate.getUTCDate()}, [Validators.required]),
+    endDate: new FormControl({year:this.currentDate.getUTCFullYear(), month:this.currentDate.getUTCMonth(), day:this.currentDate.getUTCDate()}, [Validators.required]),
+    interval: new FormControl(this.hydstraIntervals[0], [Validators.required]),
+    aggregationMode: new FormControl(this.hydstraAggregationModes[0]),
+    intervalMultiplier: new FormControl(1, [Validators.min(1), Validators.max(2147483647)])
+  });
 
   public areMetricsCollapsed: boolean = true;
   siteLocationLayer: any;
@@ -75,9 +78,7 @@ export class DataDownloadComponent implements OnInit {
   public selectedOutfallName: string = null;
   public selectedOutfallProperties: Object;
   public selectedOutfallID: string = null;
-
-  //Variable and file to be deleted once Lyra's CORS issues are solved
-  public tempStationFile = require('../../../assets/Stations_Temp.json');
+  selectedSiteName: any;
 
   constructor(
     private appRef: ApplicationRef,
@@ -179,7 +180,10 @@ export class DataDownloadComponent implements OnInit {
     this.setControl();
     this.initializeMapEvents();
 
-    this.watershedService.getWatershedMask("Aliso Creek").subscribe(maskString => {
+    forkJoin(
+    this.watershedService.getWatershedMask("Aliso Creek"),
+    this.smartWatershedService.getSiteLocationGeoJson()
+    ).subscribe(([maskString, siteLocationObject]) => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
@@ -200,7 +204,7 @@ export class DataDownloadComponent implements OnInit {
       this.defaultFitBounds();
 
       let maskLayerPoints= maskString.features[0].geometry.coordinates[0];
-      let alisoStations = this.tempStationFile._return.features.filter(feature => {
+      let alisoStations = siteLocationObject._return.features.filter(feature => {
         let lat = feature.geometry.coordinates[1];
         let lng = feature.geometry.coordinates[0];
 
@@ -221,6 +225,8 @@ export class DataDownloadComponent implements OnInit {
           layer.bindPopup('<p>'+feature.properties.stname+'</p>');
           layer.on('click', () => {
             this.selectedOutfallProperties = feature.properties;
+            this.selectedSiteName = feature.properties.station;
+            this.getTimeSeriesData();
             console.log(feature.properties);
             this.selectedOutfallID = feature.id;
           });
@@ -230,7 +236,7 @@ export class DataDownloadComponent implements OnInit {
       this.siteLocationLayer.bringToFront();
 
       //Just a stand in until the API is opened up. This should not make it  out of dev
-      var yourVlSpec = {
+      this.vegaSpec = {
         $schema: 'https://vega.github.io/schema/vega-lite/v2.0.json',
         description: 'A simple bar chart with embedded data.',
         data: {
@@ -252,14 +258,8 @@ export class DataDownloadComponent implements OnInit {
           y: {field: 'b', type: 'quantitative'}
         }
       };
-      vegaEmbed('#vis', yourVlSpec);
+      vegaEmbed('#vis', this.vegaSpec);
     });
-
-    // this.smartWatershedService.getSiteLocationGeoJson().subscribe(siteLocationString => {
-    //   this.siteLocationLayer = L.geoJSON(siteLocationString);
-    //   this.siteLocationLayer.addTo(this.map);
-    //   this.siteLocationLayer.bringToFront();
-    // })
   }
 
   public initializePanes(): void {
@@ -340,6 +340,31 @@ export class DataDownloadComponent implements OnInit {
 
   public onSubmit() {
     console.log("submitted");
+  }
+
+  public getTimeSeriesData() {
+    let swnTimeSeriesRequestDto = new Object(
+      {
+        site:this.selectedSiteName,
+        //temporary variable, this should be a dropdown
+        variable:11,
+        //temporary variable, this should be a dropdown
+        datasource:"A",
+        start_date:this.getDateFromTimeSeriesFormDateObject('startDate'),
+        end_date:this.getDateFromTimeSeriesFormDateObject('endDate'),
+        start_time: "00:00",
+        end_time: "00:00",
+        data_type:this.timeSeriesForm.get('aggregationMode').value,
+        interval: this.timeSeriesForm.get('interval').value,
+        multiplier: this.timeSeriesForm.get('intervalMultiplier').value
+      });
+      console.log(swnTimeSeriesRequestDto);
+    this.isPerformingAction = true;
+  }
+
+  public getDateFromTimeSeriesFormDateObject(formFieldName : string) : string {
+    let date = this.timeSeriesForm.get(formFieldName).value;
+    return `${date["year"]}-${date["month"]}-${date["day"]}`;
   }
 
   public catchExtraSymbols(event : KeyboardEvent) : void {

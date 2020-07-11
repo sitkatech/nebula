@@ -126,8 +126,8 @@
                                     <div class="col-lg-6">
                                         <select formControlName="aggregationMode" id="aggregationMode"
                                             class="form-control">
-                                            <option *ngFor="let mode of hydstraAggregationModes" [value]="mode">
-                                                {{mode}}
+                                            <option *ngFor="let mode of hydstraAggregationModes" [value]="mode.value">
+                                                {{mode.display}}
                                             </option>
                                         </select>
                                     </div>
@@ -138,8 +138,8 @@
                                     </label>
                                     <div class="col w-100">
                                         <select formControlName="interval" id="interval" class="form-control">
-                                            <option *ngFor="let interval of hydstraIntervals" [value]="interval">
-                                                {{interval}}
+                                            <option *ngFor="let interval of hydstraIntervals" [value]="interval.value">
+                                                {{interval.display}}
                                             </option>
                                         </select>
                                     </div>
@@ -178,7 +178,9 @@
                             </form>
                         </div>
                         <div class="col-6">
-                            <div id="vis"></div>
+                            <div id="vis">
+                                <span *ngIf="!vegaSpec">Select a station to view data</span>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -6,18 +6,20 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class SmartWatershedService {
+
+  private baseRoute = 'https://swn-lyra-dev.azurewebsites.net';
+
   constructor(private http: HttpClient) { }
 
   getSiteLocationGeoJson(): Observable<any> {
-    let route = 'https://swn-lyra-dev.azurewebsites.net/api/hydstra/sites/spatial';
-    const httpOptions = {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin':'*'
-        })
-       };
-    const result = this.http.get(route, httpOptions);
+    let route = `${this.baseRoute}/api/hydstra/sites/spatial`;
+    const result = this.http.get(route);
     return result;
+  }
+
+  getTimeSeriesData(timeSeriesObject: Object) : string {
+    let route = `${this.baseRoute}`;
+    
   }
   
 }
