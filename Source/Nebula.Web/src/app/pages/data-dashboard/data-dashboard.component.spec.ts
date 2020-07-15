@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DataDownloadComponent } from './data-download.component';
+import { DataDashboardComponent } from './data-dashboard.component';
 
-describe('DataDownloadComponent', () => {
-  let component: DataDownloadComponent;
-  let fixture: ComponentFixture<DataDownloadComponent>;
+describe('DataDashboardComponent', () => {
+  let component: DataDashboardComponent;
+  let fixture: ComponentFixture<DataDashboardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DataDownloadComponent ]
+      declarations: [ DataDashboardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DataDownloadComponent);
+    fixture = TestBed.createComponent(DataDashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

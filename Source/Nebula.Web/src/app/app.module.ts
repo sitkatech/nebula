@@ -39,7 +39,7 @@ import { FieldDefinitionListComponent } from './pages/field-definition-list/fiel
 import { FieldDefinitionEditComponent } from './pages/field-definition-edit/field-definition-edit.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpErrorInterceptor } from './shared/interceptors/httpErrorInterceptor';
-import { DataDownloadComponent } from './pages/data-download/data-download.component';
+import { DataDashboardComponent } from './pages/data-dashboard/data-dashboard.component';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -63,7 +63,7 @@ export function init_app(appLoadService: AppInitService) {
     DisclaimerComponent,
     FieldDefinitionListComponent,
     FieldDefinitionEditComponent,
-    DataDownloadComponent,
+    DataDashboardComponent,
   ],
   imports: [
     AppRoutingModule,

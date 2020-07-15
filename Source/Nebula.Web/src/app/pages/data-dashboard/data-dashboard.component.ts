@@ -2,8 +2,8 @@ import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef,
 import * as L from 'leaflet';
 import * as esri from 'esri-leaflet'
 import { GestureHandling } from "leaflet-gesture-handling";
-import '../../../../node_modules/leaflet.snogylop/src/leaflet.snogylop.js';
-import '../../../../node_modules/leaflet-loading/src/Control.Loading.js';
+import 'leaflet.snogylop';
+import 'leaflet-loading';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
@@ -11,19 +11,21 @@ import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { SmartWatershedService } from 'src/app/services/smart-watershed.service.js';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
+import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 
 declare var $ : any;
 declare var vegaEmbed : any;
 
 @Component({
-  selector: 'nebula-data-download',
-  templateUrl: './data-download.component.html',
-  styleUrls: ['./data-download.component.scss']
+  selector: 'nebula-data-dashboard',
+  templateUrl: './data-dashboard.component.html',
+  styleUrls: ['./data-dashboard.component.scss']
 })
-export class DataDownloadComponent implements OnInit {
+export class DataDashboardComponent implements OnInit {
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
+  public richTextTypeID = CustomRichTextType.DataDashboard;
   public defaultMapZoom = 12;
   public afterSetControl = new EventEmitter();
   public afterLoadMap = new EventEmitter();
@@ -31,7 +33,7 @@ export class DataDownloadComponent implements OnInit {
 
   public component: any;
 
-  public mapID = "NeighborhoodExplorerMap";
+  public mapID = "DataDashboardMap";
   public mapHeight = "500px";
   public map: L.Map;
   public featureLayer: any;
@@ -41,44 +43,31 @@ export class DataDownloadComponent implements OnInit {
   public maskLayer: any;
 
   public wmsParams: any;
-  public traceLayer: L.Layers;
-  public currentSearchLayer: L.Layers;
   public currentMask: L.Layers;
-  public clickMarker: L.Marker;
-  public traceActive: boolean = false;
-  public showInstructions: boolean = true;
-  public searchActive: boolean = false;
-  public activeSearchNotFound: boolean = false;
-  public currentlySearching: boolean = false;
   public layerControlOpen: boolean = false;
   public vegaSpec: Object = null;
-
-  public selectedNeighborhoodProperties: any;
-  public selectedNeighborhoodID: number;
-  public selectedNeighborhoodWatershed: string;
-  public selectedNeighborhoodWatershedMask: L.Layers;
 
   public hydstraAggregationModes = [{display:"Total", value:"tot"}, {display:"Average", value:"mean"}, {display:"Maximum", value:"max"}, {display:"Minimum", value:"min"}];
   public hydstraIntervals = [{display:"Hourly", value:"hour"}, {display:"Daily", value:"day"}, {display:"Monthly", value:"month"}, {display:"Yearly", value:"year"}];
   public errorMessage: string = null;
   public isPerformingAction: boolean = false;
   public currentDate = new Date();
+  public gettingAvailableVariables: boolean = false;
 
   public timeSeriesForm = new FormGroup({
     startDate: new FormControl({year:this.currentDate.getUTCFullYear()-5, month:this.currentDate.getUTCMonth(), day:this.currentDate.getUTCDate()}, [Validators.required]),
     endDate: new FormControl({year:this.currentDate.getUTCFullYear(), month:this.currentDate.getUTCMonth(), day:this.currentDate.getUTCDate()}, [Validators.required]),
-    interval: new FormControl(this.hydstraIntervals[0], [Validators.required]),
-    aggregationMode: new FormControl(this.hydstraAggregationModes[0]),
+    interval: new FormControl(this.hydstraIntervals[0].value, [Validators.required]),
+    aggregationMode: new FormControl(this.hydstraAggregationModes[0].value),
     intervalMultiplier: new FormControl(1, [Validators.min(1), Validators.max(2147483647)])
   });
 
   public areMetricsCollapsed: boolean = true;
-  siteLocationLayer: any;
+  public siteLocationLayer: any;
 
-  public selectedOutfallName: string = null;
-  public selectedOutfallProperties: Object;
-  public selectedOutfallID: string = null;
-  selectedSiteName: any;
+  public selectedSiteAvailableVariables: Object[] = new Array<Object>();
+  public selectedSiteStation: string = null;
+  public selectedSiteName: string =  null;
 
   constructor(
     private appRef: ApplicationRef,
@@ -142,10 +131,10 @@ export class DataDownloadComponent implements OnInit {
 
 
     this.overlayLayers = Object.assign({}, {
-      "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
-      "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
-      "<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", rsbsWMSOptions),
-      "<span>Stormwater Network <br/> <img src='../../assets/neighborhood-explorer/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
+      "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
+      "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
+      "<span><img src='../../assets/data-dashboard/regionalSubbasin.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", rsbsWMSOptions),
+      "<span>Stormwater Network <br/> <img src='../../assets/data-dashboard/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
     })
 
     this.compileService.configure(this.appRef);
@@ -167,8 +156,8 @@ export class DataDownloadComponent implements OnInit {
       maxZoom: 22,
       layers: [
         this.tileLayers["Street"],
-        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-        this.overlayLayers["<span><img src='../../assets/neighborhood-explorer/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"],
+        this.overlayLayers["<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
+        this.overlayLayers["<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"],
       ],
       gestureHandling: true,
       loadingControl:true
@@ -224,41 +213,14 @@ export class DataDownloadComponent implements OnInit {
         onEachFeature: function  (feature, layer) {
           layer.bindPopup('<p>'+feature.properties.stname+'</p>');
           layer.on('click', () => {
-            this.selectedOutfallProperties = feature.properties;
-            this.selectedSiteName = feature.properties.station;
-            this.getTimeSeriesData();
-            console.log(feature.properties);
-            this.selectedOutfallID = feature.id;
+            this.selectedSiteName = feature.properties.stname;
+            this.getAvailableVariables(feature.properties.station);
+            this.selectedSiteStation = feature.properties.station;
           });
         }.bind(this)
       });
       this.siteLocationLayer.addTo(this.map);
       this.siteLocationLayer.bringToFront();
-
-      //Just a stand in until the API is opened up. This should not make it  out of dev
-      this.vegaSpec = {
-        $schema: 'https://vega.github.io/schema/vega-lite/v2.0.json',
-        description: 'A simple bar chart with embedded data.',
-        data: {
-          values: [
-            {a: 'A', b: 28},
-            {a: 'B', b: 55},
-            {a: 'C', b: 43},
-            {a: 'D', b: 91},
-            {a: 'E', b: 81},
-            {a: 'F', b: 53},
-            {a: 'G', b: 19},
-            {a: 'H', b: 87},
-            {a: 'I', b: 52}
-          ]
-        },
-        mark: 'bar',
-        encoding: {
-          x: {field: 'a', type: 'ordinal'},
-          y: {field: 'b', type: 'quantitative'}
-        }
-      };
-      vegaEmbed('#vis', this.vegaSpec);
     });
   }
 
@@ -333,38 +295,60 @@ export class DataDownloadComponent implements OnInit {
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
   }
 
-  public setSearchingAndLoadScreen(searching: boolean) {
-    this.currentlySearching = searching;
-    this.map.fireEvent(this.currentlySearching ? 'dataloading' : 'dataload');
-  }
-
   public onSubmit() {
-    console.log("submitted");
+    if(this.timeSeriesForm.valid) {
+      this.getTimeSeriesData();
+    }
   }
 
   public getTimeSeriesData() {
     let swnTimeSeriesRequestDto = new Object(
       {
-        site:this.selectedSiteName,
+        site:this.selectedSiteStation,
         //temporary variable, this should be a dropdown
         variable:11,
         //temporary variable, this should be a dropdown
         datasource:"A",
         start_date:this.getDateFromTimeSeriesFormDateObject('startDate'),
         end_date:this.getDateFromTimeSeriesFormDateObject('endDate'),
-        start_time: "00:00",
-        end_time: "00:00",
+        start_time: "00:00:00",
+        end_time: "00:00:00",
         data_type:this.timeSeriesForm.get('aggregationMode').value,
         interval: this.timeSeriesForm.get('interval').value,
         multiplier: this.timeSeriesForm.get('intervalMultiplier').value
       });
-      console.log(swnTimeSeriesRequestDto);
     this.isPerformingAction = true;
+    this.smartWatershedService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
+      var spec = JSON.parse(result.spec);
+      spec.width = "container";
+      vegaEmbed('#vis', spec);
+      this.isPerformingAction = false;
+    },
+    error => {
+      this.isPerformingAction = false;
+    })
+  }
+
+  public getAvailableVariables(station: string) {
+    this.gettingAvailableVariables = true;
+    this.smartWatershedService.getAvailableVariables(station).subscribe(result => {
+      this.selectedSiteAvailableVariables = result._return.sites[0].variables.map(x => {
+        return new Object({
+          name : x.name,
+          startDate : new Date(`${x.period_start.slice(0, 4)}-${x.period_start.slice(4, 6)}-${x.period_start.slice(6, 8)}`).toLocaleDateString(),
+          endDate: new Date(`${x.period_end.slice(0, 4)}-${x.period_end.slice(4, 6)}-${x.period_end.slice(6, 8)}`).toLocaleDateString()
+        })
+      });
+      this.gettingAvailableVariables = false;
+    },
+    error => {
+      this.gettingAvailableVariables = false;
+    })
   }
 
   public getDateFromTimeSeriesFormDateObject(formFieldName : string) : string {
     let date = this.timeSeriesForm.get(formFieldName).value;
-    return `${date["year"]}-${date["month"]}-${date["day"]}`;
+    return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
   }
 
   public catchExtraSymbols(event : KeyboardEvent) : void {
@@ -379,5 +363,14 @@ export class DataDownloadComponent implements OnInit {
       val = val.replace(/\+|\-|e|E/g, '');
       event.preventDefault();
     }
+  }
+
+  public triggerTimeSeriesAndScrollIntoView(el: HTMLElement) {
+    this.scroll(el);
+    this.getTimeSeriesData();
+  }
+
+  public scroll(el : HTMLElement) {
+    el.scrollIntoView();
   }
 }

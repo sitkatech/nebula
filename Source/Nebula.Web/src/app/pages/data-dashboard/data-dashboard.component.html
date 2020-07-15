@@ -13,12 +13,12 @@
 
     <div class="row">
         <div class="col">
-            <h2 class="d-inline-block">Data Download</h2>
+            <h2 class="d-inline-block">Data Dashboard</h2>
         </div>
     </div>
     <div class="row mt-1 mb-2">
         <div class="col">
-            <!-- <custom-rich-text [customRichTextTypeID]="richTextTypeID"></custom-rich-text> -->
+            <custom-rich-text [customRichTextTypeID]="richTextTypeID"></custom-rich-text>
         </div>
     </div>
 </div>
@@ -36,19 +36,35 @@
                                 style="height:100%"></div>
                         </div>
                         <div class="col-sm-4">
-                            <ng-container *ngIf="!selectedOutfallProperties">
-                                <p>Click a station on the map to get started</p>
+                            <ng-container *ngIf="!selectedSiteName">
+                                <p>Click a station on the map to get started!</p>
                             </ng-container>
-                            <ng-container *ngIf="selectedOutfallProperties">
-                                <dl class="row" *ngFor="let item of selectedOutfallProperties | keyvalue">
-                                    <dt class="text-sm-right col-sm-6 col-xs-12">{{item.key | titlecase}}:</dt>
-                                    <dd class="col-sm-6 col-xs-12">
-                                        {{item.value}}
+                            <ng-container *ngIf="selectedSiteName">
+                                <dl class="row">
+                                    <dt class="text-sm-left col-sm-5 col-xs-12">Selected Site:</dt>
+                                    <dd class="col-sm-7 col-xs-12">
+                                        {{selectedSiteName}}
                                     </dd>
+                                </dl>
+                                <dl class="row">
+                                    <dt class="text-sm-left col-sm-6 col-xs-12">Data Available:</dt>
+                                </dl>
+                                <dl class="row" style="max-height:600px; overflow-y:auto">
+                                    <dt *ngIf="gettingAvailableVariables" class="text-sm-left col-sm-9 offset-sm-1 col-xs-12">
+                                        Fetching available variables <span class="fa fa-spinner loading-spinner"></span>
+                                    </dt>
+                                    <ng-container *ngIf="!gettingAvailableVariables">
+                                        <dt class="text-sm-left col-sm-9 offset-sm-1 col-xs-12" *ngFor="let variable of selectedSiteAvailableVariables">
+                                            {{variable.name}}
+                                            <br/>
+                                            <span style="font-weight:400">Record: {{variable.startDate}} - {{variable.endDate}}</span>
+                                        </dt>
+                                    </ng-container>
+                                    
                                 </dl>
                                 <div class="text-center">
 
-                                    <button class="btn btn-nebula">View Timeseries Data</button>
+                                    <button class="btn btn-nebula" (click)="triggerTimeSeriesAndScrollIntoView(timeSeriesCard)">View Timeseries Data</button>
                                 </div>
                             </ng-container>
                         </div>
@@ -71,11 +87,16 @@
     <div class="row mt-sm-4">
         <div class="col-sm-12">
             <div class="card">
-                <div class="card-header text-center">
+                <div class="card-header text-center" #timeSeriesCard>
                     Timeseries View and Download
                 </div>
                 <div class="card-body table-responsive">
-                    <div class="row">
+                    <div *ngIf="!selectedSiteName" class="row">
+                        <div class="col text-center">
+                            Select a station on the map to get started!
+                        </div>
+                    </div>
+                    <div *ngIf="selectedSiteName" class="row">
                         <div class="col-6">
                             <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
                                 <div *ngIf="errorMessage" class="alert alert-danger">
@@ -87,10 +108,10 @@
                                         Date</label>
                                     <div class="input-group col-lg-6">
                                         <input formControlName="startDate" id="startDate" type="text" ngbDatepicker
-                                            #d="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="d.toggle()"
+                                            #start="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="start.toggle()"
                                             class="form-control">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"
+                                            <button class="btn btn-outline-secondary calendar" (click)="start.toggle()"
                                                 type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
                                         </div>
                                     </div>
@@ -106,10 +127,10 @@
                                         Date</label>
                                     <div class="input-group col-lg-6">
                                         <input formControlName="endDate" id="endDate" type="text" ngbDatepicker
-                                            #d="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="d.toggle()"
+                                            #end="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="end.toggle()"
                                             class="form-control">
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary calendar" (click)="d.toggle()"
+                                            <button class="btn btn-outline-secondary calendar" (click)="end.toggle()"
                                                 type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
                                         </div>
                                     </div>
@@ -178,8 +199,8 @@
                             </form>
                         </div>
                         <div class="col-6">
-                            <div id="vis">
-                                <span *ngIf="!vegaSpec">Select a station to view data</span>
+                            <div id="vis" style="width:100%">
+                                <span *ngIf="!vegaSpec">{{isPerformingAction ? "Loading chart values..." : "Choose some metrics to get started"}}</span>
                             </div>
                         </div>
                     </div>
