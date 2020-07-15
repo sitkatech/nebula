@@ -8,6 +8,8 @@ using Nebula.API.Services.Authorization;
 using Nebula.EFModels.Entities;
 using Nebula.Models.DataTransferObjects;
 using Nebula.Models.DataTransferObjects.Watershed;
+using NetTopologySuite.Features;
+using NetTopologySuite.Operation.Union;
 
 namespace Nebula.API.Controllers
 {
@@ -45,6 +47,18 @@ namespace Nebula.API.Controllers
 
             var boundingBoxDto = Watershed.GetBoundingBoxByWatershedIDs(_dbContext, watershedIDListDto.WatershedIDs);
             return Ok(boundingBoxDto);
+        }
+
+        [HttpGet("watersheds/{watershedName}/get-watershed-mask")]
+        public ActionResult<string> GetWatershedMask([FromRoute] string watershedName)
+        {
+            var geometry = watershedName != "All Watersheds"
+                ? _dbContext.Watershed
+                    .SingleOrDefault(x => x.WatershedName == watershedName)
+                    ?.WatershedGeometry4326
+                : UnaryUnionOp.Union(_dbContext.Watershed.Select(x => x.WatershedGeometry4326));
+
+            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
         }
     }
 }

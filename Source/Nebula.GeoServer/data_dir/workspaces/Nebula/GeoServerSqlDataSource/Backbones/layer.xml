@@ -1,0 +1,23 @@
+<layer>
+  <name>Backbones</name>
+  <id>LayerInfoImpl-e03ed56:173259bf6a1:-7fef</id>
+  <type>VECTOR</type>
+  <defaultStyle>
+    <id>StyleInfoImpl--7024a86b:17325f4a72a:-7ffe</id>
+  </defaultStyle>
+  <styles class="linked-hash-set">
+    <style>
+      <id>StyleInfoImpl--7024a86b:17325f4a72a:-7ffe</id>
+    </style>
+    <style>
+      <id>StyleInfoImpl--7024a86b:17325f4a72a:-7fff</id>
+    </style>
+  </styles>
+  <resource class="featureType">
+    <id>FeatureTypeInfoImpl-e03ed56:173259bf6a1:-7ff0</id>
+  </resource>
+  <attribution>
+    <logoWidth>0</logoWidth>
+    <logoHeight>0</logoHeight>
+  </attribution>
+</layer>
