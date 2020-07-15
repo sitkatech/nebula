@@ -8,7 +8,7 @@ import { CustomCompileService } from 'src/app/shared/services/custom-compile.ser
 import { WfsService } from 'src/app/shared/services/wfs.service';
 import { environment } from 'src/environments/environment';
 import { WatershedService } from 'src/app/services/watershed/watershed.service';
-import { SmartWatershedService } from 'src/app/services/smart-watershed.service.js';
+import { LyraService } from 'src/app/services/lyra.service.js';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
@@ -75,7 +75,7 @@ export class DataDashboardComponent implements OnInit {
     private cdr: ChangeDetectorRef,
     private wfsService: WfsService,
     private watershedService: WatershedService,
-    private smartWatershedService: SmartWatershedService
+    private lyraService: LyraService
   ) {
   }
 
@@ -171,7 +171,7 @@ export class DataDashboardComponent implements OnInit {
 
     forkJoin(
     this.watershedService.getWatershedMask("Aliso Creek"),
-    this.smartWatershedService.getSiteLocationGeoJson()
+    this.lyraService.getSiteLocationGeoJson()
     ).subscribe(([maskString, siteLocationObject]) => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
@@ -318,7 +318,7 @@ export class DataDashboardComponent implements OnInit {
         multiplier: this.timeSeriesForm.get('intervalMultiplier').value
       });
     this.isPerformingAction = true;
-    this.smartWatershedService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
+    this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
       var spec = JSON.parse(result.spec);
       spec.width = "container";
       vegaEmbed('#vis', spec);
@@ -331,7 +331,7 @@ export class DataDashboardComponent implements OnInit {
 
   public getAvailableVariables(station: string) {
     this.gettingAvailableVariables = true;
-    this.smartWatershedService.getAvailableVariables(station).subscribe(result => {
+    this.lyraService.getAvailableVariables(station).subscribe(result => {
       this.selectedSiteAvailableVariables = result._return.sites[0].variables.map(x => {
         return new Object({
           name : x.name,

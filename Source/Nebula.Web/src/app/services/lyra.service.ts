@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class SmartWatershedService {
+export class LyraService {
 
   private baseRoute = 'https://swn-lyra-dev.azurewebsites.net';
 
