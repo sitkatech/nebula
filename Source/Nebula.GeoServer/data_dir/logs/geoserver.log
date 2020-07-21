@@ -5839,3 +5839,18 @@ Caused by: com.microsoft.sqlserver.jdbc.SQLServerException: Broken pipe (Write f
 	at org.apache.commons.dbcp.PoolingDataSource$PoolGuardConnectionWrapper.setAutoCommit(PoolingDataSource.java:328)
 	at org.geotools.jdbc.JDBCFeatureSource.getReaderInternal(JDBCFeatureSource.java:582)
 	... 144 more
+2020-07-21 22:12:26,388 WARN [turbojpeg.TurboJPEGMapResponse] - The turbo jpeg encoder is available for usage
+2020-07-21 22:12:30,667 WARN [gce.imagemosaic] - Unable to set ordering between tiff readers spi
+2020-07-21 22:12:36,466 WARN [servlet.BaseMapServlet] - Cannot delete file:/usr/local/tomcat/work/Catalina/localhost/geoserver/wicket-filestore
+2020-07-21 22:16:26,225 WARN [operation.projection] - Possible use of "Popular Visualisation Pseudo Mercator" projection outside its valid area.
+Longitude 2147483287°00.0'W is out of range (±180°).
+2020-07-21 22:16:26,226 WARN [operation.projection] - Possible use of "Popular Visualisation Pseudo Mercator" projection outside its valid area.
+Longitude 2147483287°00.0'W is out of range (±180°).
+2020-07-21 22:16:26,226 WARN [operation.projection] - Possible use of "Popular Visualisation Pseudo Mercator" projection outside its valid area.
+Longitude 2147483287°00.0'W is out of range (±180°).
+2020-07-21 22:16:26,226 WARN [operation.projection] - Possible use of "Popular Visualisation Pseudo Mercator" projection outside its valid area.
+Longitude 2147483287°00.0'W is out of range (±180°).
+2020-07-21 22:16:26,235 WARN [operation.projection] - Possible use of "Popular Visualisation Pseudo Mercator" projection outside its valid area.
+Longitude 2147483287°00.0'W is out of range (±180°).
+2020-07-21 22:16:26,235 WARN [operation.projection] - Possible use of "Popular Visualisation Pseudo Mercator" projection outside its valid area.
+Longitude 2147483287°00.0'W is out of range (±180°).

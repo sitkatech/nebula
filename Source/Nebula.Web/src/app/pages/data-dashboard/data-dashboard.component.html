@@ -27,7 +27,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header text-center">
-                    Gage Selection
+                    Station Selection
                 </div>
                 <div class="card-body table-responsive">
                     <div class="row">
@@ -41,8 +41,8 @@
                             </ng-container>
                             <ng-container *ngIf="selectedSiteName">
                                 <dl class="row">
-                                    <dt class="text-sm-left col-sm-5 col-xs-12">Selected Site:</dt>
-                                    <dd class="col-sm-7 col-xs-12">
+                                    <dt class="text-sm-left col-sm-6 col-xs-12">Selected Station:</dt>
+                                    <dd class="col-sm-6 col-xs-12">
                                         {{selectedSiteName}}
                                     </dd>
                                 </dl>
@@ -73,7 +73,7 @@
             </div>
         </div>
     </div>
-    <div class="row mt-sm-4">
+    <!-- <div class="row mt-sm-4">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header text-center">
@@ -83,7 +83,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
     <div class="row mt-sm-4">
         <div class="col-sm-12">
             <div class="card">
@@ -199,8 +199,9 @@
                             </form>
                         </div>
                         <div class="col-6">
+                            <span *ngIf="!vegaSpec && !errorOccurred">{{isPerformingAction ? "Loading chart values..." : "Choose some metrics to get started"}}</span>
+                            <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and try again.</span>
                             <div id="vis" style="width:100%">
-                                <span *ngIf="!vegaSpec">{{isPerformingAction ? "Loading chart values..." : "Choose some metrics to get started"}}</span>
                             </div>
                         </div>
                     </div>

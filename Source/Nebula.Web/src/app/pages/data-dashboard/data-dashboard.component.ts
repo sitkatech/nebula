@@ -12,6 +12,7 @@ import { LyraService } from 'src/app/services/lyra.service.js';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
+import { url } from 'inspector';
 
 declare var $ : any;
 declare var vegaEmbed : any;
@@ -62,12 +63,17 @@ export class DataDashboardComponent implements OnInit {
     intervalMultiplier: new FormControl(1, [Validators.min(1), Validators.max(2147483647)])
   });
 
+  public timeSeriesFormDefault = this.timeSeriesForm.value;
+
   public areMetricsCollapsed: boolean = true;
   public siteLocationLayer: any;
 
   public selectedSiteAvailableVariables: Object[] = new Array<Object>();
   public selectedSiteStation: string = null;
   public selectedSiteName: string =  null;
+  iconDefault: any;
+  selectedIconDefault: any;
+  errorOccurred: boolean;
 
   constructor(
     private appRef: ApplicationRef,
@@ -209,15 +215,26 @@ export class DataDashboardComponent implements OnInit {
         return inside;
       }); 
 
-      this.setupDefaultMarker();
+      this.setupMarkers();
 
       this.siteLocationLayer = L.geoJSON(alisoStations, {
         onEachFeature: function  (feature, layer) {
           layer.bindPopup('<p>'+feature.properties.stname+'</p>');
           layer.on('click', () => {
+            this.errorOccurred = false;
+            if (this.currentlySelectedLayer) {
+              this.currentlySelectedLayer.setIcon(this.iconDefault);
+            }
+            layer.setIcon(this.selectedIconDefault);
+            this.currentlySelectedLayer = layer;
             this.selectedSiteName = feature.properties.stname;
             this.getAvailableVariables(feature.properties.station);
             this.selectedSiteStation = feature.properties.station;
+            this.timeSeriesForm.reset(this.timeSeriesFormDefault);
+            if (this.vegaSpec) {
+              this.vegaSpec = null;
+              document.querySelector("#vis").innerHTML = "";
+            }  
           });
         }.bind(this)
       });
@@ -321,9 +338,16 @@ export class DataDashboardComponent implements OnInit {
       });
     this.isPerformingAction = true;
     this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
-      var spec = JSON.parse(result.spec);
-      spec.width = "container";
-      vegaEmbed('#vis', spec);
+      if (result.hasOwnProperty('spec')) {
+        var spec = JSON.parse(result.spec);
+        spec.width = "container";
+        this.vegaSpec = spec;
+        vegaEmbed('#vis', spec);
+      }
+      else {
+        this.errorOccurred = true;
+        console.log(result);
+      }
       this.isPerformingAction = false;
     },
     error => {
@@ -379,20 +403,24 @@ export class DataDashboardComponent implements OnInit {
   //Known bug in leaflet that during bundling the default image locations can get messed up
   //https://stackoverflow.com/questions/41144319/leaflet-marker-not-found-production-env
   //We could do some kind of custom marker which would require less extra, but this should work for now
-  public setupDefaultMarker() {
-    const iconUrl = 'assets/marker-icon.png';
-      const shadowUrl = 'assets/marker-shadow.png';
-      const iconRetinaUrl = 'assets/marker-icon-2x.png';
-      const iconDefault = L.icon({
-      iconRetinaUrl,
-      iconUrl,
-      shadowUrl,
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      tooltipAnchor: [16, -28],
-      shadowSize: [41, 41]
+  public setupMarkers() {   
+    this.iconDefault = this.buildMarker('assets/marker-icon.png', 'assets/marker-icon-2x.png');
+    this.selectedIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-selected.png', '/assets/main/map-icons/marker-icon-2x-selected.png');
+
+    L.Marker.prototype.options.icon = this.iconDefault;
+  }
+
+  public buildMarker(iconUrl :string, iconRetinaUrl: string): any{
+    const shadowUrl = 'assets/marker-shadow.png';
+    return L.icon({
+        iconRetinaUrl,
+        iconUrl,
+        shadowUrl,
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        tooltipAnchor: [16, -28],
+        shadowSize: [41, 41]
       });
-      L.Marker.prototype.options.icon = iconDefault;
   }
 }
