@@ -1,6 +1,9 @@
 MERGE INTO dbo.FieldDefinitionType AS Target
 USING (VALUES
-(1, 'Name', 'Name')
+(1, 'Name', 'Name'),
+(2, 'AggregationMode', 'Aggregation Mode'),
+(3, 'TimeInterval', 'Time Interval'),
+(4, 'IntervalMultiplier', 'Interval Multiplier')
 )
 AS Source (FieldDefinitionTypeID, FieldDefinitionTypeName, FieldDefinitionTypeDisplayName)
 ON Target.FieldDefinitionTypeID = Source.FieldDefinitionTypeID

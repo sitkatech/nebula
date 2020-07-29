@@ -13,9 +13,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { url } from 'inspector';
+import { SiteVariable } from 'src/app/shared/models/site-variable';
+import { SelectableVariableType } from 'src/app/shared/models/enums/selectable-variable-type.enum';
 
-declare var $ : any;
-declare var vegaEmbed : any;
+declare var $: any;
+declare var vegaEmbed: any;
 
 @Component({
   selector: 'nebula-data-dashboard',
@@ -25,6 +27,8 @@ declare var vegaEmbed : any;
 export class DataDashboardComponent implements OnInit {
 
   @ViewChild("mapDiv") mapElement: ElementRef;
+
+  public SelectableVariableType = SelectableVariableType;
 
   public richTextTypeID = CustomRichTextType.DataDashboard;
   public defaultMapZoom = 12;
@@ -42,38 +46,43 @@ export class DataDashboardComponent implements OnInit {
   public tileLayers: { [key: string]: any } = {};
   public overlayLayers: { [key: string]: any } = {};
   public maskLayer: any;
-
+  public siteLocationLayer: any;
   public wmsParams: any;
   public currentMask: L.Layers;
   public layerControlOpen: boolean = false;
+  public iconDefault: any;
+  public selectedIconDefault: any;
+
   public vegaSpec: Object = null;
 
-  public hydstraAggregationModes = [{display:"Total", value:"tot"}, {display:"Average", value:"mean"}, {display:"Maximum", value:"max"}, {display:"Minimum", value:"min"}];
-  public hydstraIntervals = [{display:"Hourly", value:"hour"}, {display:"Daily", value:"day"}, {display:"Monthly", value:"month"}, {display:"Yearly", value:"year"}];
-  public errorMessage: string = null;
-  public isPerformingAction: boolean = false;
+  public hydstraAggregationModes = [{ display: "Total", value: "tot" }, { display: "Average", value: "mean" }, { display: "Maximum", value: "max" }, { display: "Minimum", value: "min" }];
+  public hydstraIntervals = [{ display: "Hourly", value: "hour" }, { display: "Daily", value: "day" }, { display: "Monthly", value: "month" }, { display: "Yearly", value: "year" }];
   public currentDate = new Date();
-  public gettingAvailableVariables: boolean = false;
 
   public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({year:this.currentDate.getUTCFullYear()-5, month:this.currentDate.getUTCMonth(), day:this.currentDate.getUTCDate()}, [Validators.required]),
-    endDate: new FormControl({year:this.currentDate.getUTCFullYear(), month:this.currentDate.getUTCMonth(), day:this.currentDate.getUTCDate()}, [Validators.required]),
-    interval: new FormControl(this.hydstraIntervals[0].value, [Validators.required]),
+    record: new FormControl('', [Validators.required]),
+    startDate: new FormControl({ year: this.currentDate.getUTCFullYear() - 5, month: this.currentDate.getUTCMonth(), day: this.currentDate.getUTCDate() }, [Validators.required]),
+    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth(), day: this.currentDate.getUTCDate() }, [Validators.required]),
+    timeInterval: new FormControl(this.hydstraIntervals[1].value, [Validators.required]),
     aggregationMode: new FormControl(this.hydstraAggregationModes[0].value),
     intervalMultiplier: new FormControl(1, [Validators.min(1), Validators.max(2147483647)])
   });
-
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
-  public areMetricsCollapsed: boolean = true;
-  public siteLocationLayer: any;
-
-  public selectedSiteAvailableVariables: Object[] = new Array<Object>();
+  public selectedSiteAvailableVariables: SiteVariable[] = new Array<SiteVariable>();
+  public selectedSiteRainfallVariables: SiteVariable[] = new Array<SiteVariable>();
+  public selectedSiteDischargeVariables: SiteVariable[] = new Array<SiteVariable>();
   public selectedSiteStation: string = null;
-  public selectedSiteName: string =  null;
-  iconDefault: any;
-  selectedIconDefault: any;
-  errorOccurred: boolean;
+  public selectedSiteName: string = null;
+  public variableListToDisplay: SiteVariable[];
+
+  public errorOccurred: boolean;
+  public dataTypeSelected: string = null;
+  public canSwitchDataTypeSelected: boolean = false;
+  public updateVariableList: boolean = true;
+  public errorMessage: string = null;
+  public isPerformingAction: boolean = false;
+  public gettingAvailableVariables: boolean = false;
 
   constructor(
     private appRef: ApplicationRef,
@@ -156,7 +165,7 @@ export class DataDashboardComponent implements OnInit {
   }
 
   public initializeMap(): void {
-    
+
     const mapOptions: L.MapOptions = {
       minZoom: 6,
       maxZoom: 22,
@@ -166,7 +175,7 @@ export class DataDashboardComponent implements OnInit {
         this.overlayLayers["<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"],
       ],
       gestureHandling: true,
-      loadingControl:true
+      loadingControl: true
 
     } as L.MapOptions;
 
@@ -176,8 +185,8 @@ export class DataDashboardComponent implements OnInit {
     this.initializeMapEvents();
 
     forkJoin(
-    this.watershedService.getWatershedMask("Aliso Creek"),
-    this.lyraService.getSiteLocationGeoJson()
+      this.watershedService.getWatershedMask("Aliso Creek"),
+      this.lyraService.getSiteLocationGeoJson()
     ).subscribe(([maskString, siteLocationObject]) => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
@@ -198,28 +207,28 @@ export class DataDashboardComponent implements OnInit {
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();
 
-      let maskLayerPoints= maskString.features[0].geometry.coordinates[0];
+      let maskLayerPoints = maskString.features[0].geometry.coordinates[0];
       let alisoStations = siteLocationObject._return.features.filter(feature => {
         let lat = feature.geometry.coordinates[1];
         let lng = feature.geometry.coordinates[0];
 
         let inside = false;
         for (var i = 0, j = maskLayerPoints.length - 1; i < maskLayerPoints.length; j = i++) {
-            var xi = maskLayerPoints[i][1], yi = maskLayerPoints[i][0];
-            var xj = maskLayerPoints[j][1], yj = maskLayerPoints[j][0];
+          var xi = maskLayerPoints[i][1], yi = maskLayerPoints[i][0];
+          var xj = maskLayerPoints[j][1], yj = maskLayerPoints[j][0];
 
-            var intersect = ((yi > lng) != (yj > lng))
-                && (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
-            if (intersect) inside = !inside;
+          var intersect = ((yi > lng) != (yj > lng))
+            && (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
+          if (intersect) inside = !inside;
         }
         return inside;
-      }); 
+      });
 
       this.setupMarkers();
 
       this.siteLocationLayer = L.geoJSON(alisoStations, {
-        onEachFeature: function  (feature, layer) {
-          layer.bindPopup('<p>'+feature.properties.stname+'</p>');
+        onEachFeature: function (feature, layer) {
+          layer.bindPopup('<p>' + feature.properties.stname + '</p>');
           layer.on('click', () => {
             this.errorOccurred = false;
             if (this.currentlySelectedLayer) {
@@ -234,7 +243,8 @@ export class DataDashboardComponent implements OnInit {
             if (this.vegaSpec) {
               this.vegaSpec = null;
               document.querySelector("#vis").innerHTML = "";
-            }  
+            }
+            this.updateVariableList = true;
           });
         }.bind(this)
       });
@@ -289,8 +299,8 @@ export class DataDashboardComponent implements OnInit {
     })
 
     $(".leaflet-control-layers").hover(
-      () => {this.layerControlOpen = true;},
-      () => {this.layerControlOpen = false;}
+      () => { this.layerControlOpen = true; },
+      () => { this.layerControlOpen = false; }
     );
   }
 
@@ -315,75 +325,113 @@ export class DataDashboardComponent implements OnInit {
   }
 
   public onSubmit() {
-    if(this.timeSeriesForm.valid) {
-      this.getTimeSeriesData();
-    }
+    this.getTimeSeriesData();
   }
 
   public getTimeSeriesData() {
-    let swnTimeSeriesRequestDto = new Object(
-      {
-        site:this.selectedSiteStation,
-        //temporary variable, this should be a dropdown
-        variable:11,
-        //temporary variable, this should be a dropdown
-        datasource:"A",
-        start_date:this.getDateFromTimeSeriesFormDateObject('startDate'),
-        end_date:this.getDateFromTimeSeriesFormDateObject('endDate'),
-        start_time: "00:00:00",
-        end_time: "00:00:00",
-        data_type:this.timeSeriesForm.get('aggregationMode').value,
-        interval: this.timeSeriesForm.get('interval').value,
-        multiplier: this.timeSeriesForm.get('intervalMultiplier').value
+    if (this.timeSeriesForm.valid) {
+      let swnTimeSeriesRequestDto = new Object(
+        {
+          site: this.selectedSiteStation,
+          variable: this.timeSeriesForm.get('record').value,
+          //temporary variable, this should be a dropdown
+          datasource: "A",
+          start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
+          end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
+          start_time: "00:00:00",
+          end_time: "00:00:00",
+          data_type: this.timeSeriesForm.get('aggregationMode').value,
+          interval: this.timeSeriesForm.get('timeInterval').value,
+          multiplier: this.timeSeriesForm.get('intervalMultiplier').value
+        });
+      this.isPerformingAction = true;
+      this.errorOccurred = false;
+      this.vegaSpec = null;
+      this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
+        if (result.hasOwnProperty('spec')) {
+          var spec = JSON.parse(result.spec);
+          spec.width = "container";
+          this.vegaSpec = spec;
+          vegaEmbed('#vis', spec);
+        }
+        else {
+          this.errorOccurred = true;
+        }
+        this.isPerformingAction = false;
+      },
+        error => {
+          this.errorOccurred = true;
+          this.isPerformingAction = false;
+        })
+    }
+    else {
+      Object.keys(this.timeSeriesForm.controls).forEach(field => {
+        const control = this.timeSeriesForm.get(field);
+        control.markAsTouched({ onlySelf: true });
       });
-    this.isPerformingAction = true;
-    this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
-      if (result.hasOwnProperty('spec')) {
-        var spec = JSON.parse(result.spec);
-        spec.width = "container";
-        this.vegaSpec = spec;
-        vegaEmbed('#vis', spec);
-      }
-      else {
-        this.errorOccurred = true;
-        console.log(result);
-      }
-      this.isPerformingAction = false;
-    },
-    error => {
-      this.isPerformingAction = false;
-    })
+    }
   }
 
   public getAvailableVariables(station: string) {
     this.gettingAvailableVariables = true;
     this.lyraService.getAvailableVariables(station).subscribe(result => {
-      this.selectedSiteAvailableVariables = result._return.sites[0].variables.map(x => {
-        return new Object({
-          name : x.name,
-          startDate : new Date(`${x.period_start.slice(0, 4)}-${x.period_start.slice(4, 6)}-${x.period_start.slice(6, 8)}`).toLocaleDateString(),
+      this.selectedSiteAvailableVariables = result._return.sites[0].variables.filter(x => Object.keys(SelectableVariableType).includes(x.name)).map(x => {
+        return new SiteVariable({
+          displayName: `${x.name} - ${x.variable}`,
+          name: `${x.name}`,
+          variable: `${x.variable}`,
+          startDate: new Date(`${x.period_start.slice(0, 4)}-${x.period_start.slice(4, 6)}-${x.period_start.slice(6, 8)}`).toLocaleDateString(),
           endDate: new Date(`${x.period_end.slice(0, 4)}-${x.period_end.slice(4, 6)}-${x.period_end.slice(6, 8)}`).toLocaleDateString()
         })
       });
+      this.selectedSiteRainfallVariables = this.selectedSiteAvailableVariables.filter(x => x.name === SelectableVariableType.Rainfall);
+      this.selectedSiteDischargeVariables = this.selectedSiteAvailableVariables.filter(x => x.name === SelectableVariableType.Discharge);
+      this.canSwitchDataTypeSelected = this.selectedSiteDischargeVariables.length > 0 && this.selectedSiteRainfallVariables.length > 0;
+      this.determineInitialDataTypeSelected();
       this.gettingAvailableVariables = false;
     },
-    error => {
-      this.gettingAvailableVariables = false;
-    })
+      error => {
+        this.gettingAvailableVariables = false;
+      })
   }
 
-  public getDateFromTimeSeriesFormDateObject(formFieldName : string) : string {
+  public determineInitialDataTypeSelected() {
+    if (this.selectedSiteRainfallVariables.length == 0 && this.selectedSiteDischargeVariables.length == 0) {
+      return;
+    }
+
+    this.dataTypeSelected = this.selectedSiteRainfallVariables.length > 0 ? SelectableVariableType.Rainfall : SelectableVariableType.Discharge
+    this.getSelectedSiteVariableList();
+  }
+
+  public toggleDataTypeSelected(type: string) {
+    if (!this.canSwitchDataTypeSelected) {
+      return;
+    }
+
+    this.dataTypeSelected = type;
+    this.updateVariableList = true;
+    this.getSelectedSiteVariableList();
+  }
+
+  public getSelectedSiteVariableList() {
+    this.variableListToDisplay = this.dataTypeSelected == SelectableVariableType.Rainfall ? this.selectedSiteRainfallVariables : this.selectedSiteDischargeVariables;
+    this.timeSeriesForm.controls.record.setValue(this.variableListToDisplay[0].variable);
+    this.updateVariableList = false;
+  }
+
+  public getDateFromTimeSeriesFormDateObject(formFieldName: string): string {
     let date = this.timeSeriesForm.get(formFieldName).value;
     return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
   }
 
-  public catchExtraSymbols(event : KeyboardEvent) : void {
+  public catchExtraSymbols(event: KeyboardEvent): void {
     if (event.code === "KeyE" || event.code === "Equal" || event.code === "Minus" || event.code === "Plus") {
       event.preventDefault();
     }
   }
 
-  public catchPastedSymbols(event : any) : void {
+  public catchPastedSymbols(event: any): void {
     let val = event.clipboardData.getData('text/plain');
     if (val && (val.includes("+") || val.includes("-") || val.includes("e") || val.includes("E"))) {
       val = val.replace(/\+|\-|e|E/g, '');
@@ -391,36 +439,45 @@ export class DataDashboardComponent implements OnInit {
     }
   }
 
-  public triggerTimeSeriesAndScrollIntoView(el: HTMLElement) {
+  public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
     this.scroll(el);
+    this.toggleDataTypeSelected(variable.name);
+    this.timeSeriesForm.controls.record.setValue(variable.variable);
+    this.timeSeriesForm.controls.startDate.setValue(this.formatDateForNgbDatepicker(variable.startDate));
+    this.timeSeriesForm.controls.endDate.setValue(this.formatDateForNgbDatepicker(variable.endDate));
     this.getTimeSeriesData();
   }
 
-  public scroll(el : HTMLElement) {
+  public formatDateForNgbDatepicker(date: Date): any {
+    let dateToChange = new Date(date);
+    return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
+  }
+
+  public scroll(el: HTMLElement) {
     el.scrollIntoView();
   }
 
   //Known bug in leaflet that during bundling the default image locations can get messed up
   //https://stackoverflow.com/questions/41144319/leaflet-marker-not-found-production-env
   //We could do some kind of custom marker which would require less extra, but this should work for now
-  public setupMarkers() {   
+  public setupMarkers() {
     this.iconDefault = this.buildMarker('assets/marker-icon.png', 'assets/marker-icon-2x.png');
     this.selectedIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-selected.png', '/assets/main/map-icons/marker-icon-2x-selected.png');
 
     L.Marker.prototype.options.icon = this.iconDefault;
   }
 
-  public buildMarker(iconUrl :string, iconRetinaUrl: string): any{
+  public buildMarker(iconUrl: string, iconRetinaUrl: string): any {
     const shadowUrl = 'assets/marker-shadow.png';
     return L.icon({
-        iconRetinaUrl,
-        iconUrl,
-        shadowUrl,
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        tooltipAnchor: [16, -28],
-        shadowSize: [41, 41]
-      });
+      iconRetinaUrl,
+      iconUrl,
+      shadowUrl,
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41]
+    });
   }
 }
