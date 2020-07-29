@@ -54,18 +54,21 @@
                                         Fetching available variables <span class="fa fa-spinner loading-spinner"></span>
                                     </dt>
                                     <ng-container *ngIf="!gettingAvailableVariables">
-                                        <dt class="text-sm-left col-sm-9 offset-sm-1 col-xs-12" *ngFor="let variable of selectedSiteAvailableVariables">
-                                            {{variable.name}}
-                                            <br/>
-                                            <span style="font-weight:400">Record: {{variable.startDate}} - {{variable.endDate}}</span>
+                                        <dt class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1" *ngFor="let variable of selectedSiteAvailableVariables">
+                                            <div class="row no-gutters">
+                                                <div class="col-9">
+                                                    {{variable.displayName}}
+                                                    <br/>
+                                                    <span style="font-weight:400">Record: {{variable.startDate}} - {{variable.endDate}}</span>
+                                                </div>
+                                                <div class="col-3 align-self-center text-center">
+                                                    <button class="btn btn-nebula" (click)="triggerTimeSeriesWithVariableValuesAndScrollIntoView(timeSeriesCard, variable)">View</button>
+                                                </div>
+                                            </div>
                                         </dt>
                                     </ng-container>
                                     
                                 </dl>
-                                <div class="text-center">
-
-                                    <button class="btn btn-nebula" (click)="triggerTimeSeriesAndScrollIntoView(timeSeriesCard)">View Timeseries Data</button>
-                                </div>
                             </ng-container>
                         </div>
                     </div>
@@ -96,11 +99,47 @@
                             Select a station on the map to get started!
                         </div>
                     </div>
-                    <div *ngIf="selectedSiteName" class="row">
+                    <div *ngIf="selectedSiteName && gettingAvailableVariables" class="row">
+                        <div class="col text-center">
+                            Fetching available variables <span class="fa fa-spinner loading-spinner"></span>
+                        </div>
+                    </div>
+                    <div *ngIf="selectedSiteName && !gettingAvailableVariables" class="row">
                         <div class="col-6">
                             <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
                                 <div *ngIf="errorMessage" class="alert alert-danger">
                                     {{errorMessage}}
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="type"
+                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">Type
+                                    </label>
+                                    <div class="col-lg-6" id="type">
+                                        <div class="btn-group btn-group-toggle" [ngClass]="{'display-only':canSwitchDataTypeSelected == false}">
+                                            <label class="btn btn-toggle btn-sm" [ngClass]="{'active':dataTypeSelected === SelectableVariableType.Rainfall}" placement="top">
+                                              <input type="radio" name="units" id="chart-icon" (click)="toggleDataTypeSelected(SelectableVariableType.Rainfall)" [disabled]="canSwitchDataTypeSelected == false">Rainfall
+                                            </label>
+                                            <label class="btn btn-toggle btn-sm" [ngClass]="{'active':dataTypeSelected === SelectableVariableType.Discharge}" placement="top">
+                                              <input type="radio" name="units" id="table-icon" (click)="toggleDataTypeSelected(SelectableVariableType.Discharge)" [disabled]="canSwitchDataTypeSelected == false">Discharge
+                                            </label>
+                                          </div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="record"
+                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">Record
+                                    </label>
+                                    <div class="col-lg-6">
+                                        <select formControlName="record" id="record"
+                                            class="form-control">
+                                            <option *ngFor="let siteVariable of variableListToDisplay" [value]="siteVariable.variable">
+                                                {{siteVariable.variable}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div *ngIf="f.record.touched && f.record.invalid" class="alert alert-danger">
+                                        <div *ngIf="f.record.errors.required">Record is required.</div>
+                                    </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="startDate"
@@ -142,7 +181,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="aggregationMode"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">Aggregation Mode
+                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end"><field-definition [fieldDefinitionType]="'AggregationMode'"></field-definition>
                                     </label>
                                     <div class="col-lg-6">
                                         <select formControlName="aggregationMode" id="aggregationMode"
@@ -154,11 +193,11 @@
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="interval"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">Interval
+                                    <label for="timeInterval"
+                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end"><field-definition [fieldDefinitionType]="'TimeInterval'"></field-definition>
                                     </label>
                                     <div class="col w-100">
-                                        <select formControlName="interval" id="interval" class="form-control">
+                                        <select formControlName="timeInterval" id="timeInterval" class="form-control">
                                             <option *ngFor="let interval of hydstraIntervals" [value]="interval.value">
                                                 {{interval.display}}
                                             </option>
@@ -167,7 +206,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="intervalMultiplier"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">Interval Multiplier
+                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end"><field-definition [fieldDefinitionType]="'IntervalMultiplier'"></field-definition>
                                     </label>
                                     <div class="col w-100">
                                         <div class="row">
@@ -199,9 +238,12 @@
                             </form>
                         </div>
                         <div class="col-6">
-                            <span *ngIf="!vegaSpec && !errorOccurred">{{isPerformingAction ? "Loading chart values..." : "Choose some metrics to get started"}}</span>
+                            <ngContainer *ngIf="!vegaSpec && !errorOccurred">
+                                <span *ngIf="isPerformingAction">Loading chart values <span class="fa fa-spinner loading-spinner"></span></span>
+                                <span *ngIf="!isPerformingAction && !gettingAvailableVariables">Choose some metrics to get started</span>
+                            </ngContainer>
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and try again.</span>
-                            <div id="vis" style="width:100%">
+                            <div [ngStyle]="{'visibility':vegaSpec ? '' : 'hidden'}" id="vis" style="width:100%">
                             </div>
                         </div>
                     </div>
