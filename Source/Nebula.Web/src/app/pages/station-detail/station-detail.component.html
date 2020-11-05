@@ -1,0 +1,82 @@
+<div class="breadcrumb-container">
+    <div class="container">
+        <nav aria-label="breadcrumb" *ngIf="station">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item" aria-current="page">
+                    <a routerLink="/stations">Stations</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {{getStationName()}}
+                </li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="container mt-sm-4" *ngIf="station">
+    <h2 class="d-inline-block">
+        {{getStationName()}}
+    </h2>
+    <app-alert-display></app-alert-display>
+    <div class="row mt-4">
+        <div class="col-sm-12 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Basics
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="text-sm-right col-sm-6 col-xs-12">
+                            Station Name
+                        </dt>
+                        <dd class="col-sm-6 col-xs-12">
+                            {{getStationName()}}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Variables
+                </div>
+                <div class="card-body table-responsive" style="max-height: 600px; overflow-y:auto">
+                    <ng-template #noVariables>
+                        <p>No Variables recorded for this station.</p>
+                    </ng-template>
+                    <table class="table table-condensed table-striped" *ngIf="variables.length > 0 else noVariables">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th style="text-align: right">Total Acre-Inches</th>
+                                <th style="text-align: right">Beg Meter Reading</th>
+                                <th style="text-align: right">End Meter Reading</th>
+                                <th style="text-align: right">GPM</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let variable of variables">
+                                <td style="border: 0 none; white-space: nowrap">
+                                    {{ withdrawal.WithdrawalDate | date: 'M/dd/yyyy' }}</td>
+                                <td style="border: 0 none">{{withdrawal.WithdrawalName}}</td>
+                                <td style="border: 0 none; white-space: nowrap; text-align: right">
+                                    {{ withdrawal.TotalAcreInches | number: '1.1-4'}}
+                                </td>
+                                <td style="border: 0 none; white-space: nowrap; text-align: right">
+                                    {{ withdrawal.BeginningMeterReading | number: '1.1-4'}}
+                                </td>
+                                <td style="border: 0 none; white-space: nowrap; text-align: right">
+                                    {{ withdrawal.EndingMeterReading | number: '1.1-4'}}
+                                </td>
+                                <td style="border: 0 none; white-space: nowrap; text-align: right">
+                                    {{ withdrawal.WithdrawalDetailsGPM | number: '1.1-4'}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

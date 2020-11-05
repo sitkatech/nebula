@@ -16,11 +16,23 @@ export class LyraService {
     return this.http.get(route);
   }
 
-  getAvailableVariables(site: string): Observable<any> {
+  getAvailableVariables(site?: string): Observable<any> {
     let route = `${this.baseRoute}/api/hydstra/sites/variables`;
     let params = new HttpParams();
-    params = params.append('site_list', site);
+    if (site)
+    {
+      params = params.append('site_list', site);
+    }
     params = params.append('datasource', 'A');
+    return this.http.get(route, {params: params});
+  }
+
+  getStationsInfo(site?: string): Observable<any> {
+    let route = `${this.baseRoute}/api/hydstra/sites/info`;
+    let params =  new HttpParams();
+    if (site) {
+      params = params.append('site', site);
+    }
     return this.http.get(route, {params: params});
   }
 

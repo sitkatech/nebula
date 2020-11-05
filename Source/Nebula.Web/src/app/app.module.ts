@@ -40,6 +40,8 @@ import { FieldDefinitionEditComponent } from './pages/field-definition-edit/fiel
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpErrorInterceptor } from './shared/interceptors/httpErrorInterceptor';
 import { DataDashboardComponent } from './pages/data-dashboard/data-dashboard.component';
+import { StationListComponent } from './pages/station-list/station-list.component';
+import { StationDetailComponent } from './pages/station-detail/station-detail.component';
 
 export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init();
@@ -64,6 +66,8 @@ export function init_app(appLoadService: AppInitService) {
     FieldDefinitionListComponent,
     FieldDefinitionEditComponent,
     DataDashboardComponent,
+    StationListComponent,
+    StationDetailComponent,
   ],
   imports: [
     AppRoutingModule,
