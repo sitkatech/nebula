@@ -223,7 +223,7 @@ As an administrator of the {_nebulaConfiguration.PlatformShortName}, you can ass
         {
             mailMessage.IsBodyHtml = true;
             mailMessage.From = smtpClient.GetDefaultEmailFrom();
-            SitkaSmtpClientService.AddReplyToEmail(mailMessage);
+            mailMessage.ReplyToList.Add(!String.IsNullOrWhiteSpace(_nebulaConfiguration.LeadOrganizationEmail) ? _nebulaConfiguration.LeadOrganizationEmail : "donotreply@sitkatech.com");
             smtpClient.Send(mailMessage);
         }
     }
