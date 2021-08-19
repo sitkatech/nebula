@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
@@ -40,9 +40,16 @@ import { FieldDefinitionEditComponent } from './pages/field-definition-edit/fiel
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpErrorInterceptor } from './shared/interceptors/httpErrorInterceptor';
 import { DataDashboardComponent } from './pages/data-dashboard/data-dashboard.component';
+import { environment } from 'src/environments/environment';
+import { AppInsightsService } from './shared/services/app-insights.service';
+import { GlobalErrorHandlerService } from './shared/services/global-error-handler.service';
 
-export function init_app(appLoadService: AppInitService) {
-  return () => appLoadService.init();
+export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
+  return () => appLoadService.init().then(() => {
+    if (environment.appInsightsInstrumentationKey) {
+      appInsightsService.initAppInsights();
+    }
+  });
 }
 
 @NgModule({
@@ -85,9 +92,13 @@ export function init_app(appLoadService: AppInitService) {
   providers: [
     CookieService,
     AppInitService,
-    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService], multi: true },
+    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService, AppInsightsService], multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandlerService
+    },
     DecimalPipe, CurrencyPipe, DatePipe
   ],
   entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],

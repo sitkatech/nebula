@@ -72,4 +72,8 @@ export class DynamicEnvironment {
     public get leadOrganizationLogoFilename(){
         return window.config.leadOrganizationLogoFilename;
     }
+
+    public get appInsightsInstrumentationKey() {
+        return window.config.appInsightsInstrumentationKey;
+    }
 }

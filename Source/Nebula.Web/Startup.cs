@@ -88,6 +88,7 @@ namespace Nebula.Web
             LeadOrganizationHomeUrl = configuration["LeadOrganizationHomeUrl"];
             FaviconFilename = configuration["FaviconFilename"];
             LeadOrganizationLogoFilename = configuration["LeadOrganizationLogoFilename"];
+            AppInsightsInstrumentationKey =  configuration["AppInsightsInstrumentationKey"];
         }
 
         [JsonProperty("production")]
@@ -122,6 +123,8 @@ namespace Nebula.Web
         public string FaviconFilename {get; set;}
         [JsonProperty("leadOrganizationLogoFilename")]
         public string LeadOrganizationLogoFilename { get; set;}
+         [JsonProperty("appInsightsInstrumentationKey")]
+        public string AppInsightsInstrumentationKey {get; set;}
     }
 
     public class KeystoneAuthConfigurationDto
