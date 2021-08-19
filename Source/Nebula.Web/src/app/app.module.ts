@@ -94,7 +94,6 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     AppInitService,
     { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService, AppInsightsService], multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
     {
       provide: ErrorHandler,
       useClass: GlobalErrorHandlerService

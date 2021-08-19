@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Nebula.Models.DataTransferObjects;
 
@@ -24,7 +25,7 @@ namespace Nebula.API.Controllers
 
         [HttpPost("/users/invite")]
         [AdminFeature]
-        public IActionResult InviteUser([FromBody] UserInviteDto inviteDto)
+        public async Task<IActionResult> InviteUser([FromBody] UserInviteDto inviteDto)
         {
             if (inviteDto.RoleID.HasValue)
             {
@@ -53,7 +54,7 @@ namespace Nebula.API.Controllers
                 RedirectURL = _nebulaConfiguration.KEYSTONE_REDIRECT_URL
             };
 
-            var response = _keystoneService.Invite(inviteModel);
+            var response = await _keystoneService.Invite(inviteModel);
             if (response.StatusCode != HttpStatusCode.OK || response.Error != null)
             {
                 ModelState.AddModelError("Email", $"There was a problem inviting the user to Keystone: {response.Error.Message}.");

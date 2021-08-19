@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiRouteService } from '../api-route/api-route.service';
 import { Router } from '@angular/router';
@@ -44,7 +44,8 @@ export class ApiService {
     }
 
     getFromApi(relativeRoute: string): Observable<any> {
-
+        let token = this.oauthService.getAccessToken();
+        const headers =  new HttpHeaders().set('Authorization', `Bearer ${token}`);
         this.busyService.setBusy(true);
 
         if (relativeRoute.startsWith('/')) {
@@ -53,7 +54,7 @@ export class ApiService {
 
         const baseRoute = this.apiRoute.getRoute();
         const route = `${baseRoute}/${relativeRoute}`;
-        const result = this.http.get(route)
+        const result = this.http.get(route, { headers: headers })
             .pipe(
                 map((response: any) => {
                     return this.handleResponse(response);
@@ -124,7 +125,7 @@ export class ApiService {
         if (!supressErrorMessage) {
             if (error && (error.status === 401)) {
                 this.alertService.pushAlert(new Alert("Access token expired..."));
-                this.oauthService.initImplicitFlow();
+                this.oauthService.initCodeFlow();
             } else if (error && (error.status === 403)) {
                 this.alertService.pushNotFoundUnauthorizedAlert();
                 this.router.navigate(["/"]);

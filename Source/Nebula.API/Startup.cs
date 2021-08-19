@@ -79,10 +79,7 @@ namespace Nebula.API
 
             services.Configure<NebulaConfiguration>(Configuration);
 
-            // todo: Calling 'BuildServiceProvider' from application code results in an additional copy of singleton services being created.
-            // Consider alternatives such as dependency injecting services as parameters to 'Configure'.
-            var nebulaConfiguration = services.BuildServiceProvider().GetService<IOptions<NebulaConfiguration>>().Value;
-
+            var nebulaConfiguration = Configuration.Get<NebulaConfiguration>();
             var keystoneHost = nebulaConfiguration.KEYSTONE_HOST;
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -125,9 +122,7 @@ namespace Nebula.API
             var logger = GetSerilogLogger();
             services.AddSingleton(logger);
 
-            services.AddTransient(s =>
-                new KeystoneService(s.GetService<IHttpContextAccessor>(), keystoneHost.Replace("core", "")));
-
+            services.AddTransient(s => new KeystoneService(s.GetService<IHttpContextAccessor>(), keystoneHost));
             services.AddSingleton(x => new SitkaSmtpClientService(nebulaConfiguration));
 
             services.AddScoped(s => s.GetService<IHttpContextAccessor>().HttpContext);
