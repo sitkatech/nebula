@@ -2,14 +2,19 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+#nullable disable
 
 namespace Nebula.EFModels.Entities
 {
+    [Table("User")]
+    [Index(nameof(Email), Name = "AK_User_Email", IsUnique = true)]
     public partial class User
     {
         public User()
         {
-            FileResource = new HashSet<FileResource>();
+            FileResources = new HashSet<FileResource>();
         }
 
         [Key]
@@ -43,9 +48,9 @@ namespace Nebula.EFModels.Entities
         public string Company { get; set; }
 
         [ForeignKey(nameof(RoleID))]
-        [InverseProperty("User")]
+        [InverseProperty("Users")]
         public virtual Role Role { get; set; }
-        [InverseProperty("CreateUser")]
-        public virtual ICollection<FileResource> FileResource { get; set; }
+        [InverseProperty(nameof(FileResource.CreateUser))]
+        public virtual ICollection<FileResource> FileResources { get; set; }
     }
 }

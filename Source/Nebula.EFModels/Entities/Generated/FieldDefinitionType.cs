@@ -2,14 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+#nullable disable
 
 namespace Nebula.EFModels.Entities
 {
+    [Table("FieldDefinitionType")]
+    [Index(nameof(FieldDefinitionTypeDisplayName), Name = "AK_FieldDefinitionType_FieldDefinitionTypeDisplayName", IsUnique = true)]
+    [Index(nameof(FieldDefinitionTypeName), Name = "AK_FieldDefinitionType_FieldDefinitionTypeName", IsUnique = true)]
     public partial class FieldDefinitionType
     {
         public FieldDefinitionType()
         {
-            FieldDefinition = new HashSet<FieldDefinition>();
+            FieldDefinitions = new HashSet<FieldDefinition>();
         }
 
         [Key]
@@ -21,7 +27,7 @@ namespace Nebula.EFModels.Entities
         [StringLength(100)]
         public string FieldDefinitionTypeDisplayName { get; set; }
 
-        [InverseProperty("FieldDefinitionType")]
-        public virtual ICollection<FieldDefinition> FieldDefinition { get; set; }
+        [InverseProperty(nameof(FieldDefinition.FieldDefinitionType))]
+        public virtual ICollection<FieldDefinition> FieldDefinitions { get; set; }
     }
 }

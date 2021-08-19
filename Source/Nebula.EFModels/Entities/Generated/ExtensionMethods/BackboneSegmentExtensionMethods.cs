@@ -16,7 +16,7 @@ namespace Nebula.EFModels.Entities
                 BackboneSegmentID = backboneSegment.BackboneSegmentID,
                 CatchIDN = backboneSegment.CatchIDN,
                 BackboneSegmentType = backboneSegment.BackboneSegmentType.AsDto(),
-                DownstreamBackboneSegment = backboneSegment.DownstreamBackboneSegment?.AsDto(),
+                DownstreamBackboneSegmentID = backboneSegment.DownstreamBackboneSegmentID,
                 StreamName = backboneSegment.StreamName
             };
             DoCustomMappings(backboneSegment, backboneSegmentDto);
@@ -24,5 +24,6 @@ namespace Nebula.EFModels.Entities
         }
 
         static partial void DoCustomMappings(BackboneSegment backboneSegment, BackboneSegmentDto backboneSegmentDto);
+
     }
 }

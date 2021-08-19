@@ -126,7 +126,7 @@ namespace Nebula.API.Controllers
         public ActionResult<UnassignedUserReportDto> GetUnassignedUserReport()
         {
             var report = new UnassignedUserReportDto
-                {Count = _dbContext.User.Count(x => x.RoleID == (int) RoleEnum.Unassigned)};
+                {Count = _dbContext.Users.Count(x => x.RoleID == (int) RoleEnum.Unassigned)};
             return Ok(report);
         }
 

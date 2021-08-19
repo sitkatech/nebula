@@ -53,10 +53,10 @@ namespace Nebula.API.Controllers
         public ActionResult<string> GetWatershedMask([FromRoute] string watershedName)
         {
             var geometry = watershedName != "All Watersheds"
-                ? _dbContext.Watershed
+                ? _dbContext.Watersheds
                     .SingleOrDefault(x => x.WatershedName == watershedName)
                     ?.WatershedGeometry4326
-                : UnaryUnionOp.Union(_dbContext.Watershed.Select(x => x.WatershedGeometry4326));
+                : UnaryUnionOp.Union(_dbContext.Watersheds.Select(x => x.WatershedGeometry4326));
 
             return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
         }

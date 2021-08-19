@@ -24,5 +24,6 @@ namespace Nebula.EFModels.Entities
         }
 
         static partial void DoCustomMappings(Role role, RoleDto roleDto);
+
     }
 }

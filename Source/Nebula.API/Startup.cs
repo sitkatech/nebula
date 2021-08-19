@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using IdentityServer4.AccessTokenValidation;
 using Microsoft.ApplicationInsights;
@@ -83,13 +85,28 @@ namespace Nebula.API
 
             var keystoneHost = nebulaConfiguration.KEYSTONE_HOST;
             services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
-                .AddIdentityServerAuthentication(options =>
+                .AddJwtBearer(options =>
                 {
+                    if (_environment.IsDevelopment())
+                    {
+                        // NOTE: CG 3/22 - This allows the self-signed cert on Keystone to work locally.
+                        options.BackchannelHttpHandler = new HttpClientHandler()
+                        {
+                            ServerCertificateCustomValidationCallback = (message, certificate2, arg3, arg4) => true
+                        };
+                        //These allow the use of the container name and the url when developing.
+                        options.TokenValidationParameters.ValidateIssuer = false;
+                    }
+                    options.TokenValidationParameters.ValidateAudience = false;
                     options.Authority = keystoneHost;
                     options.RequireHttpsMetadata = false;
-                    options.LegacyAudienceValidation = true;
-                    options.EnableCaching = false;
-                    options.SupportedTokens = SupportedTokens.Jwt;
+                    options.SecurityTokenValidators.Clear();
+                    options.SecurityTokenValidators.Add(new JwtSecurityTokenHandler
+                    {
+                        MapInboundClaims = false
+                    });
+                    options.TokenValidationParameters.NameClaimType = "name";
+                    options.TokenValidationParameters.RoleClaimType = "role";
                 });
 
             services.AddDbContext<NebulaDbContext>(c =>
@@ -136,7 +153,6 @@ namespace Nebula.API
             }
 
             app.UseHttpsRedirection();
-            app.UseSerilogRequestLogging();
             app.UseRouting();
             app.UseCors(policy =>
             {

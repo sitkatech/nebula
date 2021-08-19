@@ -9,17 +9,14 @@ using NetTopologySuite.Geometries;
 
 namespace Nebula.EFModels.Entities
 {
-    [Table("Watershed")]
-    public partial class Watershed
+    [Keyless]
+    public partial class vGeoServerWatershed
     {
-        [Key]
+        public int PrimaryKey { get; set; }
         public int WatershedID { get; set; }
         [Required]
         [StringLength(100)]
         public string WatershedName { get; set; }
-        [Required]
-        [Column(TypeName = "geometry")]
-        public Geometry WatershedGeometry { get; set; }
         [Required]
         [Column(TypeName = "geometry")]
         public Geometry WatershedGeometry4326 { get; set; }

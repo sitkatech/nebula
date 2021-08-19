@@ -28,7 +28,7 @@ namespace Nebula.EFModels.Entities
                 CreateDate = DateTime.UtcNow,
             };
 
-            dbContext.User.Add(user);
+            dbContext.Users.Add(user);
             dbContext.SaveChanges();
             dbContext.Entry(user).Reload();
 
@@ -38,7 +38,7 @@ namespace Nebula.EFModels.Entities
         public static IEnumerable<UserDto> List(NebulaDbContext dbContext)
         {
             // right now we are assuming a parcel can only be associated to one user
-            return dbContext.User.Include(x => x.Role).AsNoTracking().OrderBy(x => x.LastName).ThenBy(x => x.FirstName).Select(x => x.AsDto()).AsEnumerable();
+            return dbContext.Users.Include(x => x.Role).AsNoTracking().OrderBy(x => x.LastName).ThenBy(x => x.FirstName).Select(x => x.AsDto()).AsEnumerable();
         }
 
         public static IEnumerable<UserDto> ListByRole(NebulaDbContext dbContext, RoleEnum roleEnum)
@@ -84,7 +84,7 @@ namespace Nebula.EFModels.Entities
 
         private static IQueryable<User> GetUserImpl(NebulaDbContext dbContext)
         {
-            return dbContext.User
+            return dbContext.Users
                 .Include(x => x.Role)
                 .AsNoTracking();
         }
@@ -102,7 +102,7 @@ namespace Nebula.EFModels.Entities
                 return null;
             }
 
-            var user = dbContext.User
+            var user = dbContext.Users
                 .Include(x => x.Role)
                 .Single(x => x.UserID == userID);
 
@@ -117,7 +117,7 @@ namespace Nebula.EFModels.Entities
 
         public static UserDto SetDisclaimerAcknowledgedDate(NebulaDbContext dbContext, int userID)
         {
-            var user = dbContext.User.Single(x => x.UserID == userID);
+            var user = dbContext.Users.Single(x => x.UserID == userID);
 
             user.UpdateDate = DateTime.UtcNow;
             user.DisclaimerAcknowledgedDate = DateTime.UtcNow;
@@ -130,7 +130,7 @@ namespace Nebula.EFModels.Entities
 
         public static UserDto UpdateUserGuid(NebulaDbContext dbContext, int userID, Guid userGuid)
         {
-            var user = dbContext.User
+            var user = dbContext.Users
                 .Single(x => x.UserID == userID);
 
             user.UserGuid = userGuid;

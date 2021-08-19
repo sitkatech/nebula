@@ -13,7 +13,7 @@ namespace Nebula.Models.DataTransferObjects
         public string DrainID { get; set; }
         public string Watershed { get; set; }
         public int OCSurveyCatchmentID { get; set; }
-        public RegionalSubbasinDto? OCSurveyDownstreamCatchment { get; set; }
+        public int? OCSurveyDownstreamCatchmentID { get; set; }
         public DateTime? LastUpdate { get; set; }
     }
 }
