@@ -97,9 +97,9 @@ namespace Nebula.Web
         public bool Dev { get; set; }
         [JsonProperty("apiHostName")]
         public string ApiHostName { get; set; }
-        [JsonProperty("createAccountUrl")]
+        [JsonProperty("createAccountRedirectUrl")]
         public string CreateAccountRedirectUrl { get; set; }
-        [JsonProperty("keystoneSupportBaseUrl")]
+        [JsonProperty("geoserverMapServiceUrl")]
         public string GeoserverMapServiceUrl { get; set; }
         [JsonProperty("keystoneAuthConfiguration")]
         public KeystoneAuthConfigurationDto KeystoneAuthConfiguration { get; set; }
