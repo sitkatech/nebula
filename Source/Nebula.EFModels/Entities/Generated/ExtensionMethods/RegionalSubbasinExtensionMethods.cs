@@ -17,7 +17,7 @@ namespace Nebula.EFModels.Entities
                 DrainID = regionalSubbasin.DrainID,
                 Watershed = regionalSubbasin.Watershed,
                 OCSurveyCatchmentID = regionalSubbasin.OCSurveyCatchmentID,
-                OCSurveyDownstreamCatchment = regionalSubbasin.OCSurveyDownstreamCatchment?.AsDto(),
+                OCSurveyDownstreamCatchmentID = regionalSubbasin.OCSurveyDownstreamCatchmentID,
                 LastUpdate = regionalSubbasin.LastUpdate
             };
             DoCustomMappings(regionalSubbasin, regionalSubbasinDto);
@@ -25,5 +25,6 @@ namespace Nebula.EFModels.Entities
         }
 
         static partial void DoCustomMappings(RegionalSubbasin regionalSubbasin, RegionalSubbasinDto regionalSubbasinDto);
+
     }
 }

@@ -12,7 +12,7 @@ namespace Nebula.Models.DataTransferObjects
         public int BackboneSegmentID { get; set; }
         public int CatchIDN { get; set; }
         public BackboneSegmentTypeDto BackboneSegmentType { get; set; }
-        public BackboneSegmentDto? DownstreamBackboneSegment { get; set; }
+        public int? DownstreamBackboneSegmentID { get; set; }
         public string StreamName { get; set; }
     }
 }

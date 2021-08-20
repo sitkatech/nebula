@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+
+#nullable disable
 
 namespace Nebula.EFModels.Entities
 {
+    [Table("BackboneSegment")]
     public partial class BackboneSegment
     {
         public BackboneSegment()
@@ -26,7 +30,7 @@ namespace Nebula.EFModels.Entities
         public Geometry BackboneSegmentGeometry4326 { get; set; }
 
         [ForeignKey(nameof(BackboneSegmentTypeID))]
-        [InverseProperty("BackboneSegment")]
+        [InverseProperty("BackboneSegments")]
         public virtual BackboneSegmentType BackboneSegmentType { get; set; }
         [ForeignKey(nameof(DownstreamBackboneSegmentID))]
         [InverseProperty(nameof(BackboneSegment.InverseDownstreamBackboneSegment))]

@@ -25,12 +25,12 @@ namespace Nebula.EFModels.Entities
 
         private static IQueryable<Watershed> GetWatershedsImpl(NebulaDbContext dbContext)
         {
-            return dbContext.Watershed.AsNoTracking();
+            return dbContext.Watersheds.AsNoTracking();
         }
 
         public static BoundingBoxDto GetBoundingBoxByWatershedIDs(NebulaDbContext dbContext, List<int> watershedIDs)
         {
-            var watersheds = dbContext.Watershed
+            var watersheds = dbContext.Watersheds
                 .AsNoTracking()
                 .Where(x => watershedIDs.Contains(x.WatershedID));
 

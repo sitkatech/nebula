@@ -9,7 +9,7 @@ namespace Nebula.EFModels.Entities
     {
         public static IEnumerable<RoleDto> List(NebulaDbContext dbContext)
         {
-            var roles = dbContext.Role
+            var roles = dbContext.Roles
                 .AsNoTracking()
                 .Select(x => x.AsDto());
 
@@ -18,7 +18,7 @@ namespace Nebula.EFModels.Entities
 
         public static RoleDto GetByRoleID(NebulaDbContext dbContext, int roleID)
         {
-            var role = dbContext.Role
+            var role = dbContext.Roles
                 .AsNoTracking()
                 .FirstOrDefault(x => x.RoleID == roleID);
 

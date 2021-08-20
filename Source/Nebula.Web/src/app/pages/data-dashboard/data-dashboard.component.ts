@@ -208,7 +208,7 @@ export class DataDashboardComponent implements OnInit {
       this.defaultFitBounds();
 
       let maskLayerPoints = maskString.features[0].geometry.coordinates[0];
-      let alisoStations = siteLocationObject._return.features.filter(feature => {
+      let alisoStations = siteLocationObject.data.return.features.filter(feature => {
         let lat = feature.geometry.coordinates[1];
         let lng = feature.geometry.coordinates[0];
 
@@ -375,7 +375,7 @@ export class DataDashboardComponent implements OnInit {
   public getAvailableVariables(station: string) {
     this.gettingAvailableVariables = true;
     this.lyraService.getAvailableVariables(station).subscribe(result => {
-      this.selectedSiteAvailableVariables = result._return.sites[0].variables.filter(x => Object.keys(SelectableVariableType).includes(x.name)).map(x => {
+      this.selectedSiteAvailableVariables = result.data.return.sites[0].variables.filter(x => Object.keys(SelectableVariableType).includes(x.name)).map(x => {
         return new SiteVariable({
           displayName: `${x.name} - ${x.variable}`,
           name: `${x.name}`,
@@ -479,5 +479,9 @@ export class DataDashboardComponent implements OnInit {
       tooltipAnchor: [16, -28],
       shadowSize: [41, 41]
     });
+  }
+
+  public siteSelectedAndVariablesFound(): boolean {
+    return this.selectedSiteName && !this.gettingAvailableVariables && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
   }
 }

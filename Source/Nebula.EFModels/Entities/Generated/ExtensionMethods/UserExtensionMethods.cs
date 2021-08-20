@@ -34,5 +34,6 @@ namespace Nebula.EFModels.Entities
         }
 
         static partial void DoCustomMappings(User user, UserDto userDto);
+
     }
 }

@@ -22,5 +22,6 @@ namespace Nebula.EFModels.Entities
         }
 
         static partial void DoCustomMappings(CustomRichText customRichText, CustomRichTextDto customRichTextDto);
+
     }
 }

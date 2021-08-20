@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
+
+#nullable disable
 
 namespace Nebula.EFModels.Entities
 {
+    [Table("FieldDefinition")]
     public partial class FieldDefinition
     {
         [Key]
@@ -13,7 +17,7 @@ namespace Nebula.EFModels.Entities
         public string FieldDefinitionValue { get; set; }
 
         [ForeignKey(nameof(FieldDefinitionTypeID))]
-        [InverseProperty("FieldDefinition")]
+        [InverseProperty("FieldDefinitions")]
         public virtual FieldDefinitionType FieldDefinitionType { get; set; }
     }
 }

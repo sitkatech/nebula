@@ -2,10 +2,15 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
+
+#nullable disable
 
 namespace Nebula.EFModels.Entities
 {
+    [Table("RegionalSubbasin")]
+    [Index(nameof(OCSurveyCatchmentID), Name = "AK_RegionalSubbasin_OCSurveyCatchmentID", IsUnique = true)]
     public partial class RegionalSubbasin
     {
         public RegionalSubbasin()

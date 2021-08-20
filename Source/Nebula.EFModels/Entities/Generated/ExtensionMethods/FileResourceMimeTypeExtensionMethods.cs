@@ -25,5 +25,6 @@ namespace Nebula.EFModels.Entities
         }
 
         static partial void DoCustomMappings(FileResourceMimeType fileResourceMimeType, FileResourceMimeTypeDto fileResourceMimeTypeDto);
+
     }
 }

@@ -76,9 +76,7 @@ namespace Nebula.Web
             Staging = bool.Parse(configuration["Staging"]);
             Dev = bool.Parse(configuration["Dev"]);
             ApiHostName = configuration["ApiHostName"];
-            CreateAccountUrl = configuration["CreateAccountUrl"];
             CreateAccountRedirectUrl = configuration["CreateAccountRedirectUrl"];
-            KeystoneSupportBaseUrl = configuration["KeystoneSupportBaseUrl"];
             GeoserverMapServiceUrl = configuration["GeoserverMapServiceUrl"];
             KeystoneAuthConfiguration = new KeystoneAuthConfigurationDto(configuration);
             PlatformLongName = configuration["PlatformLongName"];
@@ -88,6 +86,7 @@ namespace Nebula.Web
             LeadOrganizationHomeUrl = configuration["LeadOrganizationHomeUrl"];
             FaviconFilename = configuration["FaviconFilename"];
             LeadOrganizationLogoFilename = configuration["LeadOrganizationLogoFilename"];
+            AppInsightsInstrumentationKey =  configuration["AppInsightsInstrumentationKey"];
         }
 
         [JsonProperty("production")]
@@ -99,12 +98,8 @@ namespace Nebula.Web
         [JsonProperty("apiHostName")]
         public string ApiHostName { get; set; }
         [JsonProperty("createAccountUrl")]
-        public string CreateAccountUrl { get; set; }
-        [JsonProperty("createAccountRedirectUrl")]
         public string CreateAccountRedirectUrl { get; set; }
         [JsonProperty("keystoneSupportBaseUrl")]
-        public string KeystoneSupportBaseUrl { get; set; }
-        [JsonProperty("geoserverMapServiceUrl")]
         public string GeoserverMapServiceUrl { get; set; }
         [JsonProperty("keystoneAuthConfiguration")]
         public KeystoneAuthConfigurationDto KeystoneAuthConfiguration { get; set; }
@@ -122,6 +117,8 @@ namespace Nebula.Web
         public string FaviconFilename {get; set;}
         [JsonProperty("leadOrganizationLogoFilename")]
         public string LeadOrganizationLogoFilename { get; set;}
+         [JsonProperty("appInsightsInstrumentationKey")]
+        public string AppInsightsInstrumentationKey {get; set;}
     }
 
     public class KeystoneAuthConfigurationDto
@@ -135,7 +132,9 @@ namespace Nebula.Web
             SessionChecksEnabled = bool.Parse(configuration["Keystone_SessionCheckEnabled"]);
             LogoutUrl = configuration["Keystone_LogoutUrl"];
             PostLogoutRedirectUri = configuration["Keystone_PostLogoutRedirectUri"];
-            WaitForTokenInMsec = int.Parse(configuration["WaitForTokenInMsec"]);
+            WaitForTokenInMsec = int.Parse(configuration["Keystone_WaitForTokenInMsec"]);
+            ResponseType = configuration["Keystone_ResponseType"];
+            DisablePKCE = bool.Parse(configuration["Keystone_DisablePKCE"]);
         }
 
         [JsonProperty("clientId")]
@@ -154,5 +153,9 @@ namespace Nebula.Web
         public string PostLogoutRedirectUri { get; set; }
         [JsonProperty("waitForTokenInMsec")]
         public int WaitForTokenInMsec { get; set; }
+        [JsonProperty("responseType")]
+        public string ResponseType {get; set;}
+        [JsonProperty("disablePKCE")]
+        public bool DisablePKCE {get; set;}
     }
 }

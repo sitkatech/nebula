@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 
@@ -87,7 +88,6 @@ namespace Nebula.API.Services
             public Guid? OrganizationGuid { get; set; }
             public string OrganizationName { get; set; }
             public string OrganizationShortName { get; set; }
-            public TimeZoneInfo TimeZoneInfo { get; set; }
             public string TimeZoneIana { get; set; }
             public string Address1 { get; set; }
             public string City { get; set; }
@@ -101,10 +101,10 @@ namespace Nebula.API.Services
         public KeystoneService(IHttpContextAccessor context, string baseUrl)
         {
             _token = context.HttpContext.Request.Headers["Authorization"].FirstOrDefault(); //this includes the word "Bearer"
-            _baseUrl = baseUrl;
+            _baseUrl = $"{baseUrl}/api/v1";
         }
 
-        public KeystoneApiResponse<KeystoneNewUserModel> Invite(KeystoneInviteModel inviteModel)
+        public async Task<KeystoneApiResponse<KeystoneNewUserModel>> Invite(KeystoneInviteModel inviteModel)
         {
             var client = CreateClientWithAuthHeader();
 
@@ -114,13 +114,13 @@ namespace Nebula.API.Services
             }
 
             var content = new StringContent(JsonConvert.SerializeObject(inviteModel), Encoding.UTF8, "application/json");
-            var response = client.PostAsync($"{_baseUrl}api/v1/invite", content).Result;
-            return ProcessResponse<KeystoneNewUserModel>(response);
+            var response = await client.PostAsync($"{_baseUrl}/invite", content);
+            return await ProcessResponse<KeystoneNewUserModel>(response);
         }
 
         private HttpClient CreateClientWithAuthHeader()
         {
-            HttpClient client = new HttpClient();
+            var client = new HttpClient();
 
             if (!string.IsNullOrEmpty(_token))
             {
@@ -130,48 +130,37 @@ namespace Nebula.API.Services
             return client;
         }
 
-        public KeystoneApiResponse<KeystoneProfileModel> GetProfile()
+        public async Task<KeystoneApiResponse<KeystoneProfileModel>> GetProfile()
         {
             var client = CreateClientWithAuthHeader();
 
-            var response = client.GetAsync($"{_baseUrl}api/v1/profile").Result;
-
-            return ProcessResponse<KeystoneProfileModel>(response);
+            var response = client.GetAsync($"{_baseUrl}/profile").Result;
+            return await ProcessResponse<KeystoneProfileModel>(response);
         }
 
-        private static KeystoneApiResponse<T> ParseError<T>(HttpResponseMessage response)
+        private static async Task<KeystoneApiResponse<T>> ParseError<T>(HttpResponseMessage response)
         {
-            using (var sr = new StreamReader(response.Content.ReadAsStreamAsync().Result))
-            {
-                using (var jsonTextReader = new JsonTextReader(sr))
-                {
-                    var serializer = new JsonSerializer();
-
-                    var data = serializer.Deserialize<KeystoneErrorModel>(jsonTextReader);
-
-                    return new KeystoneApiResponse<T> { StatusCode = response.StatusCode, Error = data };
-                }
-            }
+            var data = await ProcessResponseImpl<KeystoneErrorModel>(response);
+            return new KeystoneApiResponse<T> { StatusCode = response.StatusCode, Error = data };
         }
 
-        private static KeystoneApiResponse<T> ProcessResponse<T>(HttpResponseMessage response)
+        private static async Task<KeystoneApiResponse<T>> ProcessResponse<T>(HttpResponseMessage response)
         {
             if (!response.IsSuccessStatusCode)
             {
-                return ParseError<T>(response);
+                return await ParseError<T>(response);
             }
 
-            using (var sr = new StreamReader(response.Content.ReadAsStreamAsync().Result))
-            {
-                using (var jsonTextReader = new JsonTextReader(sr))
-                {
-                    var serializer = new JsonSerializer();
+            var data = await ProcessResponseImpl<T>(response);
+            return new KeystoneApiResponse<T> { StatusCode = response.StatusCode, Payload = data };
+        }
 
-                    var data = serializer.Deserialize<T>(jsonTextReader);
-
-                    return new KeystoneApiResponse<T> { StatusCode = response.StatusCode, Payload = data };
-                }
-            }
+        private static async Task<T> ProcessResponseImpl<T>(HttpResponseMessage response)
+        {
+            using var sr = new StreamReader(await response.Content.ReadAsStreamAsync());
+            using var jsonTextReader = new JsonTextReader(sr);
+            var serializer = new JsonSerializer();
+            return serializer.Deserialize<T>(jsonTextReader);
         }
     }
 }

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0-focal AS build
 WORKDIR /src
 
 COPY ./Nebula.Models ./Nebula.Models
@@ -7,7 +7,7 @@ COPY ./Nebula.API ./Nebula.API
 
 RUN dotnet publish ./Nebula.API/Nebula.API.csproj -c Release -o /app
 
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:5.0-focal AS final
 WORKDIR /app
 COPY --from=build /app /app
 RUN ls -la

@@ -21,5 +21,6 @@ namespace Nebula.EFModels.Entities
         }
 
         static partial void DoCustomMappings(Watershed watershed, WatershedDto watershedDto);
+
     }
 }
