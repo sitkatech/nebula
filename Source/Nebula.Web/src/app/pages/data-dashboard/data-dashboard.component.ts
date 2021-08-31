@@ -60,8 +60,8 @@ export class DataDashboardComponent implements OnInit {
   public currentDate = new Date();
 
   public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({ year: this.currentDate.getUTCFullYear() - 5, month: this.currentDate.getUTCMonth(), day: this.currentDate.getUTCDate() }, [Validators.required]),
-    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth(), day: this.currentDate.getUTCDate() }, [Validators.required]),
+    startDate: new FormControl({ year: this.currentDate.getUTCFullYear() - 5, month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
     siteVariablesToQuery: new FormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
@@ -154,50 +154,6 @@ export class DataDashboardComponent implements OnInit {
     this.initializeMap();
   }
 
-  //#region Form Functionality
-
-  get f() {
-    return this.timeSeriesForm.controls;
-  }
-
-  siteVariablesToQuery() : FormArray {
-    return this.timeSeriesForm.get("siteVariablesToQuery") as FormArray
-  }
-
-  newSiteVariableToQuery(variable : SiteVariable): FormGroup {
-    return this.formBuilder.group({
-      variable: variable,
-      timeInterval: new FormControl(null, [Validators.required]),
-      aggregationMode: new FormControl(),
-      filter: new FormControl()
-    })
-  }
-   
-  addSiteVariableToQuery(variable) {
-    this.siteVariablesToQuery().push(this.newSiteVariableToQuery(variable));
-  }
-   
-  removeSiteVariableToQuery(i:number) {
-    this.siteVariablesToQuery().removeAt(i);
-  }
-
-  getTimeSeriesListFromTimerSeriesFormObject() {
-    return this.siteVariablesToQuery().value.map(x => ({
-        variable: x.variable.variable,
-        site: x.variable.station,
-        interval : x.timeInterval,
-        weather_condition : x.filter,
-        aggregation_method : x.aggregationMode
-    }))
-  }
-
-  public getDateFromTimeSeriesFormDateObject(formFieldName: string): string {
-    let date = this.timeSeriesForm.get(formFieldName).value;
-    return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
-  }
-
-  //#endregion
-
   public onSubmit() {
     this.getTimeSeriesData();
   }
@@ -216,7 +172,7 @@ export class DataDashboardComponent implements OnInit {
       this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
         if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
           var spec = result.data.spec;
-          //spec.width = "container";
+          spec.width = "container";
           this.vegaSpec = spec;
           vegaEmbed('#vis', spec);
         }
@@ -293,7 +249,7 @@ export class DataDashboardComponent implements OnInit {
     this.selectedSiteAvailableVariables.push(Object.assign(new SiteVariable({
       name: "Urban Drool",
       variable: "urban_drool",
-      allowedAggregations: this.hydstraAggregationModes.filter(x => x.value == "tot")
+      allowedAggregations: this.hydstraAggregationModes.filter(x => x.value == "tot").map(x => x.value)
     }), baseSiteVariable));
   }
 
@@ -355,8 +311,51 @@ export class DataDashboardComponent implements OnInit {
     return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
   }
 
+//#region Form Functionality
 
-//#region Map functionality
+  get f() {
+    return this.timeSeriesForm.controls;
+  }
+
+  siteVariablesToQuery() : FormArray {
+    return this.timeSeriesForm.get("siteVariablesToQuery") as FormArray
+  }
+
+  newSiteVariableToQuery(variable : SiteVariable): FormGroup {
+    return this.formBuilder.group({
+      variable: variable,
+      timeInterval: new FormControl(null, [Validators.required]),
+      aggregationMode: new FormControl(),
+      filter: new FormControl()
+    })
+  }
+   
+  addSiteVariableToQuery(variable) {
+    this.siteVariablesToQuery().push(this.newSiteVariableToQuery(variable));
+  }
+   
+  removeSiteVariableToQuery(i:number) {
+    this.siteVariablesToQuery().removeAt(i);
+  }
+
+  getTimeSeriesListFromTimerSeriesFormObject() {
+    return this.siteVariablesToQuery().value.map(x => ({
+        variable: x.variable.variable,
+        site: x.variable.station,
+        interval : x.timeInterval,
+        weather_condition : x.filter,
+        aggregation_method : x.aggregationMode
+    }))
+  }
+
+  public getDateFromTimeSeriesFormDateObject(formFieldName: string): string {
+    let date = this.timeSeriesForm.get(formFieldName).value;
+    return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
+  }
+
+  //#endregion
+
+//#region Map Functionality
   public initializeMap(): void {
 
     const mapOptions: L.MapOptions = {

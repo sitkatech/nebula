@@ -168,9 +168,12 @@
                                         <!-- <div *ngIf="f.date.errors.pattern">Date must be in the format 'yyyy-mm-dd'</div> -->
                                     </div>
                                 </div>
-                                <ngContainer formArrayName="siteVariablesToQuery">
-                                    <ngContainer *ngFor="let control of siteVariablesToQuery().controls; let i=index"
+                                <ngContainer formArrayName="siteVariablesToQuery" class="form-group w-100 mb-1">
+                                    <ngContainer *ngFor="let control of siteVariablesToQuery().controls; let i=index" class="form-group w-100 mb-1"
                                         [formGroupName]="i">
+                                        <div class="selected-variable">
+                                            <span>{{control.value.variable.stationShortName}}</span> - <span>{{control.value.variable.name}}</span>
+                                        </div>
                                         <div class="form-group w-100 mb-1">
                                             <label for="timeInterval"
                                                 class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">
