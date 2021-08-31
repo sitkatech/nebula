@@ -50,27 +50,35 @@
                                     <dt class="text-sm-left col-sm-6 col-xs-12">Data Available:</dt>
                                 </dl>
                                 <dl class="row" style="max-height:600px; overflow-y:auto">
-                                    <dt *ngIf="gettingAvailableVariables" class="text-sm-left col-sm-9 offset-sm-1 col-xs-12">
+                                    <dt *ngIf="gettingAvailableVariables"
+                                        class="text-sm-left col-sm-9 offset-sm-1 col-xs-12">
                                         Fetching available variables <span class="fa fa-spinner loading-spinner"></span>
                                     </dt>
                                     <ng-container *ngIf="!gettingAvailableVariables">
-                                        <span class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1" *ngIf="!siteSelectedAndVariablesFound()">No variables found for selected station. Please make another selection</span>
+                                        <span class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1"
+                                            *ngIf="!siteSelectedAndVariablesFound()">No variables found for selected
+                                            station. Please make another selection</span>
                                         <ng-container *ngIf="siteSelectedAndVariablesFound()">
-                                            <dt class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1" *ngFor="let variable of selectedSiteAvailableVariables">
+                                            <dt class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1"
+                                                *ngFor="let variable of selectedSiteAvailableVariables">
                                                 <div class="row no-gutters">
                                                     <div class="col-9">
-                                                        {{variable.displayName}}
-                                                        <br/>
-                                                        <span style="font-weight:400">Record: {{variable.startDate}} - {{variable.endDate}}</span>
+                                                        {{variable.name}}
+                                                        <br />
+                                                        <small style="font-weight:400"
+                                                            *ngIf="variable.startDate != null && variable.endDate != null">Record:
+                                                            {{variable.startDate}} -
+                                                            {{variable.endDate}}</small>
                                                     </div>
-                                                    <div class="col-3 align-self-center text-center">
-                                                        <button class="btn btn-nebula" (click)="triggerTimeSeriesWithVariableValuesAndScrollIntoView(timeSeriesCard, variable)">View</button>
+                                                    <div class="col-3 align-self-center text-center"
+                                                        *ngIf="variableNotPresentInSelectedVariables(variable)">
+                                                        <button class="btn btn-nebula"
+                                                            (click)="addVariableToSelection(variable)">Add</button>
                                                     </div>
                                                 </div>
                                             </dt>
                                         </ng-container>
                                     </ng-container>
-                                    
                                 </dl>
                             </ng-container>
                         </div>
@@ -79,17 +87,24 @@
             </div>
         </div>
     </div>
-    <!-- <div class="row mt-sm-4">
+    <div class="row mt-sm-4">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header text-center">
                     Selected Data
                 </div>
                 <div class="card-body table-responsive">
+                    <ngContainer *ngIf="selectedVariables.length > 0">
+                        <div *ngFor="let variable of selectedVariables"
+                            style="display:inline-block; background-color:#B0D2A1; color: white; border:2px solid green; border-radius:20px">
+                            <span>{{variable.stationShortName}} - {{variable.name}}</span>
+                        </div>
+                    </ngContainer>
+                    <span *ngIf="selectedVariables.length == 0"></span>
                 </div>
             </div>
         </div>
-    </div> -->
+    </div>
     <div class="row mt-sm-4">
         <div class="col-sm-12">
             <div class="card">
@@ -115,37 +130,6 @@
                             <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
                                 <div *ngIf="errorMessage" class="alert alert-danger">
                                     {{errorMessage}}
-                                </div>
-                                <div class="form-group w-100 mb-1">
-                                    <label for="type"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">Type
-                                    </label>
-                                    <div class="col-lg-6" id="type">
-                                        <div class="btn-group btn-group-toggle" [ngClass]="{'display-only':canSwitchDataTypeSelected == false}">
-                                            <label class="btn btn-toggle btn-sm" [ngClass]="{'active':dataTypeSelected === SelectableVariableType.Rainfall}" placement="top">
-                                              <input type="radio" name="units" id="chart-icon" (click)="toggleDataTypeSelected(SelectableVariableType.Rainfall)" [disabled]="canSwitchDataTypeSelected == false">Rainfall
-                                            </label>
-                                            <label class="btn btn-toggle btn-sm" [ngClass]="{'active':dataTypeSelected === SelectableVariableType.Discharge}" placement="top">
-                                              <input type="radio" name="units" id="table-icon" (click)="toggleDataTypeSelected(SelectableVariableType.Discharge)" [disabled]="canSwitchDataTypeSelected == false">Discharge
-                                            </label>
-                                          </div>
-                                    </div>
-                                </div>
-                                <div class="form-group w-100 mb-1">
-                                    <label for="record"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">Record
-                                    </label>
-                                    <div class="col-lg-6">
-                                        <select formControlName="record" id="record"
-                                            class="form-control">
-                                            <option *ngFor="let siteVariable of variableListToDisplay" [value]="siteVariable.variable">
-                                                {{siteVariable.variable}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div *ngIf="f.record.touched && f.record.invalid" class="alert alert-danger">
-                                        <div *ngIf="f.record.errors.required">Record is required.</div>
-                                    </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="startDate"
@@ -185,59 +169,64 @@
                                         <!-- <div *ngIf="f.date.errors.pattern">Date must be in the format 'yyyy-mm-dd'</div> -->
                                     </div>
                                 </div>
-                                <div class="form-group w-100 mb-1">
-                                    <label for="aggregationMode"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end"><field-definition [fieldDefinitionType]="'AggregationMode'"></field-definition>
-                                    </label>
-                                    <div class="col-lg-6">
-                                        <select formControlName="aggregationMode" id="aggregationMode"
-                                            class="form-control">
-                                            <option *ngFor="let mode of hydstraAggregationModes" [value]="mode.value">
-                                                {{mode.display}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group w-100 mb-1">
-                                    <label for="timeInterval"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end"><field-definition [fieldDefinitionType]="'TimeInterval'"></field-definition>
-                                    </label>
-                                    <div class="col w-100">
-                                        <select formControlName="timeInterval" id="timeInterval" class="form-control">
-                                            <option *ngFor="let interval of hydstraIntervals" [value]="interval.value">
-                                                {{interval.display}}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group w-100 mb-1">
-                                    <label for="intervalMultiplier"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end"><field-definition [fieldDefinitionType]="'IntervalMultiplier'"></field-definition>
-                                    </label>
-                                    <div class="col w-100">
-                                        <div class="row">
-                                            <div class="col-sm-5">
-                                                <input style="width:100%" formControlName="intervalMultiplier"
-                                                    id="intervalMultiplier" type="number"
-                                                    (keypress)="catchExtraSymbols($event)"
-                                                    (paste)="catchPastedSymbols($event)" class="form-control">
+                                <ngContainer formArrayName="siteVariablesToQuery">
+                                    <ngContainer *ngFor="let control of siteVariablesToQuery().controls; let i=index"
+                                        [formGroupName]="i">
+                                        <div class="form-group w-100 mb-1">
+                                            <label for="timeInterval"
+                                                class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">
+                                                <field-definition [fieldDefinitionType]="'TimeInterval'">
+                                                </field-definition>
+                                            </label>
+                                            <div class="col w-100">
+                                                <select formControlName="timeInterval" id="timeInterval"
+                                                    class="form-control">
+                                                    <option *ngFor="let interval of hydstraIntervals"
+                                                        [value]="interval.value">
+                                                        {{interval.display}}
+                                                    </option>
+                                                </select>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div *ngIf="f.intervalMultiplier.touched && f.intervalMultiplier.invalid"
-                                        class="alert alert-danger">
-                                        <div *ngIf="f.intervalMultiplier.errors.required">Interval Duration is
-                                            required.</div>
-                                        <div *ngIf="f.intervalMultiplier.errors.min">Interval Duration must be greater
-                                            than or equal to 1.</div>
-                                        <div *ngIf="f.intervalMultiplier.errors.max">Interval Duration must be less than
-                                            2147483647.</div>
-                                    </div>
-                                </div>
+                                        <div class="form-group w-100 mb-1">
+                                            <label for="filter"
+                                                class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">
+                                                Filter
+                                                <!-- <field-definition [fieldDefinitionType]="'TimeInterval'"></field-definition> -->
+                                            </label>
+                                            <div class="col w-100">
+                                                <select formControlName="filter" id="filter" class="form-control">
+                                                    <option *ngFor="let filter of hydstraFilters"
+                                                        [value]="filter.value">
+                                                        {{filter.display}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group w-100 mb-1">
+                                            <label for="aggregationMode"
+                                                class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">
+                                                <field-definition [fieldDefinitionType]="'AggregationMode'">
+                                                </field-definition>
+                                            </label>
+                                            <div class="col-lg-6">
+                                                <select formControlName="aggregationMode" id="aggregationMode"
+                                                    class="form-control">
+                                                    <option
+                                                        *ngFor="let mode of getAvailableAggregationModes(control.value.variable)"
+                                                        [value]="mode.value">
+                                                        {{mode.display}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </ngContainer>
+                                </ngContainer>
                                 <div class="ml-auto">
                                     Required Field <i class="fas fa-bolt"></i>
-                                    <br/>
-                                    <button type="submit" class="btn btn-nebula btn-sm mt-4 float-right" [disabled]="isPerformingAction">
+                                    <br />
+                                    <button type="submit" class="btn btn-nebula btn-sm mt-4 float-right"
+                                        [disabled]="isPerformingAction">
                                         <span *ngIf="isPerformingAction" class="fa fa-spinner loading-spinner"></span>
                                         Submit</button>
                                 </div>
@@ -245,10 +234,13 @@
                         </div>
                         <div *ngIf="siteSelectedAndVariablesFound()" class="col-6">
                             <ngContainer *ngIf="!vegaSpec && !errorOccurred">
-                                <span *ngIf="isPerformingAction">Loading chart values <span class="fa fa-spinner loading-spinner"></span></span>
-                                <span *ngIf="!isPerformingAction && !gettingAvailableVariables">Choose some metrics to get started</span>
+                                <span *ngIf="isPerformingAction">Loading chart values <span
+                                        class="fa fa-spinner loading-spinner"></span></span>
+                                <span *ngIf="!isPerformingAction && !gettingAvailableVariables">Choose some metrics to
+                                    get started</span>
                             </ngContainer>
-                            <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and try again.</span>
+                            <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
+                                try again.</span>
                             <div [ngStyle]="{'visibility':vegaSpec ? '' : 'hidden'}" id="vis" style="width:100%">
                             </div>
                         </div>

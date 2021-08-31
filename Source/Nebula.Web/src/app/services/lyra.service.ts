@@ -12,7 +12,7 @@ export class LyraService {
   constructor(private http: HttpClient) { }
 
   getSiteLocationGeoJson(): Observable<any> {
-    let route = `${this.baseRoute}/api/hydstra/sites/spatial`;
+    let route = `${this.baseRoute}/api/spatial/site_info`;
     return this.http.get(route);
   }
 
@@ -25,12 +25,9 @@ export class LyraService {
   }
 
   getTimeSeriesData(timeSeriesObject: Object) : Observable<any> {
-    let route = `${this.baseRoute}/api/plot/trace`;
-    let params = new HttpParams();
-    Object.keys(timeSeriesObject).forEach(x => {
-      params = params.append(x, timeSeriesObject[x]);
-    });
-    return this.http.get(route, {params: params});
+    let route = `${this.baseRoute}/api/plot/multi_variable?json=${JSON.stringify(timeSeriesObject)}`;
+    debugger;
+    return this.http.get(route);
   }
   
 }
