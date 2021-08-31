@@ -91,16 +91,23 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header text-center">
-                    Selected Data
+                    <span class="align-middle">Selected Data</span>
+                    <button (click)="clearAllVariables()" [disabled]="selectedVariables.length == 0" class="float-right btn btn-sm btn-nebula">Clear All</button>
                 </div>
                 <div class="card-body table-responsive">
                     <ngContainer *ngIf="selectedVariables.length > 0">
-                        <div *ngFor="let variable of selectedVariables"
-                            style="display:inline-block; background-color:#B0D2A1; color: white; border:2px solid green; border-radius:20px">
+                        <div class="selected-variable" *ngFor="let variable of selectedVariables; let i = index">
                             <span>{{variable.stationShortName}} - {{variable.name}}</span>
+                            <button (click)="removeVariableFromSelection(index)" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                             </button>
                         </div>
                     </ngContainer>
-                    <span *ngIf="selectedVariables.length == 0"></span>
+                    <div *ngIf="selectedVariables.length == 0" class="row">
+                        <div class="col text-center">
+                            Select a station on the map and an applicable variable to get started!
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -112,21 +119,13 @@
                     Timeseries View and Download
                 </div>
                 <div class="card-body table-responsive">
-                    <div *ngIf="!selectedSiteName" class="row">
+                    <div *ngIf="selectedVariables.length == 0" class="row">
                         <div class="col text-center">
-                            Select a station on the map to get started!
+                            Select a station on the map and an applicable variable to get started!
                         </div>
                     </div>
-                    <div *ngIf="selectedSiteName && gettingAvailableVariables" class="row">
-                        <div class="col text-center">
-                            Fetching available variables <span class="fa fa-spinner loading-spinner"></span>
-                        </div>
-                    </div>
-                    <div *ngIf="selectedSiteName && !gettingAvailableVariables" class="row">
-                        <div *ngIf="!siteSelectedAndVariablesFound()" class="col-12">
-                            <p>No variables found for selected station. Please make another selection</p>
-                        </div>
-                        <div *ngIf="siteSelectedAndVariablesFound()" class="col-6">
+                    <div *ngIf="selectedVariables.length > 0" class="row">
+                        <div class="col-6">
                             <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
                                 <div *ngIf="errorMessage" class="alert alert-danger">
                                     {{errorMessage}}

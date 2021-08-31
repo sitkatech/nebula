@@ -63,28 +63,20 @@ export class DataDashboardComponent implements OnInit {
     startDate: new FormControl({ year: this.currentDate.getUTCFullYear() - 5, month: this.currentDate.getUTCMonth(), day: this.currentDate.getUTCDate() }, [Validators.required]),
     endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth(), day: this.currentDate.getUTCDate() }, [Validators.required]),
     siteVariablesToQuery: new FormArray([])
-    // timeInterval: new FormControl(this.hydstraIntervals[1].value, [Validators.required]),
-    // aggregationMode: new FormControl(this.hydstraAggregationModes[0].value)
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
   public selectedSiteAvailableVariables: SiteVariable[] = new Array<SiteVariable>();
-  public selectedSiteRainfallVariables: SiteVariable[] = new Array<SiteVariable>();
-  public selectedSiteDischargeVariables: SiteVariable[] = new Array<SiteVariable>();
   public selectedSiteStation: string = null;
   public selectedSiteName: string = null;
-  public variableListToDisplay: SiteVariable[];
 
   public selectedVariables: SiteVariable[] = new Array<SiteVariable>();
 
   public errorOccurred: boolean;
-  public dataTypeSelected: string = null;
-  public canSwitchDataTypeSelected: boolean = false;
-  public updateVariableList: boolean = true;
   public errorMessage: string = null;
   public isPerformingAction: boolean = false;
   public gettingAvailableVariables: boolean = false;
-  alisoStations: any;
+  public alisoStations: any;
 
   constructor(
     private appRef: ApplicationRef,
@@ -158,6 +150,12 @@ export class DataDashboardComponent implements OnInit {
     this.compileService.configure(this.appRef);
   }
 
+  public ngAfterViewInit(): void {
+    this.initializeMap();
+  }
+
+  //#region Form Functionality
+
   get f() {
     return this.timeSeriesForm.controls;
   }
@@ -183,11 +181,182 @@ export class DataDashboardComponent implements OnInit {
     this.siteVariablesToQuery().removeAt(i);
   }
 
-  public ngAfterViewInit(): void {
-
-    this.initializeMap();
+  getTimeSeriesListFromTimerSeriesFormObject() {
+    return this.siteVariablesToQuery().value.map(x => ({
+        variable: x.variable.variable,
+        site: x.variable.station,
+        interval : x.timeInterval,
+        weather_condition : x.filter,
+        aggregation_method : x.aggregationMode
+    }))
   }
 
+  public getDateFromTimeSeriesFormDateObject(formFieldName: string): string {
+    let date = this.timeSeriesForm.get(formFieldName).value;
+    return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
+  }
+
+  //#endregion
+
+  public onSubmit() {
+    this.getTimeSeriesData();
+  }
+
+  public getTimeSeriesData() {
+    if (this.timeSeriesForm.valid) {
+      let swnTimeSeriesRequestDto = new Object(
+        {
+          start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
+          end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
+          timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
+        });
+      this.isPerformingAction = true;
+      this.errorOccurred = false;
+      this.vegaSpec = null;
+      this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
+        if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
+          var spec = result.data.spec;
+          //spec.width = "container";
+          this.vegaSpec = spec;
+          vegaEmbed('#vis', spec);
+        }
+        else {
+          this.errorOccurred = true;
+        }
+        this.isPerformingAction = false;
+      },
+        error => {
+          this.errorOccurred = true;
+          this.isPerformingAction = false;
+        })
+    }
+    else {
+      Object.keys(this.timeSeriesForm.controls).forEach(field => {
+        const control = this.timeSeriesForm.get(field);
+        control.markAsTouched({ onlySelf: true });
+      });
+    }
+  }
+
+  public getAvailableVariables(featureProperties : any) {
+    this.selectedSiteAvailableVariables = [];
+    let baseSiteVariable = new SiteVariable({stationShortName: featureProperties.shortname, station: featureProperties.station});
+
+    if (featureProperties.has_conductivity) {
+      let conductivityInfo = featureProperties.conductivity_info;
+      let conductivitySiteVariable = Object.assign(new SiteVariable({
+        name: conductivityInfo.name,
+        variable: conductivityInfo.variable,
+        startDate: new Date(`${conductivityInfo.period_start.slice(0, 4)}-${conductivityInfo.period_start.slice(4, 6)}-${conductivityInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
+        endDate: new Date(`${conductivityInfo.period_end.slice(0, 4)}-${conductivityInfo.period_end.slice(4, 6)}-${conductivityInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: conductivityInfo.allowed_aggregations
+      }), baseSiteVariable);
+      this.selectedSiteAvailableVariables.push(conductivitySiteVariable);
+    }
+
+    if (featureProperties.has_discharge) {
+      let dischargeInfo = featureProperties.discharge_info;
+      let dischargeSiteVariable = Object.assign(new SiteVariable({
+        name: dischargeInfo.name,
+        variable: dischargeInfo.variable,
+        startDate: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
+        endDate: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: dischargeInfo.allowed_aggregations
+      }), baseSiteVariable);
+      this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
+    }
+
+    if (featureProperties.has_rainfall) {
+      let rainfallInfo = featureProperties.rainfall_info;
+      let rainfallSiteVariable = Object.assign(new SiteVariable({
+        name: rainfallInfo.name,
+        variable: rainfallInfo.variable,
+        startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
+        endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: rainfallInfo.allowed_aggregations
+      }), baseSiteVariable);
+      this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
+    }
+
+    if (featureProperties.has_raw_level) {
+      let rawLevelInfo = featureProperties.raw_level_info;
+      let rawLevelSiteVariable = Object.assign(new SiteVariable({
+        name: rawLevelInfo.name,
+        variable: rawLevelInfo.variable,
+        startDate: new Date(`${rawLevelInfo.period_start.slice(0, 4)}-${rawLevelInfo.period_start.slice(4, 6)}-${rawLevelInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
+        endDate: new Date(`${rawLevelInfo.period_end.slice(0, 4)}-${rawLevelInfo.period_end.slice(4, 6)}-${rawLevelInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: rawLevelInfo.allowed_aggregations
+      }), baseSiteVariable);
+      this.selectedSiteAvailableVariables.push(rawLevelSiteVariable);
+    }
+
+    this.selectedSiteAvailableVariables.push(Object.assign(new SiteVariable({
+      name: "Urban Drool",
+      variable: "urban_drool",
+      allowedAggregations: this.hydstraAggregationModes.filter(x => x.value == "tot")
+    }), baseSiteVariable));
+  }
+
+  public catchExtraSymbols(event: KeyboardEvent): void {
+    if (event.code === "KeyE" || event.code === "Equal" || event.code === "Minus" || event.code === "Plus") {
+      event.preventDefault();
+    }
+  }
+
+  public catchPastedSymbols(event: any): void {
+    let val = event.clipboardData.getData('text/plain');
+    if (val && (val.includes("+") || val.includes("-") || val.includes("e") || val.includes("E"))) {
+      val = val.replace(/\+|\-|e|E/g, '');
+      event.preventDefault();
+    }
+  }
+
+  // public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
+  //   this.scroll(el);
+  //   this.timeSeriesForm.controls.startDate.setValue(this.formatDateForNgbDatepicker(variable.startDate));
+  //   this.timeSeriesForm.controls.endDate.setValue(this.formatDateForNgbDatepicker(variable.endDate));
+  //   this.getTimeSeriesData();
+  // }
+
+  public formatDateForNgbDatepicker(date: Date): any {
+    let dateToChange = new Date(date);
+    return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
+  }
+
+  public scroll(el: HTMLElement) {
+    el.scrollIntoView();
+  }
+
+  public siteSelectedAndVariablesFound(): boolean {
+    return this.selectedSiteName && !this.gettingAvailableVariables && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
+  }
+
+  public addVariableToSelection(variable : SiteVariable): void {
+      this.selectedVariables.push(variable);
+      this.addSiteVariableToQuery(variable);
+      this.cdr.detectChanges();
+  }
+
+  public removeVariableFromSelection(index : number): void {
+    this.selectedVariables.splice(index, 1);
+    this.removeSiteVariableToQuery(index);
+  }
+
+  public clearAllVariables(): void {
+    this.selectedVariables = [];
+    this.siteVariablesToQuery().clear();
+  }
+
+  public variableNotPresentInSelectedVariables(variable : SiteVariable): boolean {
+    return this.selectedVariables.length == 0 || !this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
+  }
+
+  public getAvailableAggregationModes(variable: SiteVariable): any[] {
+    return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
+  }
+
+
+//#region Map functionality
   public initializeMap(): void {
 
     const mapOptions: L.MapOptions = {
@@ -262,12 +431,6 @@ export class DataDashboardComponent implements OnInit {
             this.selectedSiteName = feature.properties.stname;
             this.getAvailableVariables(feature.properties);
             this.selectedSiteStation = feature.properties.station;
-            // this.timeSeriesForm.reset(this.timeSeriesFormDefault);
-            // if (this.vegaSpec) {
-            //   this.vegaSpec = null;
-            //   document.querySelector("#vis").innerHTML = "";
-            // }
-            //this.updateVariableList = true;
           });
         }.bind(this)
       });
@@ -347,153 +510,6 @@ export class DataDashboardComponent implements OnInit {
     this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
   }
 
-  public onSubmit() {
-    this.getTimeSeriesData();
-  }
-
-  public getTimeSeriesData() {
-    if (this.timeSeriesForm.valid) {
-      let swnTimeSeriesRequestDto = new Object(
-        {
-          start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
-          end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
-          timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
-        });
-      this.isPerformingAction = true;
-      this.errorOccurred = false;
-      this.vegaSpec = null;
-      this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
-        if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
-          var spec = result.data.spec;
-          //spec.width = "container";
-          this.vegaSpec = spec;
-          vegaEmbed('#vis', spec);
-        }
-        else {
-          this.errorOccurred = true;
-        }
-        this.isPerformingAction = false;
-      },
-        error => {
-          this.errorOccurred = true;
-          this.isPerformingAction = false;
-        })
-    }
-    else {
-      Object.keys(this.timeSeriesForm.controls).forEach(field => {
-        const control = this.timeSeriesForm.get(field);
-        control.markAsTouched({ onlySelf: true });
-      });
-    }
-  }
-
-  getTimeSeriesListFromTimerSeriesFormObject() {
-    return this.siteVariablesToQuery().value.map(x => ({
-        variable: x.variable.variable,
-        site: x.variable.station,
-        interval : x.timeInterval,
-        weather_condition : x.filter,
-        aggregation_method : x.aggregationMode
-    }))
-  }
-
-  public getAvailableVariables(featureProperties : any) {
-    this.gettingAvailableVariables = true;
-    this.selectedSiteAvailableVariables = [];
-    let baseSiteVariable = new SiteVariable({stationShortName: featureProperties.shortname, station: featureProperties.station});
-
-    if (featureProperties.has_conductivity) {
-      let conductivityInfo = featureProperties.conductivity_info;
-      let conductivitySiteVariable = Object.assign(new SiteVariable({
-        name: conductivityInfo.name,
-        variable: conductivityInfo.variable,
-        startDate: new Date(`${conductivityInfo.period_start.slice(0, 4)}-${conductivityInfo.period_start.slice(4, 6)}-${conductivityInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${conductivityInfo.period_end.slice(0, 4)}-${conductivityInfo.period_end.slice(4, 6)}-${conductivityInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: conductivityInfo.allowed_aggregations
-      }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(conductivitySiteVariable);
-    }
-
-    if (featureProperties.has_discharge) {
-      let dischargeInfo = featureProperties.discharge_info;
-      let dischargeSiteVariable = Object.assign(new SiteVariable({
-        name: dischargeInfo.name,
-        variable: dischargeInfo.variable,
-        startDate: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: dischargeInfo.allowed_aggregations
-      }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
-    }
-
-    if (featureProperties.has_rainfall) {
-      let rainfallInfo = featureProperties.rainfall_info;
-      let rainfallSiteVariable = Object.assign(new SiteVariable({
-        name: rainfallInfo.name,
-        variable: rainfallInfo.variable,
-        startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: rainfallInfo.allowed_aggregations
-      }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
-    }
-
-    if (featureProperties.has_raw_level) {
-      let rawLevelInfo = featureProperties.raw_level_info;
-      let rawLevelSiteVariable = Object.assign(new SiteVariable({
-        name: rawLevelInfo.name,
-        variable: rawLevelInfo.variable,
-        startDate: new Date(`${rawLevelInfo.period_start.slice(0, 4)}-${rawLevelInfo.period_start.slice(4, 6)}-${rawLevelInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${rawLevelInfo.period_end.slice(0, 4)}-${rawLevelInfo.period_end.slice(4, 6)}-${rawLevelInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: rawLevelInfo.allowed_aggregations
-      }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(rawLevelSiteVariable);
-    }
-
-    this.selectedSiteAvailableVariables.push(Object.assign(new SiteVariable({
-      name: "Urban Drool",
-      variable: "urban_drool",
-      allowedAggregations: this.hydstraAggregationModes.map(x => x.value)
-    }), baseSiteVariable));
-    this.gettingAvailableVariables = false;
-
-  }
-
-  public getDateFromTimeSeriesFormDateObject(formFieldName: string): string {
-    let date = this.timeSeriesForm.get(formFieldName).value;
-    return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
-  }
-
-  public catchExtraSymbols(event: KeyboardEvent): void {
-    if (event.code === "KeyE" || event.code === "Equal" || event.code === "Minus" || event.code === "Plus") {
-      event.preventDefault();
-    }
-  }
-
-  public catchPastedSymbols(event: any): void {
-    let val = event.clipboardData.getData('text/plain');
-    if (val && (val.includes("+") || val.includes("-") || val.includes("e") || val.includes("E"))) {
-      val = val.replace(/\+|\-|e|E/g, '');
-      event.preventDefault();
-    }
-  }
-
-  public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
-    this.scroll(el);
-    this.timeSeriesForm.controls.startDate.setValue(this.formatDateForNgbDatepicker(variable.startDate));
-    this.timeSeriesForm.controls.endDate.setValue(this.formatDateForNgbDatepicker(variable.endDate));
-    this.getTimeSeriesData();
-  }
-
-  public formatDateForNgbDatepicker(date: Date): any {
-    let dateToChange = new Date(date);
-    return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
-  }
-
-  public scroll(el: HTMLElement) {
-    el.scrollIntoView();
-  }
-
   //Known bug in leaflet that during bundling the default image locations can get messed up
   //https://stackoverflow.com/questions/41144319/leaflet-marker-not-found-production-env
   //We could do some kind of custom marker which would require less extra, but this should work for now
@@ -517,22 +533,5 @@ export class DataDashboardComponent implements OnInit {
       shadowSize: [41, 41]
     });
   }
-
-  public siteSelectedAndVariablesFound(): boolean {
-    return this.selectedSiteName && !this.gettingAvailableVariables && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
-  }
-
-  public addVariableToSelection(variable : SiteVariable): void {
-      this.selectedVariables.push(variable);
-      this.addSiteVariableToQuery(variable);
-      this.cdr.detectChanges();
-  }
-
-  public variableNotPresentInSelectedVariables(variable : SiteVariable): boolean {
-    return this.selectedVariables.length == 0 || !this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
-  }
-
-  public getAvailableAggregationModes(variable: SiteVariable): any[] {
-    return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
-  }
+//#endregion
 }
