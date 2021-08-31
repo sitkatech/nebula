@@ -46,6 +46,8 @@ export class WatershedMapComponent implements OnInit, AfterViewInit {
     @Input()
     public selectedWatershedIDs: Array<number> = [];
 
+    public allWatershedIDs: Array<number> = [];
+
     @Input()
     public onEachFeatureCallback?: (feature, layer) => void;
 
@@ -100,10 +102,10 @@ export class WatershedMapComponent implements OnInit, AfterViewInit {
     public ngOnInit(): void {
         // Default bounding box
         this.boundingBox = new BoundingBoxDto();
-        this.boundingBox.Left = -122.65840077734131;
-        this.boundingBox.Bottom = 44.800395454281436;
-        this.boundingBox.Right = -121.65139301718362;
-        this.boundingBox.Top = 45.528908149000124;
+        this.boundingBox.Left = -117.96363830566408;
+        this.boundingBox.Bottom = 33.444047234512354;
+        this.boundingBox.Right = -117.23030090332033;
+        this.boundingBox.Top = 33.73005042840439;
 
         this.tileLayers = Object.assign({}, {
             "Aerial": tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
@@ -164,7 +166,13 @@ export class WatershedMapComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
+        this.watershedService.getWatersheds().subscribe(watersheds => {
+            this.allWatershedIDs = watersheds.map(x => x.WatershedID);
+            this.initializeMap();
+        });
+    }
 
+    private initializeMap() {
         const mapOptions: MapOptions = {
             // center: [46.8797, -110],
             // zoom: 6,
@@ -191,6 +199,9 @@ export class WatershedMapComponent implements OnInit, AfterViewInit {
         if (this.selectedWatershedIDs.length > 0) {
             this.updateSelectedWatershedsOverlayLayer(this.selectedWatershedIDs);
             this.fitBoundsToSelectedWatersheds(this.selectedWatershedIDs);
+        }
+        else {
+            this.fitBoundsToSelectedWatersheds(this.allWatershedIDs);
         }
 
         if (!this.disableDefaultClick) {
