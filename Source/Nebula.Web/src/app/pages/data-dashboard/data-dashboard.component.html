@@ -242,6 +242,7 @@
                             </ngContainer>
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
+                            <button *ngIf="currentlyDisplayingRequestDto" (click)="downloadChartData()" class="btn btn-sm btn-nebula mb-1">Download</button>
                             <div [ngStyle]="{'visibility':vegaSpec ? '' : 'hidden'}" id="vis" style="width:100%">
                             </div>
                         </div>

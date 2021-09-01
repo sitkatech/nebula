@@ -77,6 +77,7 @@ export class DataDashboardComponent implements OnInit {
   public isPerformingAction: boolean = false;
   public gettingAvailableVariables: boolean = false;
   public alisoStations: any;
+  currentlyDisplayingRequestDto: any;
 
   constructor(
     private appRef: ApplicationRef,
@@ -169,12 +170,14 @@ export class DataDashboardComponent implements OnInit {
       this.isPerformingAction = true;
       this.errorOccurred = false;
       this.vegaSpec = null;
+      this.currentlyDisplayingRequestDto = null;
       this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
         if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
           var spec = result.data.spec;
           spec.width = "container";
           this.vegaSpec = spec;
           vegaEmbed('#vis', spec);
+          this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
         }
         else {
           this.errorOccurred = true;
@@ -192,6 +195,31 @@ export class DataDashboardComponent implements OnInit {
         control.markAsTouched({ onlySelf: true });
       });
     }
+  }
+
+  public downloadChartData() {
+    if (!this.currentlyDisplayingRequestDto) {
+      return;
+    }
+
+    this.lyraService.downloadTimeSeriesData(this.currentlyDisplayingRequestDto).subscribe(result => {
+      const blob = new Blob([result], {
+        type: 'text/csv'
+      });
+
+      //Create a fake object to trigger downloading the csv file that was returned
+      const a: any = document.createElement('a');
+      document.body.appendChild(a);
+
+      a.style = 'display: none';
+      const url = window.URL.createObjectURL(blob);
+      a.href = url;
+      let date = new Date();
+      a.download = `SWN_Multi_Site_Multi_Variable_Data_Request_${date.getMonth() + 1}_${date.getDate()}_${date.getFullYear()}_${date.getHours()}_${date.getMinutes()}.csv`;
+      a.click();
+      window.URL.revokeObjectURL(url);
+      //this.isDownloading = false;
+    })
   }
 
   public getAvailableVariables(featureProperties: any) {

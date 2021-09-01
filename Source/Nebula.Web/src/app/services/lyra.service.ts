@@ -6,7 +6,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class LyraService {
-
   private baseRoute = 'https://swn-lyra-dev.azurewebsites.net';
 
   constructor(private http: HttpClient) { }
@@ -26,8 +25,14 @@ export class LyraService {
 
   getTimeSeriesData(timeSeriesObject: Object) : Observable<any> {
     let route = `${this.baseRoute}/api/plot/multi_variable?json=${JSON.stringify(timeSeriesObject)}`;
-    debugger;
     return this.http.get(route);
+  }
+
+  downloadTimeSeriesData(timeSeriesObject: Object) {
+    let route = `${this.baseRoute}/api/plot/multi_variable/data?f=csv&json=${JSON.stringify(timeSeriesObject)}`;
+    return this.http.get(route, {
+      responseType: 'arraybuffer'
+    });
   }
   
 }
