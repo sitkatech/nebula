@@ -56,7 +56,7 @@ export class DataDashboardComponent implements OnInit {
   public hydstraAggregationModes = [{ display: "Total", value: "tot" }, { display: "Average", value: "mean" }, { display: "Maximum", value: "max" }, { display: "Minimum", value: "min" }];
   public hydstraIntervals = [{ display: "Hourly", value: "hour" }, { display: "Daily", value: "day" }, { display: "Monthly", value: "month" }, { display: "Yearly", value: "year" }];
   public hydstraFilters = [{ display: "All (Wet + Dry)", value: "both" }, { display: "Dry", value: "dry" }, { display: "Wet", value: "wet" }];
-  
+
   public currentDate = new Date();
 
   public timeSeriesForm = new FormGroup({
@@ -194,9 +194,9 @@ export class DataDashboardComponent implements OnInit {
     }
   }
 
-  public getAvailableVariables(featureProperties : any) {
+  public getAvailableVariables(featureProperties: any) {
     this.selectedSiteAvailableVariables = [];
-    let baseSiteVariable = new SiteVariable({stationShortName: featureProperties.shortname, station: featureProperties.station});
+    let baseSiteVariable = new SiteVariable({ stationShortName: featureProperties.shortname, station: featureProperties.station });
 
     if (featureProperties.has_conductivity) {
       let conductivityInfo = featureProperties.conductivity_info;
@@ -287,13 +287,13 @@ export class DataDashboardComponent implements OnInit {
     return this.selectedSiteName && !this.gettingAvailableVariables && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
   }
 
-  public addVariableToSelection(variable : SiteVariable): void {
-      this.selectedVariables.push(variable);
-      this.addSiteVariableToQuery(variable);
-      this.cdr.detectChanges();
+  public addVariableToSelection(variable: SiteVariable): void {
+    this.selectedVariables.push(variable);
+    this.addSiteVariableToQuery(variable);
+    this.cdr.detectChanges();
   }
 
-  public removeVariableFromSelection(index : number): void {
+  public removeVariableFromSelection(index: number): void {
     this.selectedVariables.splice(index, 1);
     this.removeSiteVariableToQuery(index);
   }
@@ -303,7 +303,7 @@ export class DataDashboardComponent implements OnInit {
     this.siteVariablesToQuery().clear();
   }
 
-  public variableNotPresentInSelectedVariables(variable : SiteVariable): boolean {
+  public variableNotPresentInSelectedVariables(variable: SiteVariable): boolean {
     return this.selectedVariables.length == 0 || !this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
   }
 
@@ -311,17 +311,17 @@ export class DataDashboardComponent implements OnInit {
     return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
   }
 
-//#region Form Functionality
+  //#region Form Functionality
 
   get f() {
     return this.timeSeriesForm.controls;
   }
 
-  siteVariablesToQuery() : FormArray {
+  siteVariablesToQuery(): FormArray {
     return this.timeSeriesForm.get("siteVariablesToQuery") as FormArray
   }
 
-  newSiteVariableToQuery(variable : SiteVariable): FormGroup {
+  newSiteVariableToQuery(variable: SiteVariable): FormGroup {
     return this.formBuilder.group({
       variable: variable,
       timeInterval: new FormControl(null, [Validators.required]),
@@ -329,22 +329,23 @@ export class DataDashboardComponent implements OnInit {
       filter: new FormControl()
     })
   }
-   
+
   addSiteVariableToQuery(variable) {
     this.siteVariablesToQuery().push(this.newSiteVariableToQuery(variable));
   }
-   
-  removeSiteVariableToQuery(i:number) {
+
+  removeSiteVariableToQuery(i: number) {
+
     this.siteVariablesToQuery().removeAt(i);
   }
 
   getTimeSeriesListFromTimerSeriesFormObject() {
     return this.siteVariablesToQuery().value.map(x => ({
-        variable: x.variable.variable,
-        site: x.variable.station,
-        interval : x.timeInterval,
-        weather_condition : x.filter,
-        aggregation_method : x.aggregationMode
+      variable: x.variable.variable,
+      site: x.variable.station,
+      interval: x.timeInterval,
+      weather_condition: x.filter,
+      aggregation_method: x.aggregationMode
     }))
   }
 
@@ -355,7 +356,7 @@ export class DataDashboardComponent implements OnInit {
 
   //#endregion
 
-//#region Map Functionality
+  //#region Map Functionality
   public initializeMap(): void {
 
     const mapOptions: L.MapOptions = {
@@ -532,5 +533,5 @@ export class DataDashboardComponent implements OnInit {
       shadowSize: [41, 41]
     });
   }
-//#endregion
+  //#endregion
 }

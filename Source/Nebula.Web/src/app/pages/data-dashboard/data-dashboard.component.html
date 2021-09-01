@@ -70,9 +70,8 @@
                                                             {{variable.startDate}} -
                                                             {{variable.endDate}}</small>
                                                     </div>
-                                                    <div class="col-3 align-self-center text-center"
-                                                        *ngIf="variableNotPresentInSelectedVariables(variable)">
-                                                        <button class="btn btn-nebula"
+                                                    <div class="col-3 align-self-center text-center">
+                                                        <button class="btn btn-sm btn-nebula" [disabled]="!variableNotPresentInSelectedVariables(variable)"
                                                             (click)="addVariableToSelection(variable)">Add</button>
                                                     </div>
                                                 </div>
@@ -98,7 +97,7 @@
                     <ngContainer *ngIf="selectedVariables.length > 0">
                         <div class="selected-variable" *ngFor="let variable of selectedVariables; let i = index">
                             <span>{{variable.stationShortName}} - {{variable.name}}</span>
-                            <button (click)="removeVariableFromSelection(index)" type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <button (click)="removeVariableFromSelection(i)" type="button" class="close" data-dismiss="alert" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                              </button>
                         </div>
