@@ -55,7 +55,7 @@ export class DataDashboardComponent implements OnInit {
 
   public vegaSpec: Object = null;
 
-  public hydstraAggregationModes = [{display: "Hi", value:"there"},{ display: "Total", value: "tot" }, { display: "Average", value: "mean" }, { display: "Maximum", value: "max" }, { display: "Minimum", value: "min" }];
+  public hydstraAggregationModes = [{ display: "Total", value: "tot" }, { display: "Average", value: "mean" }, { display: "Maximum", value: "max" }, { display: "Minimum", value: "min" }];
   public hydstraIntervals = [{ display: "Hourly", value: "hour" }, { display: "Daily", value: "day" }, { display: "Monthly", value: "month" }, { display: "Yearly", value: "year" }];
   public hydstraFilters = [{ display: "All (Wet + Dry)", value: "both" }, { display: "Dry", value: "dry" }, { display: "Wet", value: "wet" }];
 
@@ -270,7 +270,7 @@ export class DataDashboardComponent implements OnInit {
         variable: dischargeInfo.variable,
         startDate: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: this.hydstraAggregationModes.map(x => x.value)//dischargeInfo.allowed_aggregations
+        allowedAggregations: dischargeInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
     }
