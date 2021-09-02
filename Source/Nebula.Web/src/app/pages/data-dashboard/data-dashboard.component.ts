@@ -74,10 +74,10 @@ export class DataDashboardComponent implements OnInit {
 
   public errorOccurred: boolean;
   public errorMessage: string = null;
-  public isPerformingAction: boolean = false;
-  public gettingAvailableVariables: boolean = false;
+  public gettingTimeSeriesData: boolean = false;
   public alisoStations: any;
   currentlyDisplayingRequestDto: any;
+  downloadingChartData: boolean;
 
   constructor(
     private appRef: ApplicationRef,
@@ -159,42 +159,50 @@ export class DataDashboardComponent implements OnInit {
     this.getTimeSeriesData();
   }
 
+  public isActionBeingPerformed() {
+    return this.gettingTimeSeriesData || this.downloadingChartData
+  }
+
   public getTimeSeriesData() {
-    if (this.timeSeriesForm.valid) {
-      let swnTimeSeriesRequestDto = new Object(
-        {
-          start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
-          end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
-          timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
-        });
-      this.isPerformingAction = true;
-      this.errorOccurred = false;
-      this.vegaSpec = null;
-      this.currentlyDisplayingRequestDto = null;
-      this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
-        if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
-          var spec = result.data.spec;
-          spec.width = "container";
-          this.vegaSpec = spec;
-          vegaEmbed('#vis', spec);
-          this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
-        }
-        else {
-          this.errorOccurred = true;
-        }
-        this.isPerformingAction = false;
-      },
-        error => {
-          this.errorOccurred = true;
-          this.isPerformingAction = false;
-        })
-    }
-    else {
+    if (!this.timeSeriesForm.valid) {
       Object.keys(this.timeSeriesForm.controls).forEach(field => {
         const control = this.timeSeriesForm.get(field);
         control.markAsTouched({ onlySelf: true });
       });
     }
+
+    let swnTimeSeriesRequestDto =
+    {
+      start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
+      end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
+      timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
+    };
+    this.gettingTimeSeriesData = true;
+    this.errorOccurred = false;
+    this.vegaSpec = null;
+    this.currentlyDisplayingRequestDto = null;
+    this.timeSeriesForm.disable();
+    this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
+      if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
+        debugger;
+        var spec = result.data.spec;
+        //This only works for single view charts, need to find a new way to be responsive
+        //spec.width = "container";
+        this.vegaSpec = spec;
+        vegaEmbed('#vis', spec);
+        this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
+      }
+      else {
+        this.errorOccurred = true;
+      }
+      this.gettingTimeSeriesData = false;
+      this.timeSeriesForm.enable();
+    },
+      error => {
+        this.errorOccurred = true;
+        this.gettingTimeSeriesData = false;
+        this.timeSeriesForm.enable();
+      });
   }
 
   public downloadChartData() {
@@ -202,6 +210,8 @@ export class DataDashboardComponent implements OnInit {
       return;
     }
 
+    this.downloadingChartData = true;
+    this.timeSeriesForm.disable();
     this.lyraService.downloadTimeSeriesData(this.currentlyDisplayingRequestDto).subscribe(result => {
       const blob = new Blob([result], {
         type: 'text/csv'
@@ -218,7 +228,8 @@ export class DataDashboardComponent implements OnInit {
       a.download = `SWN_Multi_Site_Multi_Variable_Data_Request_${date.getMonth() + 1}_${date.getDate()}_${date.getFullYear()}_${date.getHours()}_${date.getMinutes()}.csv`;
       a.click();
       window.URL.revokeObjectURL(url);
-      //this.isDownloading = false;
+      this.downloadingChartData = false;
+      this.timeSeriesForm.enable();
     })
   }
 
@@ -259,6 +270,21 @@ export class DataDashboardComponent implements OnInit {
         endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
         allowedAggregations: rainfallInfo.allowed_aggregations
       }), baseSiteVariable);
+      this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
+    }
+    else if (featureProperties.nearest_rainfall_station != null) {
+      let rainfallStationProperties = this.alisoStations.filter(x => x.properties.index === featureProperties.nearest_rainfall_station)[0].properties;
+      let rainfallInfo = rainfallStationProperties.rainfall_info;
+      let rainfallSiteVariable = new SiteVariable({
+        name: rainfallInfo.name,
+        variable: rainfallInfo.variable,
+        gage: rainfallStationProperties.stname,
+        startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
+        endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: rainfallInfo.allowed_aggregations,
+        stationShortName: rainfallStationProperties.shortname, 
+        station: rainfallStationProperties.station
+      });
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
     }
 
@@ -312,7 +338,7 @@ export class DataDashboardComponent implements OnInit {
   }
 
   public siteSelectedAndVariablesFound(): boolean {
-    return this.selectedSiteName && !this.gettingAvailableVariables && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
+    return this.selectedSiteName && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
   }
 
   public addVariableToSelection(variable: SiteVariable): void {
@@ -363,7 +389,6 @@ export class DataDashboardComponent implements OnInit {
   }
 
   removeSiteVariableToQuery(i: number) {
-
     this.siteVariablesToQuery().removeAt(i);
   }
 
