@@ -39,7 +39,7 @@ import { FieldDefinitionListComponent } from './pages/field-definition-list/fiel
 import { FieldDefinitionEditComponent } from './pages/field-definition-edit/field-definition-edit.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpErrorInterceptor } from './shared/interceptors/httpErrorInterceptor';
-import { DataDashboardComponent } from './pages/data-dashboard/data-dashboard.component';
+import { MultiVariableMultiSiteComponent } from './pages/multi-variable-multi-site/multi-variable-multi-site.component';
 import { environment } from 'src/environments/environment';
 import { AppInsightsService } from './shared/services/app-insights.service';
 import { GlobalErrorHandlerService } from './shared/services/global-error-handler.service';
@@ -70,7 +70,7 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     DisclaimerComponent,
     FieldDefinitionListComponent,
     FieldDefinitionEditComponent,
-    DataDashboardComponent,
+    MultiVariableMultiSiteComponent,
   ],
   imports: [
     AppRoutingModule,

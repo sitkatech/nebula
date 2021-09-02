@@ -22,17 +22,17 @@ declare var $: any;
 declare var vegaEmbed: any;
 
 @Component({
-  selector: 'nebula-data-dashboard',
-  templateUrl: './data-dashboard.component.html',
-  styleUrls: ['./data-dashboard.component.scss']
+  selector: 'nebula-multi-variable-multi-site',
+  templateUrl: './multi-variable-multi-site.component.html',
+  styleUrls: ['./multi-variable-multi-site.component.scss']
 })
-export class DataDashboardComponent implements OnInit {
+export class MultiVariableMultiSiteComponent implements OnInit {
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
-  public richTextTypeID = CustomRichTextType.DataDashboard;
+  public richTextTypeID = CustomRichTextType.MultiVariableMultiSite;
 
-  public mapID = "DataDashboardMap";
+  public mapID = "MultiVariableMultiSiteMap";
   public mapHeight = "500px";
   public map: L.Map;
   public featureLayer: any;
