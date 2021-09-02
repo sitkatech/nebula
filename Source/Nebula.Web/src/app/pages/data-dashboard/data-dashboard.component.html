@@ -2,7 +2,7 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-empty">
-                <li class="breadcrumb-item active" aria-current="page">Data Download</li>
+                <li class="breadcrumb-item active" aria-current="page">Multi-Variable Multi-Site</li>
             </ol>
         </nav>
     </div>
@@ -13,7 +13,7 @@
 
     <div class="row">
         <div class="col">
-            <h2 class="d-inline-block">Data Dashboard</h2>
+            <h2 class="d-inline-block">Multi-Variable Multi-Site</h2>
         </div>
     </div>
     <div class="row mt-1 mb-2">
@@ -31,11 +31,11 @@
                 </div>
                 <div class="card-body table-responsive">
                     <div class="row">
-                        <div class="col-sm-8">
+                        <div class="col-md-8">
                             <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight"
                                 style="height:100%"></div>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-md-4">
                             <ng-container *ngIf="!selectedSiteName">
                                 <p>Click a station on the map to get started!</p>
                             </ng-container>
@@ -141,16 +141,16 @@
                             </ngb-alert>
                             </div>
                         </ng-container>
-                        <div class="col-6">
+                        <div class="col-lg-6">
                             <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
                                 <div *ngIf="errorMessage" class="alert alert-danger">
                                     {{errorMessage}}
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="startDate"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">Start
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">Start
                                         Date</label>
-                                    <div class="input-group col-lg-6">
+                                    <div class="input-group col-sm-6">
                                         <input formControlName="startDate" id="startDate" type="text" ngbDatepicker
                                             #start="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="start.toggle()"
                                             class="form-control">
@@ -160,16 +160,16 @@
                                         </div>
                                     </div>
 
-                                    <div *ngIf="f.startDate.touched && f.startDate.invalid" class="alert alert-danger">
+                                    <div *ngIf="f.startDate.touched && f.startDate.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                         <div *ngIf="f.startDate.errors.required">Date is required.</div>
-                                        <!-- <div *ngIf="f.date.errors.pattern">Date must be in the format 'yyyy-mm-dd'</div> -->
+                                        <div *ngIf="f.startDate.errors.ngbDate?.invalid">Date must be in the format 'yyyy-mm-dd'</div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="endDate"
-                                        class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">End
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">End
                                         Date</label>
-                                    <div class="input-group col-lg-6">
+                                    <div class="input-group col-sm-6">
                                         <input formControlName="endDate" id="endDate" type="text" ngbDatepicker
                                             #end="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="end.toggle()"
                                             class="form-control">
@@ -179,21 +179,21 @@
                                         </div>
                                     </div>
 
-                                    <div *ngIf="f.endDate.touched && f.endDate.invalid" class="alert alert-danger">
+                                    <div *ngIf="f.endDate.touched && f.endDate.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                         <div *ngIf="f.endDate.errors.required">Date is required.</div>
-                                        <!-- <div *ngIf="f.date.errors.pattern">Date must be in the format 'yyyy-mm-dd'</div> -->
+                                        <div *ngIf="f.endDate.errors.ngbDate?.invalid">Date must be in the format 'yyyy-mm-dd'</div>
                                     </div>
                                 </div>
                                 <ngContainer formArrayName="siteVariablesToQuery" class="form-group w-100 mb-1">
                                     <ngContainer *ngFor="let control of siteVariablesToQuery().controls; let i=index"
                                         class="form-group w-100 mb-1" [formGroupName]="i">
-                                        <div class="selected-variable">
+                                        <div class="selected-variable mb-1">
                                             <span>{{control.value.variable.stationShortName}}</span> -
                                             <span>{{control.value.variable.name}}</span>
                                         </div>
                                         <div class="form-group w-100 mb-1">
                                             <label for="timeInterval"
-                                                class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">
+                                                class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
                                                 <field-definition [fieldDefinitionType]="'TimeInterval'">
                                                 </field-definition>
                                             </label>
@@ -206,12 +206,15 @@
                                                     </option>
                                                 </select>
                                             </div>
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('timeInterval').touched && siteVariablesToQuery().controls[i].get('timeInterval').invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                                <div *ngIf="siteVariablesToQuery().controls[i].get('timeInterval').errors.required">Time Interval is required.</div>
+                                            </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">
                                             <label for="filter"
-                                                class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">
+                                            class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
                                                 Filter
-                                                <!-- <field-definition [fieldDefinitionType]="'TimeInterval'"></field-definition> -->
+                                                <!-- <field-definition [fieldDefinitionType]="'Filter'"></field-definition> -->
                                             </label>
                                             <div class="col w-100">
                                                 <select formControlName="filter" id="filter" class="form-control">
@@ -221,14 +224,17 @@
                                                     </option>
                                                 </select>
                                             </div>
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('filter').touched && siteVariablesToQuery().controls[i].get('filter').invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                                <div *ngIf="siteVariablesToQuery().controls[i].get('filter').errors.required">Filter is required.</div>
+                                            </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">
                                             <label for="aggregationMode"
-                                                class="col-lg-6 col-form-label required justify-content-start justify-content-lg-end">
+                                                class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
                                                 <field-definition [fieldDefinitionType]="'AggregationMode'">
                                                 </field-definition>
                                             </label>
-                                            <div class="col-lg-6">
+                                            <div class="col-sm-6 w-100">
                                                 <select formControlName="aggregationMode" id="aggregationMode"
                                                     class="form-control">
                                                     <option
@@ -237,6 +243,9 @@
                                                         {{mode.display}}
                                                     </option>
                                                 </select>
+                                            </div>
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').touched && siteVariablesToQuery().controls[i].get('aggregationMode').invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                                <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').errors.required">Aggregation Mode is required.</div>
                                             </div>
                                         </div>
                                     </ngContainer>
@@ -252,7 +261,7 @@
                                 </div>
                             </form>
                         </div>
-                        <div *ngIf="siteSelectedAndVariablesFound()" class="col-6">
+                        <div *ngIf="siteSelectedAndVariablesFound()" class="col-lg-6">
                             <ngContainer *ngIf="!vegaSpec && !errorOccurred">
                                 <span *ngIf="gettingTimeSeriesData">Loading chart values <span
                                         class="fa fa-spinner loading-spinner"></span></span>
@@ -263,7 +272,7 @@
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
                             <button *ngIf="currentlyDisplayingRequestDto" (click)="downloadChartData()"
-                                class="btn btn-sm btn-nebula mb-1" [disabled]="isActionBeingPerformed()">
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left" [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
                                     class="fa fa-spinner loading-spinner"></span>Download</button>
                             <div [ngStyle]="{'visibility':vegaSpec ? '' : 'hidden'}" id="vis" style="width:100%">

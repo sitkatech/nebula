@@ -31,12 +31,6 @@ export class DataDashboardComponent implements OnInit {
   @ViewChild("mapDiv") mapElement: ElementRef;
 
   public richTextTypeID = CustomRichTextType.DataDashboard;
-  public defaultMapZoom = 12;
-  public afterSetControl = new EventEmitter();
-  public afterLoadMap = new EventEmitter();
-  public onMapMoveEnd = new EventEmitter();
-
-  public component: any;
 
   public mapID = "DataDashboardMap";
   public mapHeight = "500px";
@@ -52,6 +46,10 @@ export class DataDashboardComponent implements OnInit {
   public layerControlOpen: boolean = false;
   public iconDefault: any;
   public selectedIconDefault: any;
+  public defaultMapZoom = 12;
+  public afterSetControl = new EventEmitter();
+  public afterLoadMap = new EventEmitter();
+  public onMapMoveEnd = new EventEmitter();
 
   public vegaSpec: Object = null;
 
@@ -60,7 +58,6 @@ export class DataDashboardComponent implements OnInit {
   public hydstraFilters = [{ display: "All (Wet + Dry)", value: "both" }, { display: "Dry", value: "dry" }, { display: "Wet", value: "wet" }];
 
   public currentDate = new Date();
-
   public timeSeriesForm = new FormGroup({
     startDate: new FormControl({ year: this.currentDate.getUTCFullYear() - 5, month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
     endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
@@ -71,15 +68,14 @@ export class DataDashboardComponent implements OnInit {
   public selectedSiteAvailableVariables: SiteVariable[] = [];
   public selectedSiteStation: string = null;
   public selectedSiteName: string = null;
-
   public selectedVariables: SiteVariable[] = [];
 
   public errorOccurred: boolean;
   public errorMessage: string = null;
   public gettingTimeSeriesData: boolean = false;
-  public alisoStations: any;
-  currentlyDisplayingRequestDto: any;
-  downloadingChartData: boolean;
+  public allStations: any;
+  public currentlyDisplayingRequestDto: any;
+  public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
 
   constructor(
@@ -167,11 +163,21 @@ export class DataDashboardComponent implements OnInit {
   }
 
   public getTimeSeriesData() {
-    if (!this.timeSeriesForm.valid) {
+    
+    if (!this.timeSeriesForm.valid || !this.siteVariablesToQuery().valid) {
       Object.keys(this.timeSeriesForm.controls).forEach(field => {
         const control = this.timeSeriesForm.get(field);
         control.markAsTouched({ onlySelf: true });
       });
+      for (let [index, formGroup] of this.siteVariablesToQuery().controls.entries()) {
+        if (formGroup instanceof FormGroup) {
+          Object.keys(formGroup.controls).forEach(field => {
+            const control = this.siteVariablesToQuery().controls[index].get(field);
+            control.markAsTouched({ onlySelf: true });
+          })
+        }
+      }
+      return;
     }
 
     let swnTimeSeriesRequestDto =
@@ -207,7 +213,7 @@ export class DataDashboardComponent implements OnInit {
     },
       error => {
         if (error.hasOwnProperty('error') && error.error.hasOwnProperty('detail')) {
-          for (let details of error.error.detail){
+          for (let details of error.error.detail) {
             if (details.hasOwnProperty('msg')) {
               this.lyraMessages.push(new Alert(`There was an error with the entered query. Message: ${details.msg}`, AlertContext.Danger, true));
             }
@@ -245,6 +251,10 @@ export class DataDashboardComponent implements OnInit {
       this.downloadingChartData = false;
       this.timeSeriesForm.enable();
     })
+  }
+
+  public getAvailableAggregationModes(variable: SiteVariable): any[] {
+    return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
   }
 
   public getAvailableVariables(featureProperties: any) {
@@ -287,7 +297,7 @@ export class DataDashboardComponent implements OnInit {
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
     }
     else if (featureProperties.nearest_rainfall_station != null) {
-      let rainfallStationProperties = this.alisoStations.filter(x => x.properties.index === featureProperties.nearest_rainfall_station)[0].properties;
+      let rainfallStationProperties = this.allStations.filter(x => x.properties.index === featureProperties.nearest_rainfall_station)[0].properties;
       let rainfallInfo = rainfallStationProperties.rainfall_info;
       let rainfallSiteVariable = new SiteVariable({
         name: rainfallInfo.name,
@@ -296,7 +306,7 @@ export class DataDashboardComponent implements OnInit {
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
         allowedAggregations: rainfallInfo.allowed_aggregations,
-        stationShortName: rainfallStationProperties.shortname, 
+        stationShortName: rainfallStationProperties.shortname,
         station: rainfallStationProperties.station
       });
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
@@ -319,6 +329,34 @@ export class DataDashboardComponent implements OnInit {
       variable: "urban_drool",
       allowedAggregations: this.hydstraAggregationModes.filter(x => x.value == "tot").map(x => x.value)
     }), baseSiteVariable));
+  }
+
+  public siteSelectedAndVariablesFound(): boolean {
+    return this.selectedSiteName && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
+  }
+
+  public addVariableToSelection(variable: SiteVariable): void {
+    this.selectedVariables.push(variable);
+    this.addSiteVariableToQuery(variable);
+    this.cdr.detectChanges();
+  }
+
+  public removeVariableFromSelection(index: number): void {
+    this.selectedVariables.splice(index, 1);
+    this.removeSiteVariableToQuery(index);
+    if (this.selectedVariables.length == 0) {
+      this.lyraMessages = [];
+    }
+  }
+
+  public clearAllVariables(): void {
+    this.selectedVariables = [];
+    this.lyraMessages = [];
+    this.siteVariablesToQuery().clear();
+  }
+
+  public variableNotPresentInSelectedVariables(variable: SiteVariable): boolean {
+    return this.selectedVariables.length == 0 || !this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
   }
 
   public catchExtraSymbols(event: KeyboardEvent): void {
@@ -351,36 +389,8 @@ export class DataDashboardComponent implements OnInit {
     el.scrollIntoView();
   }
 
-  public closeAlert(index : number) {
+  public closeAlert(index: number) {
     this.lyraMessages.splice(index, 1);
-}
-
-  public siteSelectedAndVariablesFound(): boolean {
-    return this.selectedSiteName && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
-  }
-
-  public addVariableToSelection(variable: SiteVariable): void {
-    this.selectedVariables.push(variable);
-    this.addSiteVariableToQuery(variable);
-    this.cdr.detectChanges();
-  }
-
-  public removeVariableFromSelection(index: number): void {
-    this.selectedVariables.splice(index, 1);
-    this.removeSiteVariableToQuery(index);
-  }
-
-  public clearAllVariables(): void {
-    this.selectedVariables = [];
-    this.siteVariablesToQuery().clear();
-  }
-
-  public variableNotPresentInSelectedVariables(variable: SiteVariable): boolean {
-    return this.selectedVariables.length == 0 || !this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
-  }
-
-  public getAvailableAggregationModes(variable: SiteVariable): any[] {
-    return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
   }
 
   //#region Form Functionality
@@ -397,8 +407,8 @@ export class DataDashboardComponent implements OnInit {
     return this.formBuilder.group({
       variable: variable,
       timeInterval: new FormControl(null, [Validators.required]),
-      aggregationMode: new FormControl(),
-      filter: new FormControl()
+      aggregationMode: new FormControl(null, [Validators.required]),
+      filter: new FormControl(null, [Validators.required])
     })
   }
 
@@ -471,25 +481,11 @@ export class DataDashboardComponent implements OnInit {
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();
       let maskLayerPoints = maskString.features[0].geometry.coordinates[0];
-      this.alisoStations = siteLocationObject.features.filter(feature => {
-        let lat = feature.geometry.coordinates[1];
-        let lng = feature.geometry.coordinates[0];
-
-        let inside = false;
-        for (var i = 0, j = maskLayerPoints.length - 1; i < maskLayerPoints.length; j = i++) {
-          var xi = maskLayerPoints[i][1], yi = maskLayerPoints[i][0];
-          var xj = maskLayerPoints[j][1], yj = maskLayerPoints[j][0];
-
-          var intersect = ((yi > lng) != (yj > lng))
-            && (lat < (xj - xi) * (lng - yi) / (yj - yi) + xi);
-          if (intersect) inside = !inside;
-        }
-        return inside;
-      });
+      this.allStations = siteLocationObject.features;
 
       this.setupMarkers();
 
-      this.siteLocationLayer = L.geoJSON(this.alisoStations, {
+      this.siteLocationLayer = L.geoJSON(this.allStations, {
         onEachFeature: function (feature, layer) {
           layer.bindPopup('<p>' + feature.properties.stname + '</p>');
           layer.on('click', () => {
