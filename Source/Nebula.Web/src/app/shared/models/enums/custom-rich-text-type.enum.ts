@@ -5,5 +5,5 @@ export enum CustomRichTextType{
     Help = 4,
     LabelsAndDefinitionsList = 5,
     WatershedList = 6,
-    DataDashboard = 7
+    MultiVariableMultiSite = 7
 }

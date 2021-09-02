@@ -6,7 +6,7 @@ USING (VALUES
 (4, 'Help', 'Help'),
 (5, 'LabelsAndDefinitionsList', 'Labels and Definitions List'),
 (6, 'WatershedList', 'Watershed List'),
-(7, 'DataDashboard', 'Data Dashboard')
+(7, 'MultiVariableMultiSite', 'Multi-Variable Multi-Site')
 )
 AS Source (CustomRichTextTypeID, CustomRichTextTypeName, CustomRichTextTypeDisplayName)
 ON Target.CustomRichTextTypeID = Source.CustomRichTextTypeID

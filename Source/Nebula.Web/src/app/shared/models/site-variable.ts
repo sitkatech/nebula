@@ -1,9 +1,12 @@
 export class SiteVariable {
-    displayName: string;
     name: string;
-    variable: number;
+    variable: string;
+    gage: string;
+    stationShortName: string;
+    station: string;
     startDate: Date;
     endDate: Date;
+    allowedAggregations: string[];
 
     constructor(obj?: any) {
         Object.assign(this, obj);
