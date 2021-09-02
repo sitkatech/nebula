@@ -133,6 +133,14 @@
                         </div>
                     </div>
                     <div *ngIf="selectedVariables.length > 0" class="row">
+                        <ng-container *ngIf="lyraMessages.length > 0">
+                            <div class="col-12" *ngFor="let alert of lyraMessages; let i = index">
+                                <ngb-alert [type]="alert.context"
+                                [dismissible]="alert.dismissable" (close)="closeAlert(i)">
+                                <span [innerHTML]="alert.message"></span>
+                            </ngb-alert>
+                            </div>
+                        </ng-container>
                         <div class="col-6">
                             <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
                                 <div *ngIf="errorMessage" class="alert alert-danger">

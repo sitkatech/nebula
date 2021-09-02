@@ -15,6 +15,8 @@ import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text
 import { url } from 'inspector';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { Alert } from 'src/app/shared/models/alert';
+import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -53,7 +55,7 @@ export class DataDashboardComponent implements OnInit {
 
   public vegaSpec: Object = null;
 
-  public hydstraAggregationModes = [{ display: "Total", value: "tot" }, { display: "Average", value: "mean" }, { display: "Maximum", value: "max" }, { display: "Minimum", value: "min" }];
+  public hydstraAggregationModes = [{display: "Hi", value:"there"},{ display: "Total", value: "tot" }, { display: "Average", value: "mean" }, { display: "Maximum", value: "max" }, { display: "Minimum", value: "min" }];
   public hydstraIntervals = [{ display: "Hourly", value: "hour" }, { display: "Daily", value: "day" }, { display: "Monthly", value: "month" }, { display: "Yearly", value: "year" }];
   public hydstraFilters = [{ display: "All (Wet + Dry)", value: "both" }, { display: "Dry", value: "dry" }, { display: "Wet", value: "wet" }];
 
@@ -66,11 +68,11 @@ export class DataDashboardComponent implements OnInit {
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
-  public selectedSiteAvailableVariables: SiteVariable[] = new Array<SiteVariable>();
+  public selectedSiteAvailableVariables: SiteVariable[] = [];
   public selectedSiteStation: string = null;
   public selectedSiteName: string = null;
 
-  public selectedVariables: SiteVariable[] = new Array<SiteVariable>();
+  public selectedVariables: SiteVariable[] = [];
 
   public errorOccurred: boolean;
   public errorMessage: string = null;
@@ -78,6 +80,7 @@ export class DataDashboardComponent implements OnInit {
   public alisoStations: any;
   currentlyDisplayingRequestDto: any;
   downloadingChartData: boolean;
+  public lyraMessages: Alert[] = [];
 
   constructor(
     private appRef: ApplicationRef,
@@ -181,24 +184,35 @@ export class DataDashboardComponent implements OnInit {
     this.errorOccurred = false;
     this.vegaSpec = null;
     this.currentlyDisplayingRequestDto = null;
+    this.lyraMessages = [];
     this.timeSeriesForm.disable();
     this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
-        debugger;
-        var spec = result.data.spec;
-        //This only works for single view charts, need to find a new way to be responsive
-        //spec.width = "container";
-        this.vegaSpec = spec;
-        vegaEmbed('#vis', spec);
+        if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
+          this.lyraMessages.push(...result.data.messages.filter(x => x != "").map(x => new Alert(x, AlertContext.Warning, true)));
+        }
+        this.vegaSpec = result.data.spec;
+        vegaEmbed('#vis', this.vegaSpec);
         this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
       }
       else {
         this.errorOccurred = true;
+        if (result.hasOwnProperty('msg')) {
+          this.lyraMessages.push(new Alert(`There was an error with the entered query. Message: ${result.msg}`, AlertContext.Danger, true));
+        }
       }
       this.gettingTimeSeriesData = false;
       this.timeSeriesForm.enable();
+      this.cdr.detectChanges();
     },
       error => {
+        if (error.hasOwnProperty('error') && error.error.hasOwnProperty('detail')) {
+          for (let details of error.error.detail){
+            if (details.hasOwnProperty('msg')) {
+              this.lyraMessages.push(new Alert(`There was an error with the entered query. Message: ${details.msg}`, AlertContext.Danger, true));
+            }
+          }
+        }
         this.errorOccurred = true;
         this.gettingTimeSeriesData = false;
         this.timeSeriesForm.enable();
@@ -256,7 +270,7 @@ export class DataDashboardComponent implements OnInit {
         variable: dischargeInfo.variable,
         startDate: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: dischargeInfo.allowed_aggregations
+        allowedAggregations: this.hydstraAggregationModes.map(x => x.value)//dischargeInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
     }
@@ -301,7 +315,7 @@ export class DataDashboardComponent implements OnInit {
     }
 
     this.selectedSiteAvailableVariables.push(Object.assign(new SiteVariable({
-      name: "Urban Drool",
+      name: "Estimated Urban Drool",
       variable: "urban_drool",
       allowedAggregations: this.hydstraAggregationModes.filter(x => x.value == "tot").map(x => x.value)
     }), baseSiteVariable));
@@ -336,6 +350,10 @@ export class DataDashboardComponent implements OnInit {
   public scroll(el: HTMLElement) {
     el.scrollIntoView();
   }
+
+  public closeAlert(index : number) {
+    this.lyraMessages.splice(index, 1);
+}
 
   public siteSelectedAndVariablesFound(): boolean {
     return this.selectedSiteName && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
