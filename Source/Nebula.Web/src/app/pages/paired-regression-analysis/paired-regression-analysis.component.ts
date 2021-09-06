@@ -23,7 +23,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   public mapID: string = 'PairedRegressionAnalysisStationSelectMap';
 
-  public richTextTypeID = CustomRichTextType.MultiVariableMultiSite;
+  public richTextTypeID = CustomRichTextType.PairedRegressionAnalysis;
 
   public vegaSpec: Object = null;
 
@@ -101,7 +101,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     this.currentlyDisplayingRequestDto = null;
     this.lyraMessages = [];
     this.timeSeriesForm.disable();
-    this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
+    this.lyraService.getRegressionPlot(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
         if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
           this.lyraMessages.push(...result.data.messages.filter(x => x != "").map(x => new Alert(x, AlertContext.Warning, true)));
@@ -141,7 +141,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
     this.downloadingChartData = true;
     this.timeSeriesForm.disable();
-    this.lyraService.downloadTimeSeriesData(this.currentlyDisplayingRequestDto).subscribe(result => {
+    this.lyraService.downloadRegressionData(this.currentlyDisplayingRequestDto).subscribe(result => {
       const blob = new Blob([result], {
         type: 'text/csv'
       });
@@ -241,7 +241,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   }
 
   public canSelectVariable(variable: SiteVariable): boolean {
-    return this.selectedVariables.length <= 2 && this.variableNotPresentInSelectedVariables(variable) && !this.isActionBeingPerformed()
+    return this.selectedVariables.length < 2 && this.variableNotPresentInSelectedVariables(variable) && !this.isActionBeingPerformed()
   }
 
   public addVariableToSelection(variable: SiteVariable): void {

@@ -5,5 +5,6 @@ export enum CustomRichTextType{
     Help = 4,
     LabelsAndDefinitionsList = 5,
     WatershedList = 6,
-    MultiVariableMultiSite = 7
+    MultiVariableMultiSite = 7,
+    PairedRegressionAnalysis = 8
 }

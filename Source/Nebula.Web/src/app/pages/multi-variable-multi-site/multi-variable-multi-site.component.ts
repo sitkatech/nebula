@@ -104,7 +104,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     this.currentlyDisplayingRequestDto = null;
     this.lyraMessages = [];
     this.timeSeriesForm.disable();
-    this.lyraService.getTimeSeriesData(swnTimeSeriesRequestDto).subscribe(result => {
+    this.lyraService.getTimeSeriesPlot(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
         if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
           this.lyraMessages.push(...result.data.messages.filter(x => x != "").map(x => new Alert(x, AlertContext.Warning, true)));

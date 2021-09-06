@@ -100,7 +100,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header text-center">
-                    <span class="align-middle">Selected Data</span>
+                    <span class="align-middle">Selected Data (x,y)</span>
                     <button (click)="clearAllVariables()"
                         [disabled]="selectedVariables.length == 0 || isActionBeingPerformed()"
                         class="float-right btn btn-sm btn-nebula">Clear All</button>
@@ -155,7 +155,7 @@
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">Start
                                         Date</label>
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="startDate" id="startDate" type="text" ngbDatepicker
+                                        <input formControlName="startDate" id="startDate" type="text" ngbDatepicker container="body"
                                             #start="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="start.toggle()"
                                             class="form-control">
                                         <div class="input-group-append">
@@ -176,7 +176,7 @@
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">End
                                         Date</label>
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="endDate" id="endDate" type="text" ngbDatepicker
+                                        <input formControlName="endDate" id="endDate" type="text" ngbDatepicker container="body"
                                             #end="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="end.toggle()"
                                             class="form-control">
                                         <div class="input-group-append">
@@ -233,9 +233,8 @@
                                 <div class="form-group w-100 mb-1">
                                     <label for="regressionMethod"
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
-                                        <!-- <field-definition [fieldDefinitionType]="'AggregationMode'">
-                                        </field-definition> -->
-                                        Regression Method
+                                        <field-definition [fieldDefinitionType]="'RegressionMethod'">
+                                        </field-definition>
                                     </label>
                                     <div class="col-sm-6 w-100">
                                         <select formControlName="regression_method" id="regressionMethod"
