@@ -7,6 +7,9 @@ import 'leaflet-loading';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { environment } from 'src/environments/environment';
 import { WatershedService } from 'src/app/services/watershed/watershed.service';
+import { forkJoin } from 'rxjs';
+import { LyraService } from 'src/app/services/lyra.service';
+import './leaflet.topojson.js'
 
 declare var $: any;
 
@@ -19,7 +22,7 @@ declare var $: any;
 export class StationSelectMapComponent implements OnInit {
 
   @Input()
-  public mapID : string = '';
+  public mapID: string = '';
   @Input()
   public mapHeight: string = "500px";
   @Input()
@@ -56,9 +59,11 @@ export class StationSelectMapComponent implements OnInit {
     private appRef: ApplicationRef,
     private compileService: CustomCompileService,
     private watershedService: WatershedService,
+    private lyraService: LyraService
   ) { }
 
   public ngOnInit(): void {
+
     this.tileLayers = Object.assign({}, {
       "Aerial": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Aerial',
@@ -142,7 +147,11 @@ export class StationSelectMapComponent implements OnInit {
     this.setControl();
     this.initializeMapEvents();
 
-    this.watershedService.getWatershedMask("Aliso Creek").subscribe(maskString => {
+    forkJoin([
+      this.watershedService.getWatershedMask("Aliso Creek"),
+      this.lyraService.getRSBTopoJson()
+    ])
+    .subscribe(([maskString, topoJSON]) => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
@@ -161,9 +170,25 @@ export class StationSelectMapComponent implements OnInit {
 
       this.maskLayer.addTo(this.map);
       this.defaultFitBounds();
-      //let maskLayerPoints = maskString.features[0].geometry.coordinates[0];
 
       this.setupMarkers();
+
+      var tjson = L.topoJson(topoJSON, {
+        style: function (feature) {
+          return {
+            color: "#ff4500",
+            opacity: 1,
+            weight: 1,
+            fillColor: "#35495d",
+            fillOpacity: 0.0,
+          };
+        },
+        onEachFeature: function (feature, layer) {
+          layer.bindPopup(
+            "<p>" + `CatchIDN: ${feature.properties.CatchIDN}` + "</p>"
+          );
+        },
+      }).addTo(this.map);
 
       this.siteLocationLayer = L.geoJSON(this.selectableStations, {
         onEachFeature: function (feature, layer) {
