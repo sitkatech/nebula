@@ -43,6 +43,7 @@ import { MultiVariableMultiSiteComponent } from './pages/multi-variable-multi-si
 import { environment } from 'src/environments/environment';
 import { AppInsightsService } from './shared/services/app-insights.service';
 import { GlobalErrorHandlerService } from './shared/services/global-error-handler.service';
+import { PairedRegressionAnalysisComponent } from './pages/paired-regression-analysis/paired-regression-analysis.component';
 
 export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
   return () => appLoadService.init().then(() => {
@@ -71,6 +72,7 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     FieldDefinitionListComponent,
     FieldDefinitionEditComponent,
     MultiVariableMultiSiteComponent,
+    PairedRegressionAnalysisComponent,
   ],
   imports: [
     AppRoutingModule,

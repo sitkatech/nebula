@@ -26,3 +26,4 @@ export class HydstraAggregationMode {
         return this.key;
     }
 }
+
