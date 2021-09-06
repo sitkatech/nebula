@@ -15,21 +15,25 @@ export class LyraService {
     return this.http.get(route);
   }
 
-  getAvailableVariables(site: string): Observable<any> {
-    let route = `${this.baseRoute}/api/hydstra/sites/variables`;
-    let params = new HttpParams();
-    params = params.append('site_list', site);
-    params = params.append('datasource', 'A');
-    return this.http.get(route, {params: params});
-  }
-
-  getTimeSeriesData(timeSeriesObject: Object) : Observable<any> {
+  getTimeSeriesPlot(timeSeriesObject: Object) : Observable<any> {
     let route = `${this.baseRoute}/api/plot/multi_variable?json=${JSON.stringify(timeSeriesObject)}`;
     return this.http.get(route);
   }
 
   downloadTimeSeriesData(timeSeriesObject: Object) {
     let route = `${this.baseRoute}/api/plot/multi_variable/data?f=csv&json=${JSON.stringify(timeSeriesObject)}`;
+    return this.http.get(route, {
+      responseType: 'arraybuffer'
+    });
+  }
+
+  getRegressionPlot(regressionObject: Object) : Observable<any> {
+    let route = `${this.baseRoute}/api/plot/regression?json=${JSON.stringify(regressionObject)}`;
+    return this.http.get(route);
+  }
+
+  downloadRegressionData(regressionObject: Object) {
+    let route = `${this.baseRoute}/api/plot/regression/data?f=csv&json=${JSON.stringify(regressionObject)}`;
     return this.http.get(route, {
       responseType: 'arraybuffer'
     });

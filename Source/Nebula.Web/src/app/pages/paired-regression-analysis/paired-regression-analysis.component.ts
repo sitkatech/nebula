@@ -1,40 +1,43 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef } from '@angular/core';
-import { LyraService } from 'src/app/services/lyra.service.js';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
-import { SiteVariable } from 'src/app/shared/models/site-variable';
+import { LyraService } from 'src/app/services/lyra.service';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
+import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
-import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval";
 import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
+import { HydstraInterval } from 'src/app/shared/models/hydstra/hydstra-interval';
+import { HydstraRegressionMethod } from 'src/app/shared/models/hydstra/hydstra-regression-method';
+import { SiteVariable } from 'src/app/shared/models/site-variable';
 
-declare var $: any;
 declare var vegaEmbed: any;
 
 @Component({
-  selector: 'nebula-multi-variable-multi-site',
-  templateUrl: './multi-variable-multi-site.component.html',
-  styleUrls: ['./multi-variable-multi-site.component.scss']
+  selector: 'nebula-paired-regression-analysis',
+  templateUrl: './paired-regression-analysis.component.html',
+  styleUrls: ['./paired-regression-analysis.component.scss']
 })
-export class MultiVariableMultiSiteComponent implements OnInit {
+export class PairedRegressionAnalysisComponent implements OnInit {
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
-  public mapID: string = 'MultiVariableMultiSiteStationSelectMap';
+  public mapID: string = 'PairedRegressionAnalysisStationSelectMap';
 
-  public richTextTypeID = CustomRichTextType.MultiVariableMultiSite;
+  public richTextTypeID = CustomRichTextType.PairedRegressionAnalysis;
 
   public vegaSpec: Object = null;
 
-  public hydstraAggregationModes: HydstraAggregationMode[] = Object.values(HydstraAggregationMode);
   public hydstraIntervals: HydstraInterval[] = Object.values(HydstraInterval);
-  public hydstraFilters: HydstraFilter[] = Object.values(HydstraFilter)
+  public hydstraFilters: HydstraFilter[] = Object.values(HydstraFilter);
+  public hydstraRegressionMethods: HydstraRegressionMethod[] = Object.values(HydstraRegressionMethod);
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
     startDate: new FormControl({ year: this.currentDate.getUTCFullYear() - 5, month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
     endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    interval: new FormControl(null, [Validators.required]),
+    filter: new FormControl(null, [Validators.required]),
+    regression_method: new FormControl(null, [Validators.required]),
     siteVariablesToQuery: new FormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
@@ -76,19 +79,11 @@ export class MultiVariableMultiSiteComponent implements OnInit {
 
   public getTimeSeriesData() {
     
-    if (!this.timeSeriesForm.valid || !this.siteVariablesToQuery().valid) {
+    if (!this.timeSeriesForm.valid) {
       Object.keys(this.timeSeriesForm.controls).forEach(field => {
         const control = this.timeSeriesForm.get(field);
         control.markAsTouched({ onlySelf: true });
       });
-      for (let [index, formGroup] of this.siteVariablesToQuery().controls.entries()) {
-        if (formGroup instanceof FormGroup) {
-          Object.keys(formGroup.controls).forEach(field => {
-            const control = this.siteVariablesToQuery().controls[index].get(field);
-            control.markAsTouched({ onlySelf: true });
-          })
-        }
-      }
       return;
     }
 
@@ -96,6 +91,8 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     {
       start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
       end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
+      interval: this.timeSeriesForm.get('interval').value,
+      regression_method: this.timeSeriesForm.get('regression_method').value,
       timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
     };
     this.gettingTimeSeriesData = true;
@@ -104,7 +101,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     this.currentlyDisplayingRequestDto = null;
     this.lyraMessages = [];
     this.timeSeriesForm.disable();
-    this.lyraService.getTimeSeriesPlot(swnTimeSeriesRequestDto).subscribe(result => {
+    this.lyraService.getRegressionPlot(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
         if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
           this.lyraMessages.push(...result.data.messages.filter(x => x != "").map(x => new Alert(x, AlertContext.Warning, true)));
@@ -144,7 +141,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
 
     this.downloadingChartData = true;
     this.timeSeriesForm.disable();
-    this.lyraService.downloadTimeSeriesData(this.currentlyDisplayingRequestDto).subscribe(result => {
+    this.lyraService.downloadRegressionData(this.currentlyDisplayingRequestDto).subscribe(result => {
       const blob = new Blob([result], {
         type: 'text/csv'
       });
@@ -157,16 +154,12 @@ export class MultiVariableMultiSiteComponent implements OnInit {
       const url = window.URL.createObjectURL(blob);
       a.href = url;
       let date = new Date();
-      a.download = `SWN_Multi_Site_Multi_Variable_Data_Request_${date.getMonth() + 1}_${date.getDate()}_${date.getFullYear()}_${date.getHours()}_${date.getMinutes()}.csv`;
+      a.download = `SWN_Paired_Regression_Analysis_Data_Request_${date.getMonth() + 1}_${date.getDate()}_${date.getFullYear()}_${date.getHours()}_${date.getMinutes()}.csv`;
       a.click();
       window.URL.revokeObjectURL(url);
       this.downloadingChartData = false;
       this.timeSeriesForm.enable();
     })
-  }
-
-  public getAvailableAggregationModes(variable: SiteVariable): HydstraAggregationMode[] {
-    return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
   }
 
   public updateSelectedStation(selectedStationProperties: any) {
@@ -186,7 +179,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
         variable: conductivityInfo.variable,
         startDate: new Date(`${conductivityInfo.period_start.slice(0, 4)}-${conductivityInfo.period_start.slice(4, 6)}-${conductivityInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${conductivityInfo.period_end.slice(0, 4)}-${conductivityInfo.period_end.slice(4, 6)}-${conductivityInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: conductivityInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(conductivitySiteVariable);
     }
@@ -198,7 +190,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
         variable: dischargeInfo.variable,
         startDate: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: dischargeInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
     }
@@ -210,7 +201,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
         variable: rainfallInfo.variable,
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: rainfallInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
     }
@@ -223,7 +213,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
         gage: rainfallStationProperties.stname,
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: rainfallInfo.allowed_aggregations,
         stationShortName: rainfallStationProperties.shortname,
         station: rainfallStationProperties.station
       });
@@ -237,7 +226,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
         variable: rawLevelInfo.variable,
         startDate: new Date(`${rawLevelInfo.period_start.slice(0, 4)}-${rawLevelInfo.period_start.slice(4, 6)}-${rawLevelInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rawLevelInfo.period_end.slice(0, 4)}-${rawLevelInfo.period_end.slice(4, 6)}-${rawLevelInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: rawLevelInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(rawLevelSiteVariable);
     }
@@ -245,12 +233,15 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     this.selectedSiteAvailableVariables.push(Object.assign(new SiteVariable({
       name: "Estimated Urban Drool",
       variable: "urban_drool",
-      allowedAggregations: this.hydstraAggregationModes.filter(x => x.value == "tot").map(x => x.value)
     }), baseSiteVariable));
   }
 
   public siteSelectedAndVariablesFound(): boolean {
     return this.selectedSiteName && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
+  }
+
+  public canSelectVariable(variable: SiteVariable): boolean {
+    return this.selectedVariables.length < 2 && this.variableNotPresentInSelectedVariables(variable) && !this.isActionBeingPerformed()
   }
 
   public addVariableToSelection(variable: SiteVariable): void {
@@ -323,10 +314,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
 
   newSiteVariableToQuery(variable: SiteVariable): FormGroup {
     return this.formBuilder.group({
-      variable: variable,
-      timeInterval: new FormControl(null, [Validators.required]),
-      aggregationMode: new FormControl(null, [Validators.required]),
-      filter: new FormControl(null, [Validators.required])
+      variable: variable
     })
   }
 
@@ -341,10 +329,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   getTimeSeriesListFromTimerSeriesFormObject() {
     return this.siteVariablesToQuery().value.map(x => ({
       variable: x.variable.variable,
-      site: x.variable.station,
-      interval: x.timeInterval,
-      weather_condition: x.filter,
-      aggregation_method: x.aggregationMode
+      site: x.variable.station
     }))
   }
 
@@ -354,4 +339,5 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   }
 
   //#endregion
+
 }

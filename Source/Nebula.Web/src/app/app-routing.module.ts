@@ -19,6 +19,7 @@ import { WatershedDetailComponent } from './pages/watershed-detail/watershed-det
 import { FieldDefinitionListComponent } from './pages/field-definition-list/field-definition-list.component';
 import { FieldDefinitionEditComponent } from './pages/field-definition-edit/field-definition-edit.component';
 import { MultiVariableMultiSiteComponent } from './pages/multi-variable-multi-site/multi-variable-multi-site.component';
+import { PairedRegressionAnalysisComponent } from './pages/paired-regression-analysis/paired-regression-analysis.component';
 
 const routes: Routes = [
   { path: "labels-and-definitions/:id", component: FieldDefinitionEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: "invite-user/:userID", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
   { path: "invite-user", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
   { path: "multi-variable-multi-site", component: MultiVariableMultiSiteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard]},
+  { path: "paired-regression-analysis", component: PairedRegressionAnalysisComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard]},
   { path: "", component: HomeIndexComponent},
   { path: "disclaimer", component: DisclaimerComponent },
   { path: "disclaimer/:forced", component: DisclaimerComponent },

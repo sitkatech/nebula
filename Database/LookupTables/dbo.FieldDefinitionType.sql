@@ -3,7 +3,8 @@ USING (VALUES
 (1, 'Name', 'Name'),
 (2, 'AggregationMode', 'Aggregation Mode'),
 (3, 'TimeInterval', 'Time Interval'),
-(4, 'Filter', 'Filter')
+(4, 'Filter', 'Filter'),
+(5, 'RegressionMethod', 'Regression Method')
 )
 AS Source (FieldDefinitionTypeID, FieldDefinitionTypeName, FieldDefinitionTypeDisplayName)
 ON Target.FieldDefinitionTypeID = Source.FieldDefinitionTypeID
