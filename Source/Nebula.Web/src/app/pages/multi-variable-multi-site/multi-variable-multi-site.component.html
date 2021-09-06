@@ -32,7 +32,7 @@
                 <div class="card-body table-responsive">
                     <div class="row">
                         <div class="col-md-8">
-                            <nebula-station-select-map [mapID]="mapID" [selectableStations]="allStations" (selectedStationProperties)="updateSelectedStation($event)"></nebula-station-select-map>
+                            <nebula-station-select-map [mapID]="mapID" [selectableStations]="allStations" (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)"></nebula-station-select-map>
                         </div>
                         <div class="col-md-4">
                             <ng-container *ngIf="!selectedSiteName">

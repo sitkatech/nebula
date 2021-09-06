@@ -1,4 +1,4 @@
-import { ApplicationRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ApplicationRef, Component, EventEmitter, HostListener, Input, OnInit, Output } from '@angular/core';
 import * as L from 'leaflet';
 import * as esri from 'esri-leaflet'
 import { GestureHandling } from "leaflet-gesture-handling";
@@ -20,6 +20,13 @@ declare var $: any;
   styleUrls: ['./station-select-map.component.scss']
 })
 export class StationSelectMapComponent implements OnInit {
+  @HostListener('document:click', ['$event']) 
+  clickout(event) 
+  { 
+    if(event.target.classList.contains("view-tributary-area"))
+      this.viewTributaryArea(); 
+  }
+
 
   @Input()
   public mapID: string = '';
@@ -39,7 +46,7 @@ export class StationSelectMapComponent implements OnInit {
   @Output()
   public onMapMoveEnd = new EventEmitter();
   @Output()
-  public selectedStationProperties = new EventEmitter();
+  public selectedStationPropertiesUpdateEvent = new EventEmitter();
 
   public map: L.Map;
   public featureLayer: any;
@@ -52,6 +59,10 @@ export class StationSelectMapComponent implements OnInit {
   public currentMask: L.Layers;
   public iconDefault: any;
   public selectedIconDefault: any;
+  public selectedStationProperties: any;
+  public selectedStationTributaryAreaLayer: any;
+
+  public topoJSONrsbs: any;
 
 
 
@@ -103,20 +114,10 @@ export class StationSelectMapComponent implements OnInit {
       pane: "nebulaOverlayPane"
     } as L.WMSOptions);
 
-    let rsbsWMSOptions = ({
-      layers: "Nebula:RegionalSubbasins",
-      transparent: true,
-      format: "image/png",
-      tiled: true,
-      pane: "nebulaOverlayPane"
-    } as L.WMSOptions);
-
-
 
     this.overlayLayers = Object.assign({}, {
       "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
       "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
-      "<span><img src='../../assets/data-dashboard/regionalSubbasin.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", rsbsWMSOptions),
       "<span>Stormwater Network <br/> <img src='../../assets/data-dashboard/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
     })
 
@@ -144,7 +145,6 @@ export class StationSelectMapComponent implements OnInit {
 
     this.map = L.map(this.mapID, mapOptions);
     this.initializePanes();
-    this.setControl();
     this.initializeMapEvents();
 
     forkJoin([
@@ -173,7 +173,9 @@ export class StationSelectMapComponent implements OnInit {
 
       this.setupMarkers();
 
-      var tjson = L.topoJson(topoJSON, {
+      this.topoJSONrsbs = topoJSON;
+
+      var topoJSONOverlay = L.topoJson(topoJSON, {
         style: function (feature) {
           return {
             color: "#ff4500",
@@ -188,19 +190,28 @@ export class StationSelectMapComponent implements OnInit {
             "<p>" + `CatchIDN: ${feature.properties.CatchIDN}` + "</p>"
           );
         },
-      }).addTo(this.map);
+      });
 
+      this.overlayLayers[
+        "<span><img src='../../assets/data-dashboard/regionalSubbasin.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>"] = topoJSONOverlay;
+
+      this.setControl();
       this.siteLocationLayer = L.geoJSON(this.selectableStations, {
         onEachFeature: function (feature, layer) {
-          layer.bindPopup('<p>' + feature.properties.stname + '</p>');
+          layer.bindPopup(`<div class="text-center"><p>${feature.properties.stname}</p>${feature.properties.upstream !== null && feature.properties.upstream !== undefined ? '<button class="btn btn-sm btn-nebula view-tributary-area">View Tributary Area</button></div>' : '<p class="font-italic">No Tributary Area information found</p>'}`);
           layer.on('click', () => {
             this.errorOccurred = false;
             if (this.currentlySelectedLayer) {
               this.currentlySelectedLayer.setIcon(this.iconDefault);
             }
+            if (this.selectedStationTributaryAreaLayer) {
+              this.map.removeLayer(this.selectedStationTributaryAreaLayer);
+              this.selectedStationTributaryAreaLayer = null;
+            }
             layer.setIcon(this.selectedIconDefault);
             this.currentlySelectedLayer = layer;
-            this.selectedStationProperties.emit(feature.properties);
+            this.selectedStationProperties = feature.properties;
+            this.selectedStationPropertiesUpdateEvent.emit(this.selectedStationProperties);
           });
         }.bind(this)
       });
@@ -270,16 +281,6 @@ export class StationSelectMapComponent implements OnInit {
     this.map.setView(target.center, this.defaultMapZoom, null);
   }
 
-  public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
-    let paddingHeight = $("#buttonDiv").innerHeight();
-    let popupContent = $(".search-popup");
-    if (popupContent !== null && popupContent !== undefined && popupContent.length == 1) {
-      paddingHeight += popupContent.innerHeight();
-    }
-
-    this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
-  }
-
   //Known bug in leaflet that during bundling the default image locations can get messed up
   //https://stackoverflow.com/questions/41144319/leaflet-marker-not-found-production-env
   //We could do some kind of custom marker which would require less extra, but this should work for now
@@ -302,5 +303,35 @@ export class StationSelectMapComponent implements OnInit {
       tooltipAnchor: [16, -28],
       shadowSize: [41, 41]
     });
+  }
+
+  public viewTributaryArea() {
+    if (!this.selectedStationProperties || !this.selectedStationProperties.upstream) {
+      return;
+    }
+    let upstreamCatchIDNs = JSON.parse(this.selectedStationProperties.upstream);
+    let tempRSBs = Object.assign({}, this.topoJSONrsbs);
+    let topoJSONObjects = tempRSBs.objects.data.geometries.filter(x => upstreamCatchIDNs.includes(x.properties.CatchIDN));
+    tempRSBs.objects = topoJSONObjects;
+    this.selectedStationTributaryAreaLayer = L.topoJson(tempRSBs, {
+      style: function (feature) {
+        return {
+          color: "#D55E00",
+          opacity: 1,
+          weight: 1,
+          fillColor: "#D55E00",
+          fillOpacity: 0.5,
+        };
+      },
+      onEachFeature: function (feature, layer) {
+        layer.bindPopup(
+          "<p>" + `CatchIDN: ${feature.properties.CatchIDN}` + "</p>"
+        );
+      },
+    });
+
+    this.selectedStationTributaryAreaLayer.addTo(this.map);
+    this.selectedStationTributaryAreaLayer.bringToFront();
+    this.map.fitBounds(this.selectedStationTributaryAreaLayer.getBounds(), {maxZoom:this.defaultMapZoom});
   }
 }
