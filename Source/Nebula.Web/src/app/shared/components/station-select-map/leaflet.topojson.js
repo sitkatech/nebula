@@ -1,4 +1,4 @@
-import * as topojson from 'topojson';
+import * as topojson from '../../../../../node_modules/topojson-client';
 
 (function () {
     function defineTopoJSON(L) {
