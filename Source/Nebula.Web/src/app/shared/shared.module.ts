@@ -20,6 +20,7 @@ import { FieldDefinitionComponent } from './components/field-definition/field-de
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AlertDisplayComponent } from './components/alert-display/alert-display.component';
 import { FieldDefinitionGridHeaderComponent } from './components/field-definition-grid-header/field-definition-grid-header.component';
+import { StationSelectMapComponent } from './components/station-select-map/station-select-map.component';
 
 @NgModule({
     declarations: [
@@ -35,7 +36,8 @@ import { FieldDefinitionGridHeaderComponent } from './components/field-definitio
         MultiLinkRendererComponent,
         CustomRichTextComponent,
         FieldDefinitionComponent,
-        FieldDefinitionGridHeaderComponent
+        FieldDefinitionGridHeaderComponent,
+        StationSelectMapComponent
     ],
     imports: [
         CommonModule,
@@ -56,7 +58,8 @@ import { FieldDefinitionGridHeaderComponent } from './components/field-definitio
         HeaderNavComponent,
         CustomRichTextComponent,
         FieldDefinitionComponent,
-        FieldDefinitionGridHeaderComponent
+        FieldDefinitionGridHeaderComponent,
+        StationSelectMapComponent
     ],
     entryComponents:[
         WatershedDetailPopupComponent,

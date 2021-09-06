@@ -1,22 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef } from '@angular/core';
-import * as L from 'leaflet';
-import * as esri from 'esri-leaflet'
-import { GestureHandling } from "leaflet-gesture-handling";
-import 'leaflet.snogylop';
-import 'leaflet-loading';
-import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
-import { WfsService } from 'src/app/shared/services/wfs.service';
-import { environment } from 'src/environments/environment';
-import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { LyraService } from 'src/app/services/lyra.service.js';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { forkJoin } from 'rxjs';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
-import { url } from 'inspector';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
-import { AlertService } from 'src/app/shared/services/alert.service';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
+import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
+import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval";
+import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -30,32 +21,15 @@ export class MultiVariableMultiSiteComponent implements OnInit {
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
-  public richTextTypeID = CustomRichTextType.MultiVariableMultiSite;
+  public mapID: string = 'MultiVariableMultiSiteStationSelectMap';
 
-  public mapID = "MultiVariableMultiSiteMap";
-  public mapHeight = "500px";
-  public map: L.Map;
-  public featureLayer: any;
-  public layerControl: L.Control.Layers;
-  public tileLayers: { [key: string]: any } = {};
-  public overlayLayers: { [key: string]: any } = {};
-  public maskLayer: any;
-  public siteLocationLayer: any;
-  public wmsParams: any;
-  public currentMask: L.Layers;
-  public layerControlOpen: boolean = false;
-  public iconDefault: any;
-  public selectedIconDefault: any;
-  public defaultMapZoom = 12;
-  public afterSetControl = new EventEmitter();
-  public afterLoadMap = new EventEmitter();
-  public onMapMoveEnd = new EventEmitter();
+  public richTextTypeID = CustomRichTextType.MultiVariableMultiSite;
 
   public vegaSpec: Object = null;
 
-  public hydstraAggregationModes = [{ display: "Total", value: "tot" }, { display: "Average", value: "mean" }, { display: "Maximum", value: "max" }, { display: "Minimum", value: "min" }];
-  public hydstraIntervals = [{ display: "Hourly", value: "hour" }, { display: "Daily", value: "day" }, { display: "Monthly", value: "month" }, { display: "Yearly", value: "year" }];
-  public hydstraFilters = [{ display: "All (Wet + Dry)", value: "both" }, { display: "Dry", value: "dry" }, { display: "Wet", value: "wet" }];
+  public hydstraAggregationModes: HydstraAggregationMode[] = Object.values(HydstraAggregationMode);
+  public hydstraIntervals: HydstraInterval[] = Object.values(HydstraInterval);
+  public hydstraFilters: HydstraFilter[] = Object.values(HydstraFilter)
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
@@ -65,6 +39,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
+  public selectedSiteProperties: any;
   public selectedSiteAvailableVariables: SiteVariable[] = [];
   public selectedSiteStation: string = null;
   public selectedSiteName: string = null;
@@ -73,85 +48,22 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   public errorOccurred: boolean;
   public errorMessage: string = null;
   public gettingTimeSeriesData: boolean = false;
-  public allStations: any;
+  public allStations: any = null;
   public currentlyDisplayingRequestDto: any;
   public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
 
   constructor(
-    private appRef: ApplicationRef,
-    private compileService: CustomCompileService,
     private cdr: ChangeDetectorRef,
-    private wfsService: WfsService,
-    private watershedService: WatershedService,
     private lyraService: LyraService,
     private formBuilder: FormBuilder
   ) {
   }
 
-  public ngOnInit(): void {
-
-    this.tileLayers = Object.assign({}, {
-      "Aerial": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Aerial',
-        maxNativeZoom: 16,
-        maxZoom: 22
-      }),
-      "Street": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Street',
-        maxNativeZoom: 16,
-        maxZoom: 22
-      }),
-      "Terrain": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Terrain',
-        maxNativeZoom: 16,
-        maxZoom: 22
-      }),
-      "Hillshade": L.tileLayer('https://wtb.maptiles.arcgis.com/arcgis/rest/services/World_Topo_Base/MapServer/tile/{z}/{y}/{x}', {
-        attribution: 'Hillshade',
-        maxNativeZoom: 15,
-        maxZoom: 22
-      })
-    }, this.tileLayers);
-
-    let backboneWMSOptions = ({
-      layers: "Nebula:Backbones",
-      transparent: true,
-      format: "image/png",
-      tiled: true,
-      pane: "nebulaOverlayPane"
-    } as L.WMSOptions);
-
-    let watershedsWMSOptions = ({
-      layers: "Nebula:Watersheds",
-      transparent: true,
-      format: "image/png",
-      tiled: true,
-      pane: "nebulaOverlayPane"
-    } as L.WMSOptions);
-
-    let rsbsWMSOptions = ({
-      layers: "Nebula:RegionalSubbasins",
-      transparent: true,
-      format: "image/png",
-      tiled: true,
-      pane: "nebulaOverlayPane"
-    } as L.WMSOptions);
-
-
-
-    this.overlayLayers = Object.assign({}, {
-      "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
-      "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
-      "<span><img src='../../assets/data-dashboard/regionalSubbasin.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", rsbsWMSOptions),
-      "<span>Stormwater Network <br/> <img src='../../assets/data-dashboard/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
+  ngOnInit() {
+    this.lyraService.getSiteLocationGeoJson().subscribe(result => {
+      this.allStations = result.features;
     })
-
-    this.compileService.configure(this.appRef);
-  }
-
-  public ngAfterViewInit(): void {
-    this.initializeMap();
   }
 
   public onSubmit() {
@@ -253,8 +165,14 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     })
   }
 
-  public getAvailableAggregationModes(variable: SiteVariable): any[] {
+  public getAvailableAggregationModes(variable: SiteVariable): HydstraAggregationMode[] {
     return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
+  }
+
+  public updateSelectedStation(selectedStationProperties: any) {
+    this.selectedSiteName = selectedStationProperties.stname;
+    this.getAvailableVariables(selectedStationProperties);
+    this.selectedSiteStation = selectedStationProperties.station;
   }
 
   public getAvailableVariables(featureProperties: any) {
@@ -435,170 +353,5 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
   }
 
-  //#endregion
-
-  //#region Map Functionality
-  public initializeMap(): void {
-
-    const mapOptions: L.MapOptions = {
-      minZoom: 6,
-      maxZoom: 22,
-      layers: [
-        this.tileLayers["Street"],
-        this.overlayLayers["<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-        this.overlayLayers["<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"],
-      ],
-      gestureHandling: true,
-      loadingControl: true
-
-    } as L.MapOptions;
-
-    this.map = L.map(this.mapID, mapOptions);
-    this.initializePanes();
-    this.setControl();
-    this.initializeMapEvents();
-
-    forkJoin(
-      this.watershedService.getWatershedMask("Aliso Creek"),
-      this.lyraService.getSiteLocationGeoJson()
-    ).subscribe(([maskString, siteLocationObject]) => {
-      this.maskLayer = L.geoJSON(maskString, {
-        invert: true,
-        style: function (feature) {
-          return {
-            fillColor: "#323232",
-            fill: true,
-            fillOpacity: 0.2,
-            color: "#3388ff",
-            weight: 5,
-            stroke: true
-          };
-        }
-      });
-
-      L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
-
-      this.maskLayer.addTo(this.map);
-      this.defaultFitBounds();
-      let maskLayerPoints = maskString.features[0].geometry.coordinates[0];
-      this.allStations = siteLocationObject.features;
-
-      this.setupMarkers();
-
-      this.siteLocationLayer = L.geoJSON(this.allStations, {
-        onEachFeature: function (feature, layer) {
-          layer.bindPopup('<p>' + feature.properties.stname + '</p>');
-          layer.on('click', () => {
-            this.errorOccurred = false;
-            if (this.currentlySelectedLayer) {
-              this.currentlySelectedLayer.setIcon(this.iconDefault);
-            }
-            layer.setIcon(this.selectedIconDefault);
-            this.currentlySelectedLayer = layer;
-            this.selectedSiteName = feature.properties.stname;
-            this.getAvailableVariables(feature.properties);
-            this.selectedSiteStation = feature.properties.station;
-          });
-        }.bind(this)
-      });
-      this.siteLocationLayer.addTo(this.map);
-      this.siteLocationLayer.bringToFront();
-    });
-  }
-
-  public initializePanes(): void {
-    let nebulaOverlayPane = this.map.createPane("nebulaOverlayPane");
-    nebulaOverlayPane.style.zIndex = 10000;
-    this.map.getPane("markerPane").style.zIndex = 10001;
-    this.map.getPane("popupPane").style.zIndex = 10002;
-  }
-
-  public setControl(): void {
-    var loadingControl = L.Control.loading({
-      separate: true
-    });
-    this.map.addControl(loadingControl);
-    this.layerControl = new L.Control.Layers(this.tileLayers, this.overlayLayers)
-      .addTo(this.map);
-    this.map.zoomControl.setPosition('topright');
-
-    this.afterSetControl.emit(this.layerControl);
-  }
-
-  public initializeMapEvents(): void {
-    this.map.on('load', (event: L.LeafletEvent) => {
-      this.afterLoadMap.emit(event);
-    });
-    this.map.on("moveend", (event: L.LeafletEvent) => {
-      this.onMapMoveEnd.emit(event);
-    });
-
-    let dblClickTimer = null;
-
-    //to handle click for select area vs double click for zoom
-    this.map.on("click", (event: L.LeafletEvent) => {
-      this.layerControlOpen = false;
-      if (dblClickTimer !== null) {
-        return;
-      }
-      dblClickTimer = setTimeout(() => {
-        //this.getNeighborhoodFromLatLong(event.latlng, true);
-        dblClickTimer = null;
-      }, 200);
-    }).on("dblclick", () => {
-      clearTimeout(dblClickTimer);
-      dblClickTimer = null;
-      this.map.zoomIn();
-    })
-
-    $(".leaflet-control-layers").hover(
-      () => { this.layerControlOpen = true; },
-      () => { this.layerControlOpen = false; }
-    );
-  }
-
-  //fitBounds will use it's default zoom level over what is sent in
-  //if it determines that its max zoom is further away. This can make the 
-  //map zoom out to inappropriate levels sometimes, and then setZoom 
-  //won't be honored because it's in the middle of a zoom. So we'll manipulate
-  //it a bit.
-  public defaultFitBounds(): void {
-    let target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
-    this.map.setView(target.center, this.defaultMapZoom, null);
-  }
-
-  public fitBoundsWithPaddingAndFeatureGroup(featureGroup: L.featureGroup): void {
-    let paddingHeight = $("#buttonDiv").innerHeight();
-    let popupContent = $(".search-popup");
-    if (popupContent !== null && popupContent !== undefined && popupContent.length == 1) {
-      paddingHeight += popupContent.innerHeight();
-    }
-
-    this.map.fitBounds(featureGroup.getBounds(), { padding: [paddingHeight, paddingHeight] });
-  }
-
-  //Known bug in leaflet that during bundling the default image locations can get messed up
-  //https://stackoverflow.com/questions/41144319/leaflet-marker-not-found-production-env
-  //We could do some kind of custom marker which would require less extra, but this should work for now
-  public setupMarkers() {
-    this.iconDefault = this.buildMarker('assets/marker-icon.png', 'assets/marker-icon-2x.png');
-    this.selectedIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-selected.png', '/assets/main/map-icons/marker-icon-2x-selected.png');
-
-    L.Marker.prototype.options.icon = this.iconDefault;
-  }
-
-  public buildMarker(iconUrl: string, iconRetinaUrl: string): any {
-    const shadowUrl = 'assets/marker-shadow.png';
-    return L.icon({
-      iconRetinaUrl,
-      iconUrl,
-      shadowUrl,
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      tooltipAnchor: [16, -28],
-      shadowSize: [41, 41]
-    });
-  }
   //#endregion
 }

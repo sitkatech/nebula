@@ -22,7 +22,7 @@
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container" *ngIf="allStations">
     <div class="row mt-sm-4">
         <div class="col-sm-12">
             <div class="card">
@@ -32,8 +32,7 @@
                 <div class="card-body table-responsive">
                     <div class="row">
                         <div class="col-md-8">
-                            <div #mapDiv id={{mapID}} class="location-card" [style.min-height]="mapHeight"
-                                style="height:100%"></div>
+                            <nebula-station-select-map [mapID]="mapID" [selectableStations]="allStations" (selectedStationProperties)="updateSelectedStation($event)"></nebula-station-select-map>
                         </div>
                         <div class="col-md-4">
                             <ng-container *ngIf="!selectedSiteName">
@@ -202,7 +201,7 @@
                                                     class="form-control">
                                                     <option *ngFor="let interval of hydstraIntervals"
                                                         [value]="interval.value">
-                                                        {{interval.display}}
+                                                        {{interval.key}}
                                                     </option>
                                                 </select>
                                             </div>
@@ -219,7 +218,7 @@
                                                 <select formControlName="filter" id="filter" class="form-control">
                                                     <option *ngFor="let filter of hydstraFilters"
                                                         [value]="filter.value">
-                                                        {{filter.display}}
+                                                        {{filter.key}}
                                                     </option>
                                                 </select>
                                             </div>
@@ -239,7 +238,7 @@
                                                     <option
                                                         *ngFor="let mode of getAvailableAggregationModes(control.value.variable)"
                                                         [value]="mode.value">
-                                                        {{mode.display}}
+                                                        {{mode.key}}
                                                     </option>
                                                 </select>
                                             </div>
