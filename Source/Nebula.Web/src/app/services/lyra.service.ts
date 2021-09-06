@@ -15,6 +15,11 @@ export class LyraService {
     return this.http.get(route);
   }
 
+  getRSBTopoJson(): Observable<any> {
+    let route = `${this.baseRoute}/api/spatial/regional_subbasins`;
+    return this.http.get(route);
+  }
+
   getTimeSeriesPlot(timeSeriesObject: Object) : Observable<any> {
     let route = `${this.baseRoute}/api/plot/multi_variable?json=${JSON.stringify(timeSeriesObject)}`;
     return this.http.get(route);
