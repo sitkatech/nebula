@@ -1,5 +1,8 @@
 import * as topojson from '../../../../../node_modules/topojson-client';
 
+//This is not an official leaflet plugin nor is it one that is actively maintained.
+//The code in defineTopoJSON came directly from Austin Orr, the rest is just boilerplate found in  other leaflet plugins 
+//to add it to the L namespace.
 (function () {
     function defineTopoJSON(L) {
         //extend Leaflet to create a GeoJSON layer from a TopoJSON file
@@ -26,7 +29,7 @@ import * as topojson from '../../../../../node_modules/topojson-client';
     }
 
     if (typeof define === 'function' && define.amd) {
-        // Try to add snogylop to Leaflet using AMD
+        // Try to add topojson to Leaflet using AMD
         define(['leaflet'], function (L) {
             defineTopoJSON(L);
         });
