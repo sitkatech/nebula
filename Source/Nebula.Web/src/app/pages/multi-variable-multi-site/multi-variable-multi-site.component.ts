@@ -8,6 +8,8 @@ import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
 import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval";
 import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
+import { UserDetailedDto } from 'src/app/shared/models';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -18,6 +20,8 @@ declare var vegaEmbed: any;
   styleUrls: ['./multi-variable-multi-site.component.scss']
 })
 export class MultiVariableMultiSiteComponent implements OnInit {
+  public watchUserChangeSubscription: any;
+  public currentUser: UserDetailedDto;
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
@@ -56,14 +60,18 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private lyraService: LyraService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private authenticationService: AuthenticationService
   ) {
   }
 
   ngOnInit() {
-    this.lyraService.getSiteLocationGeoJson().subscribe(result => {
-      this.allStations = result.features;
-    })
+    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+      this.currentUser = currentUser;
+      this.lyraService.getSiteLocationGeoJson().subscribe(result => {
+        this.allStations = result.features;
+      });
+    });
   }
 
   public onSubmit() {
@@ -75,7 +83,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   }
 
   public getTimeSeriesData() {
-    
+
     if (!this.timeSeriesForm.valid || !this.siteVariablesToQuery().valid) {
       Object.keys(this.timeSeriesForm.controls).forEach(field => {
         const control = this.timeSeriesForm.get(field);

@@ -65,19 +65,15 @@
                                                     <div class="col-9">
                                                         {{variable.name}}
                                                         <br />
-                                                        <small style="font-weight:400"
-                                                            *ngIf="variable.startDate != null && variable.endDate != null">Record:
-                                                            {{variable.startDate}} -
-                                                            {{variable.endDate}}</small>
-                                                            <br/>
                                                         <ng-container *ngIf="variable.gage != null">
                                                             <small style="font-weight:400">Gage:
                                                                 {{variable.gage}}</small>
                                                             <br />
                                                         </ng-container>
-                                                        <small style="font-weight:400">
-                                                            Source:
-                                                        </small>
+                                                        <small style="font-weight:400"
+                                                            *ngIf="variable.startDate != null && variable.endDate != null">Record:
+                                                            {{variable.startDate}} -
+                                                            {{variable.endDate}}</small>
                                                     </div>
                                                     <div class="col-3 align-self-center text-center">
                                                         <button class="btn btn-sm btn-nebula"
