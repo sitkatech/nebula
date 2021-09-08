@@ -1,6 +1,6 @@
 import { NgModule, ModuleWithProviders } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { NotFoundComponent } from './pages';
 import { HeaderNavComponent } from './components';
@@ -21,6 +21,8 @@ import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AlertDisplayComponent } from './components/alert-display/alert-display.component';
 import { FieldDefinitionGridHeaderComponent } from './components/field-definition-grid-header/field-definition-grid-header.component';
 import { StationSelectMapComponent } from './components/station-select-map/station-select-map.component';
+import { NgSelectModule } from '@ng-select/ng-select';
+import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select-custom.component';
 
 @NgModule({
     declarations: [
@@ -37,17 +39,20 @@ import { StationSelectMapComponent } from './components/station-select-map/stati
         CustomRichTextComponent,
         FieldDefinitionComponent,
         FieldDefinitionGridHeaderComponent,
-        StationSelectMapComponent
+        StationSelectMapComponent,
+        NgSelectCustomComponent
     ],
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpClientModule,
         NgProgressModule,
         RouterModule,
         SelectDropDownModule,
         CKEditorModule,
-        NgbModule
+        NgbModule,
+        NgSelectModule
     ],
     exports: [
         AlertDisplayComponent,
@@ -59,7 +64,8 @@ import { StationSelectMapComponent } from './components/station-select-map/stati
         CustomRichTextComponent,
         FieldDefinitionComponent,
         FieldDefinitionGridHeaderComponent,
-        StationSelectMapComponent
+        StationSelectMapComponent,
+        NgSelectCustomComponent
     ],
     entryComponents:[
         WatershedDetailPopupComponent,

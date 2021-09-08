@@ -1,0 +1,32 @@
+<ng-select 
+    #ngSelectControl
+    placeholder="{{placeholder}}" 
+    bindLabel="{{bindLabel}}" 
+    bindValue="{{bindValue}}"
+    labelForId="{{labelForId}}" 
+    [multiple]="multiple" 
+    [items]="items" 
+    appendTo="body" 
+    [closeOnSelect]="false"
+    [searchable]="false"
+    [clearable]="false"
+    [formControl]="control">
+    <ng-template ng-header-tmp>
+        <div class="mb-1">
+            <input type="text" appAutofocus class="form-control input-sm ng-select-search-box" placeholder="Filter"
+                (input)="ngSelectControl.filter($event.target.value)">
+        </div>
+        <div>
+            <button class="btn btn-sm btn-nebula mr-1" (click)="selectAll()">Select
+                All</button>
+            <button class="btn btn-sm btn-nebula" (click)="clearAll()">Clear All</button>
+        </div>
+    </ng-template>
+    <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
+        <div class="ng-value" *ngFor="let item of items | slice:0:numSelectedItemsToShow">
+            <span class="ng-value-label">{{item.display}}</span>
+            <span class="ng-value-icon right" (click)="clear(item)">×</span>
+        </div>
+        <span class="ng-value" style="background-color:transparent; margin-right:0" *ngIf="items.length > numSelectedItemsToShow">+{{items.length - numSelectedItemsToShow}} more</span>
+    </ng-template>
+</ng-select>

@@ -230,3 +230,10 @@ nebula-station-select-map {
       padding-left:5px;
   }
 }
+
+ng-select-custom {
+  .ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
+    border-color: $input-focus-border-color;
+    box-shadow: $input-focus-box-shadow;
+  }
+}

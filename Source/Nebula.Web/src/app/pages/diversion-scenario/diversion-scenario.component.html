@@ -1,0 +1,355 @@
+<div class="breadcrumb-container">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb breadcrumb-empty">
+                <li class="breadcrumb-item active" aria-current="page">Diversion Scenario</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+<div class="container">
+
+    <app-alert-display></app-alert-display>
+
+    <div class="row">
+        <div class="col">
+            <h2 class="d-inline-block">Diversion Scenario</h2>
+        </div>
+    </div>
+    <div class="row mt-1 mb-2">
+        <div class="col">
+            <custom-rich-text [customRichTextTypeID]="richTextTypeID"></custom-rich-text>
+        </div>
+    </div>
+</div>
+<div class="container" *ngIf="dischargeAndRainfallStations">
+    <div class="row mt-sm-4">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    Station Selection
+                </div>
+                <div class="card-body table-responsive">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <nebula-station-select-map [mapID]="mapID" [selectableStations]="dischargeAndRainfallStations" (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)"></nebula-station-select-map>
+                        </div>
+                        <div class="col-md-4">
+                            <ng-container *ngIf="!selectedSiteName">
+                                <p>Click a station on the map to get started!</p>
+                            </ng-container>
+                            <ng-container *ngIf="selectedSiteName">
+                                <dl class="row">
+                                    <dt class="text-sm-left col-sm-6 col-xs-12">Selected Station:</dt>
+                                    <dd class="col-sm-6 col-xs-12">
+                                        {{selectedSiteName}}
+                                    </dd>
+                                </dl>
+                                <dl class="row">
+                                    <dt class="text-sm-left col-sm-6 col-xs-12">Data Available:</dt>
+                                </dl>
+                                <dl class="row" style="max-height:600px; overflow-y:auto">
+                                    <dt *ngIf="gettingAvailableVariables"
+                                        class="text-sm-left col-sm-9 offset-sm-1 col-xs-12">
+                                        Fetching available variables <span class="fa fa-spinner loading-spinner"></span>
+                                    </dt>
+                                    <ng-container *ngIf="!gettingAvailableVariables">
+                                        <span class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1"
+                                            *ngIf="!siteSelectedAndVariablesFound()">No variables found for selected
+                                            station. Please make another selection</span>
+                                        <ng-container *ngIf="siteSelectedAndVariablesFound()">
+                                            <dt class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1"
+                                                *ngFor="let variable of selectedSiteAvailableVariables">
+                                                <div class="row no-gutters">
+                                                    <div class="col-9">
+                                                        {{variable.name}}
+                                                        <br />
+                                                        <ng-container *ngIf="variable.gage != null">
+                                                            <small style="font-weight:400">Gage:
+                                                                {{variable.gage}}</small>
+                                                            <br />
+                                                        </ng-container>
+                                                        <small style="font-weight:400"
+                                                            *ngIf="variable.startDate != null && variable.endDate != null">Record:
+                                                            {{variable.startDate}} -
+                                                            {{variable.endDate}}</small>
+                                                    </div>
+                                                    <div class="col-3 align-self-center text-center">
+                                                        <button class="btn btn-sm btn-nebula"
+                                                            [disabled]="isActionBeingPerformed()"
+                                                            (click)="addVariableToSelection(variable)">Add</button>
+                                                    </div>
+                                                </div>
+                                            </dt>
+                                        </ng-container>
+                                    </ng-container>
+                                </dl>
+                            </ng-container>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-sm-4">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header text-center">
+                    <span class="align-middle">Selected Data</span>
+                    <button (click)="removeVariableFromSelection()"
+                        [disabled]="selectedVariable == null || isActionBeingPerformed()"
+                        class="float-right btn btn-sm btn-nebula">Clear All</button>
+                </div>
+                <div class="card-body table-responsive">
+                    <ngContainer *ngIf="selectedVariable != null">
+                        <div class="selected-variable">
+                            <span>{{selectedVariable.stationShortName}} - {{selectedVariable.name}}</span>
+                            <button (click)="removeVariableFromSelection()" [disabled]="isActionBeingPerformed()"
+                                type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </ngContainer>
+                    <div *ngIf="selectedVariable == null" class="row">
+                        <div class="col text-center">
+                            Select a station on the map and an applicable variable to get started!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-sm-4">
+        <div class="col-sm-12">
+            <div class="card">
+                <div class="card-header text-center" #timeSeriesCard>
+                    Timeseries View and Download
+                </div>
+                <div class="card-body table-responsive">
+                    <div *ngIf="selectedVariable == null" class="row">
+                        <div class="col text-center">
+                            Select a station on the map and an applicable variable to get started!
+                        </div>
+                    </div>
+                    <div *ngIf="selectedVariable != null" class="row">
+                        <ng-container *ngIf="lyraMessages.length > 0">
+                            <div class="col-12" *ngFor="let alert of lyraMessages; let i = index">
+                                <ngb-alert [type]="alert.context"
+                                [dismissible]="alert.dismissable" (close)="closeAlert(i)">
+                                <span [innerHTML]="alert.message"></span>
+                            </ngb-alert>
+                            </div>
+                        </ng-container>
+                        <div class="col-lg-6">
+                            <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
+                                <div *ngIf="errorMessage" class="alert alert-danger">
+                                    {{errorMessage}}
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="startDate"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">Start
+                                        Date</label>
+                                    <div class="input-group col-sm-6">
+                                        <input formControlName="startDate" id="startDate" type="text" ngbDatepicker container="body"
+                                            #start="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="start.toggle()"
+                                            class="form-control">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary calendar" (click)="start.toggle()" [disabled]="disabled"
+                                                type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="f.startDate.touched && f.startDate.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.startDate.errors.required">Date is required.</div>
+                                        <div *ngIf="f.startDate.errors.ngbDate?.invalid">Date must be in the format 'yyyy-mm-dd'</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="endDate"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">End
+                                        Date</label>
+                                    <div class="input-group col-sm-6">
+                                        <input formControlName="endDate" id="endDate" type="text" ngbDatepicker container="body"
+                                            #end="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="end.toggle()"
+                                            class="form-control">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary calendar" (click)="end.toggle()" [disabled]="disabled"
+                                                type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+                                        </div>
+                                    </div>
+
+                                    <div *ngIf="f.endDate.touched && f.endDate.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.endDate.errors.required">Date is required.</div>
+                                        <div *ngIf="f.endDate.errors.ngbDate?.invalid">Date must be in the format 'yyyy-mm-dd'</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="diversionRate"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'DiversionRate'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input formControlName="diversionRate" id="diversionRate" type="number"
+                                            class="form-control w-100">
+                                    </div>
+                                    <div *ngIf="f.diversionRate.touched && f.diversionRate.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.diversionRate.errors.required">Diversion Rate is required.</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="storageMaxDepth"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'StorageMaxDepth'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input formControlName="storageMaxDepth" id="storageMaxDepth" type="number" 
+                                            class="form-control w-100">
+                                    </div>
+
+                                    <div *ngIf="f.storageMaxDepth.touched && f.storageMaxDepth.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.storageMaxDepth.errors.required">Storage Max Depth is required.</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="storageInitialDepth"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'StorageInitialDepth'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input formControlName="storageInitialDepth" id="storageInitialDepth" type="number" 
+                                            class="form-control w-100">
+                                    </div>
+                                    <div *ngIf="f.storageInitialDepth.touched && f.storageInitialDepth.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.storageInitialDepth.errors.required">Storage Initial Depth is required.</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="storageArea"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'StorageArea'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input formControlName="storageArea" id="storageArea" type="number"
+                                            class="form-control w-100">
+                                    </div>
+
+                                    <div *ngIf="f.storageArea.touched && f.storageArea.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.endDate.errors.required">Storage Area is required.</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="infiltrationRate"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'InfiltrationRate'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input formControlName="infiltrationRate" id="infiltrationRate" type="number" 
+                                            class="form-control w-100">
+                                    </div>
+                                    <div *ngIf="f.infiltrationRate.touched && f.infiltrationRate.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.infiltrationRate.errors.required">Infiltration Rate is required.</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="monthsActive"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'MonthsActive'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <ng-select-custom #monthsActive
+                                            [placeholder]="'Select one or more Months'"
+                                            [bindLabel]="'display'"
+                                            [bindValue]="'id'"
+                                            [labelForId]="'monthsActive'"
+                                            [multiple]="true"
+                                            [items]="monthData"
+                                            [control]="timeSeriesForm.get('monthsActive')">
+                                        </ng-select-custom>
+                                    </div>
+                                    <div *ngIf="f.monthsActive.touched && f.monthsActive.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.monthsActive.errors.required">At least one active Month must be selected.</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="daysActive"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'WeekdaysActive'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <ng-select-custom #daysActive
+                                            [placeholder]="'Select one or more Weekdays'"
+                                            [bindLabel]="'display'"
+                                            [bindValue]="'id'"
+                                            [labelForId]="'daysActive'"
+                                            [multiple]="true"
+                                            [items]="weekdayData"
+                                            [control]="timeSeriesForm.get('daysActive')">
+                                        </ng-select-custom>
+                                    </div>
+                                    <div *ngIf="f.daysActive.touched && f.daysActive.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.daysActive.errors.required">At least one active Weekday must be selected.</div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="hoursActive"
+                                        class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'HoursActive'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <ng-select-custom #hoursActive
+                                            [placeholder]="'Select one or more Hours'"
+                                            [bindLabel]="'display'"
+                                            [bindValue]="'id'"
+                                            [labelForId]="'hoursActive'"
+                                            [multiple]="true"
+                                            [items]="hourData"
+                                            [numSelectedItemsToShow]="2"
+                                            [control]="timeSeriesForm.get('hoursActive')">
+                                        </ng-select-custom>
+                                    </div>
+                                    <div *ngIf="f.hoursActive.touched && f.hoursActive.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.hoursActive.errors.required">At least one active Hour must be selected.</div>
+                                    </div>
+                                </div>
+                                <div class="ml-auto">
+                                    Required Field <i class="fas fa-bolt"></i>
+                                    <br />
+                                    <button type="submit" class="btn btn-nebula btn-sm mt-4 float-right"
+                                        [disabled]="isActionBeingPerformed()">
+                                        <span *ngIf="gettingTimeSeriesData"
+                                            class="fa fa-spinner loading-spinner"></span>
+                                        Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div *ngIf="siteSelectedAndVariablesFound()" class="col-lg-6">
+                            <ngContainer *ngIf="!vegaSpec && !errorOccurred">
+                                <span *ngIf="gettingTimeSeriesData">Loading chart values <span
+                                        class="fa fa-spinner loading-spinner"></span></span>
+                                <span *ngIf="!isActionBeingPerformed() && !gettingAvailableVariables">Choose some
+                                    metrics to
+                                    get started</span>
+                            </ngContainer>
+                            <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
+                                try again.</span>
+                            <button *ngIf="currentlyDisplayingRequestDto" (click)="downloadChartData()"
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left" [disabled]="isActionBeingPerformed()">
+                                <span *ngIf="downloadingChartData"
+                                    class="fa fa-spinner loading-spinner"></span>Download</button>
+                            <div [ngStyle]="{'visibility':vegaSpec ? '' : 'hidden'}" id="vis" style="width:100%">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,3 +9,9 @@ values (8, 'PairedRegressionAnalysis', 'Paired Regression Analysis')
 
 insert into dbo.CustomRichText (CustomRichTextTypeID, CustomRichTextContent)
 values (8, 'Paired Regression Analysis Default Content')
+
+insert into dbo.CustomRichTextType (CustomRichTextTypeID, CustomRichTextTypeName, CustomRichTextTypeDisplayName)
+values (9, 'DiversionScenario', 'Diversion Scenario')
+
+insert into dbo.CustomRichText (CustomRichTextTypeID, CustomRichTextContent)
+values (9, 'Diversion Scenario Default Content')

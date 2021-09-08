@@ -21,4 +21,8 @@ export class HydstraFilter {
     toString() {
         return this.key;
     }
+
+    public static all(): HydstraFilter[] {
+        return Object.values(HydstraFilter);
+    }
 }
