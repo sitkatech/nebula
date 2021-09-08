@@ -32,9 +32,11 @@ export class DiversionScenarioComponent implements OnInit {
 
   public vegaSpec: Object = null;
 
+  public hydstraFilters: HydstraFilter[] = HydstraFilter.all();
+
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({ year: this.currentDate.getUTCFullYear() - 5, month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
     endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
     site: new FormControl(null, [Validators.required]),
     diversionRate: new FormControl(0, [Validators.required]),
@@ -42,6 +44,7 @@ export class DiversionScenarioComponent implements OnInit {
     storageInitialDepth: new FormControl(0, [Validators.required]),
     storageArea: new FormControl(0, [Validators.required]),
     infiltrationRate: new FormControl(0, [Validators.required]),
+    filter: new FormControl(HydstraFilter.Both.value, [Validators.required]),
     monthsActive: new FormControl([], [Validators.required]),
     daysActive: new FormControl([], [Validators.required]),
     hoursActive: new FormControl([], [Validators.required]),
@@ -158,6 +161,7 @@ export class DiversionScenarioComponent implements OnInit {
       storage_initial_depth_ft: this.timeSeriesForm.get('storageInitialDepth').value,
       storage_area_sqft: this.timeSeriesForm.get('storageArea').value,
       infiltration_rate_inhr: this.timeSeriesForm.get('infiltrationRate').value,
+      operated_weather_condition: this.timeSeriesForm.get('filter').value,
       diversion_months_active: this.timeSeriesForm.get('monthsActive').value,
       diversion_days_active: this.timeSeriesForm.get('daysActive').value,
       diversion_hours_active: this.timeSeriesForm.get('hoursActive').value

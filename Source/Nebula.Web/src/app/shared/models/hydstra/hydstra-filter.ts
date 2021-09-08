@@ -1,16 +1,16 @@
 
 export class HydstraFilter {
-    static readonly Total = new HydstraFilter(
+    static readonly Both = new HydstraFilter(
         "All (Wet + Dry)",
         "both"
     );
 
-    static readonly Average = new HydstraFilter(
+    static readonly Dry = new HydstraFilter(
         "Dry",
         "dry"
     );
 
-    static readonly Maximum = new HydstraFilter(
+    static readonly Wet = new HydstraFilter(
         "Wet",
         "wet"
     );

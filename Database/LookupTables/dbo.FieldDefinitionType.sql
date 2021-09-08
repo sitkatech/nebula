@@ -6,7 +6,7 @@ USING (VALUES
 (4, 'Filter', 'Filter'),
 (5, 'RegressionMethod', 'Regression Method'),
 (6, 'DiversionRate', 'Diversion Rate (cfs)'),
-(7, 'StorageMaxDepth', 'Storage Max Depth (cfs)'),
+(7, 'StorageMaxDepth', 'Storage Max Depth (ft)'),
 (8, 'StorageInitialDepth', 'Storage Initial Depth (ft)'),
 (9, 'StorageArea', 'Storage Area (sqft)'),
 (10, 'InfiltrationRate', 'Infiltration Rate (in/hr)'),

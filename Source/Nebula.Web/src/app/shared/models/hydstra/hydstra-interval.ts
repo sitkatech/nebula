@@ -1,21 +1,21 @@
 
 export class HydstraInterval {
-    static readonly Total = new HydstraInterval(
+    static readonly Hourly = new HydstraInterval(
         "Hourly",
         "hour"
     );
 
-    static readonly Average = new HydstraInterval(
+    static readonly Daily = new HydstraInterval(
         "Daily",
         "day"
     );
 
-    static readonly Maximum = new HydstraInterval(
+    static readonly Monthly = new HydstraInterval(
         "Monthly",
         "month"
     );
 
-    static readonly Minimum = new HydstraInterval(
+    static readonly Yearly = new HydstraInterval(
         "Yearly",
         "year"
     );

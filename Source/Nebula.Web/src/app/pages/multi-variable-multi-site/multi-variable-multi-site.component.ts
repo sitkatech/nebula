@@ -37,7 +37,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({ year: this.currentDate.getUTCFullYear() - 5, month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
     endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
     siteVariablesToQuery: new FormArray([])
   });
@@ -332,9 +332,9 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   newSiteVariableToQuery(variable: SiteVariable): FormGroup {
     return this.formBuilder.group({
       variable: variable,
-      timeInterval: new FormControl(null, [Validators.required]),
-      aggregationMode: new FormControl(null, [Validators.required]),
-      filter: new FormControl(null, [Validators.required])
+      timeInterval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
+      aggregationMode: new FormControl(variable.allowedAggregations[0], [Validators.required]),
+      filter: new FormControl(HydstraFilter.Both.value, [Validators.required])
     })
   }
 
