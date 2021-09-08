@@ -4,6 +4,7 @@ import * as esri from 'esri-leaflet'
 import { GestureHandling } from "leaflet-gesture-handling";
 import 'leaflet.snogylop';
 import 'leaflet-loading';
+import 'leaflet.markercluster';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { environment } from 'src/environments/environment';
 import { WatershedService } from 'src/app/services/watershed/watershed.service';
@@ -55,6 +56,7 @@ export class StationSelectMapComponent implements OnInit {
   public overlayLayers: { [key: string]: any } = {};
   public maskLayer: any;
   public siteLocationLayer: any;
+  public markerClusterGroup;
   public wmsParams: any;
   public currentMask: L.Layers;
   public iconDefault: any;
@@ -74,7 +76,7 @@ export class StationSelectMapComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-
+    this.markerClusterGroup = L.markerClusterGroup({removeOutsideVisibleBounds: true});
     this.tileLayers = Object.assign({}, {
       "Aerial": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Aerial',
@@ -215,8 +217,9 @@ export class StationSelectMapComponent implements OnInit {
           });
         }.bind(this)
       });
-      this.siteLocationLayer.addTo(this.map);
-      this.siteLocationLayer.bringToFront();
+      this.markerClusterGroup.addLayer(this.siteLocationLayer);
+      this.markerClusterGroup.addTo(this.map);
+      this.markerClusterGroup.bringToFront();
     });
   }
 
