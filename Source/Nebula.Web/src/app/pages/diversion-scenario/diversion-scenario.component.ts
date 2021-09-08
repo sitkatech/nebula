@@ -79,13 +79,13 @@ export class DiversionScenarioComponent implements OnInit {
   ]
 
   public weekdayData = [
-    { id: 7, display: 'Sunday' },
-    { id: 1, display: 'Monday' },
-    { id: 2, display: 'Tuesday' },
-    { id: 3, display: 'Wednesday' },
-    { id: 4, display: 'Thursday' },
-    { id: 5, display: 'Friday' },
-    { id: 6, display: 'Saturday' }
+    { id: 6, display: 'Sunday' },
+    { id: 0, display: 'Monday' },
+    { id: 1, display: 'Tuesday' },
+    { id: 2, display: 'Wednesday' },
+    { id: 3, display: 'Thursday' },
+    { id: 4, display: 'Friday' },
+    { id: 5, display: 'Saturday' }
   ]
 
   public hourData = [
