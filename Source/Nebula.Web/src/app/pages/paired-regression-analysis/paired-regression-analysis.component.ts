@@ -6,6 +6,7 @@ import { UserDetailedDto } from 'src/app/shared/models';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
+import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
 import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
 import { HydstraInterval } from 'src/app/shared/models/hydstra/hydstra-interval';
 import { HydstraRegressionMethod } from 'src/app/shared/models/hydstra/hydstra-regression-method';
