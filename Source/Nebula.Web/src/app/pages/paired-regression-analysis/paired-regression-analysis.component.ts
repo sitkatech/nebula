@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LyraService } from 'src/app/services/lyra.service';
+import { UserDetailedDto } from 'src/app/shared/models';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
-import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
 import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
 import { HydstraInterval } from 'src/app/shared/models/hydstra/hydstra-interval';
 import { HydstraRegressionMethod } from 'src/app/shared/models/hydstra/hydstra-regression-method';
@@ -18,6 +19,8 @@ declare var vegaEmbed: any;
   styleUrls: ['./paired-regression-analysis.component.scss']
 })
 export class PairedRegressionAnalysisComponent implements OnInit {
+  private watchUserChangeSubscription: any;
+  private currentUser: UserDetailedDto;
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
@@ -59,14 +62,18 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private lyraService: LyraService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private authenticationService: AuthenticationService
   ) {
   }
 
   ngOnInit() {
-    this.lyraService.getSiteLocationGeoJson().subscribe(result => {
-      this.allStations = result.features;
-    })
+    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+      this.currentUser = currentUser;
+      this.lyraService.getSiteLocationGeoJson().subscribe(result => {
+        this.allStations = result.features;
+      });
+    });
   }
 
   public onSubmit() {
@@ -78,7 +85,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   }
 
   public getTimeSeriesData() {
-    
+
     if (!this.timeSeriesForm.valid) {
       Object.keys(this.timeSeriesForm.controls).forEach(field => {
         const control = this.timeSeriesForm.get(field);
