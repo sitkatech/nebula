@@ -27,9 +27,10 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   public vegaSpec: Object = null;
 
-  public hydstraIntervals: HydstraInterval[] = Object.values(HydstraInterval);
-  public hydstraFilters: HydstraFilter[] = Object.values(HydstraFilter);
-  public hydstraRegressionMethods: HydstraRegressionMethod[] = Object.values(HydstraRegressionMethod);
+  public hydstraIntervals: HydstraInterval[] = HydstraInterval.all();
+  public hydstraFilters: HydstraFilter[] = HydstraFilter.all();
+  public hydstraRegressionMethods: HydstraRegressionMethod[] = HydstraRegressionMethod.all();
+  public hydstraAggregationModes: HydstraAggregationMode[] = HydstraAggregationMode.all();
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
@@ -162,6 +163,10 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     })
   }
 
+  public getAvailableAggregationModes(variable: SiteVariable): HydstraAggregationMode[] {
+    return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
+  }
+
   public updateSelectedStation(selectedStationProperties: any) {
     this.selectedSiteName = selectedStationProperties.stname;
     this.getAvailableVariables(selectedStationProperties);
@@ -179,6 +184,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
         variable: conductivityInfo.variable,
         startDate: new Date(`${conductivityInfo.period_start.slice(0, 4)}-${conductivityInfo.period_start.slice(4, 6)}-${conductivityInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${conductivityInfo.period_end.slice(0, 4)}-${conductivityInfo.period_end.slice(4, 6)}-${conductivityInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: conductivityInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(conductivitySiteVariable);
     }
@@ -190,6 +196,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
         variable: dischargeInfo.variable,
         startDate: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: dischargeInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
     }
@@ -201,6 +208,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
         variable: rainfallInfo.variable,
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: rainfallInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
     }
@@ -213,6 +221,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
         gage: rainfallStationProperties.stname,
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: rainfallInfo.allowed_aggregations,
         stationShortName: rainfallStationProperties.shortname,
         station: rainfallStationProperties.station
       });
@@ -226,6 +235,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
         variable: rawLevelInfo.variable,
         startDate: new Date(`${rawLevelInfo.period_start.slice(0, 4)}-${rawLevelInfo.period_start.slice(4, 6)}-${rawLevelInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rawLevelInfo.period_end.slice(0, 4)}-${rawLevelInfo.period_end.slice(4, 6)}-${rawLevelInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: rawLevelInfo.allowed_aggregations
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(rawLevelSiteVariable);
     }
@@ -233,6 +243,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     this.selectedSiteAvailableVariables.push(Object.assign(new SiteVariable({
       name: "Estimated Urban Drool",
       variable: "urban_drool",
+      allowedAggregations: this.hydstraAggregationModes.filter(x => x.value == "tot").map(x => x.value)
     }), baseSiteVariable));
   }
 
@@ -314,7 +325,8 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   newSiteVariableToQuery(variable: SiteVariable): FormGroup {
     return this.formBuilder.group({
-      variable: variable
+      variable: variable,
+      aggregationMode: new FormControl(null, [Validators.required])
     })
   }
 
@@ -329,7 +341,8 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   getTimeSeriesListFromTimerSeriesFormObject() {
     return this.siteVariablesToQuery().value.map(x => ({
       variable: x.variable.variable,
-      site: x.variable.station
+      site: x.variable.station,
+      aggregation_method: x.aggregationMode
     }))
   }
 

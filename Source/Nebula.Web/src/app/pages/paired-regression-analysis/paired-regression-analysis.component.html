@@ -33,7 +33,8 @@
                     <div class="row">
                         <div class="col-md-8">
                             <nebula-station-select-map [mapID]="mapID" [selectableStations]="allStations"
-                                (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)"></nebula-station-select-map>
+                                (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)">
+                            </nebula-station-select-map>
                         </div>
                         <div class="col-md-4">
                             <ng-container *ngIf="!selectedSiteName">
@@ -151,9 +152,9 @@
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">Start
                                         Date</label>
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="startDate" id="startDate" type="text" ngbDatepicker container="body"
-                                            #start="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="start.toggle()"
-                                            class="form-control">
+                                        <input formControlName="startDate" id="startDate" type="text" ngbDatepicker
+                                            container="body" #start="ngbDatepicker" placeholder="yyyy-mm-dd"
+                                            (click)="start.toggle()" class="form-control">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary calendar" (click)="start.toggle()"
                                                 type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
@@ -172,9 +173,9 @@
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">End
                                         Date</label>
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="endDate" id="endDate" type="text" ngbDatepicker container="body"
-                                            #end="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="end.toggle()"
-                                            class="form-control">
+                                        <input formControlName="endDate" id="endDate" type="text" ngbDatepicker
+                                            container="body" #end="ngbDatepicker" placeholder="yyyy-mm-dd"
+                                            (click)="end.toggle()" class="form-control">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary calendar" (click)="end.toggle()"
                                                 type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
@@ -203,8 +204,7 @@
                                     </div>
                                     <div *ngIf="f.interval.touched && f.interval.invalid"
                                         class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div
-                                            *ngIf="f.interval.errors.required">
+                                        <div *ngIf="f.interval.errors.required">
                                             Time Interval is required.</div>
                                     </div>
                                 </div>
@@ -235,20 +235,49 @@
                                     <div class="col-sm-6 w-100">
                                         <select formControlName="regression_method" id="regressionMethod"
                                             class="form-control">
-                                            <option
-                                                *ngFor="let mode of hydstraRegressionMethods"
-                                                [value]="mode.value">
+                                            <option *ngFor="let mode of hydstraRegressionMethods" [value]="mode.value">
                                                 {{mode.key}}
                                             </option>
                                         </select>
                                     </div>
                                     <div *ngIf="f.regression_method.touched && f.regression_method.invalid"
                                         class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div
-                                            *ngIf="f.regression_method.errors.required">
+                                        <div *ngIf="f.regression_method.errors.required">
                                             Regression Method is required.</div>
                                     </div>
                                 </div>
+                                <ngContainer formArrayName="siteVariablesToQuery" class="form-group w-100 mb-1">
+                                    <ngContainer *ngFor="let control of siteVariablesToQuery().controls; let i=index"
+                                        class="form-group w-100 mb-1" [formGroupName]="i">
+                                        <div class="selected-variable mb-1">
+                                            <span>{{control.value.variable.stationShortName}}</span> -
+                                            <span>{{control.value.variable.name}}</span>
+                                        </div>
+                                        <div class="form-group w-100 mb-1">
+                                            <label for="aggregationMode"
+                                                class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
+                                                <field-definition [fieldDefinitionType]="'AggregationMode'">
+                                                </field-definition>
+                                            </label>
+                                            <div class="col-sm-6 w-100">
+                                                <select formControlName="aggregationMode" id="aggregationMode"
+                                                    class="form-control">
+                                                    <option
+                                                        *ngFor="let mode of getAvailableAggregationModes(control.value.variable)"
+                                                        [value]="mode.value">
+                                                        {{mode.key}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').touched && siteVariablesToQuery().controls[i].get('aggregationMode').invalid"
+                                                class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                                <div
+                                                    *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').errors.required">
+                                                    Aggregation Mode is required.</div>
+                                            </div>
+                                        </div>
+                                    </ngContainer>
+                                </ngContainer>
                                 <div class="ml-auto">
                                     Required Field <i class="fas fa-bolt"></i>
                                     <br />
