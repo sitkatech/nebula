@@ -140,7 +140,6 @@ export class DiversionScenarioComponent implements OnInit {
       });
       return;
     }
-    debugger;
     let swnTimeSeriesRequestDto =
     {
       start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
@@ -151,8 +150,9 @@ export class DiversionScenarioComponent implements OnInit {
       storage_initial_depth_ft: this.timeSeriesForm.get('storageInitialDepth').value,
       storage_area_sqft: this.timeSeriesForm.get('storageArea').value,
       infiltration_rate_inhr: this.timeSeriesForm.get('infiltrationRate').value,
-      diversion_months_active: this.timeSeriesForm.get('monthsActive').value.map(x => x.id),
-      diversion_days_active: this.timeSeriesForm.get('daysActive').value.map(x => x.id),
+      diversion_months_active: this.timeSeriesForm.get('monthsActive').value,
+      diversion_days_active: this.timeSeriesForm.get('daysActive').value,
+      diversion_hours_active: this.timeSeriesForm.get('hoursActive').value
     };
     this.gettingTimeSeriesData = true;
     this.errorOccurred = false;
@@ -292,26 +292,10 @@ export class DiversionScenarioComponent implements OnInit {
     this.lyraMessages.splice(index, 1);
   }
 
-  public onSelectAll(formField : string, data: any) {
-    const selected = data.map(item => item.id);
-    this.timeSeriesForm.get(formField).patchValue(selected);
-  }
-  
-  public onClearAll(formField : string) {
-    this.timeSeriesForm.get(formField).patchValue([]);
-  }
-
   //#region Form Functionality
 
   get f() {
     return this.timeSeriesForm.controls;
-  }
-
-  //Not ideal, but ng-multiselect-dropdown has known issue with using a reserved name as part of a component property
-  //so disabling with the reactive form doesn't work like it needs to. Also the datepickers use this to disable the button
-  //active issue that has not seen any action for a good while https://github.com/NileshPatel17/ng-multiselect-dropdown/issues/144
-  get disabled() {
-    return this.timeSeriesForm.disabled;
   }
 
   public getDateFromTimeSeriesFormDateObject(formFieldName: string): string {

@@ -21,10 +21,24 @@ export class NgSelectCustomComponent {
   @Input() bindValue: string;
   @Input() placeholder: string;
   @Input() labelForId: string;
-  @Input() control: any;
-  @Input() multiple: boolean;
-  //for now handle these on a case-by-case basis because of reactive forms
-  @Output() selectAll = new EventEmitter();
-  @Output() deselectAll = new EventEmitter();
+  @Input() control: any = null;
+  @Input() multiple: boolean = false;
+  @Input() numSelectedItemsToShow: number = 1;
+
+  selectAll() : void {
+    if (this.control == null || this.items == null || this.bindValue == null) {
+      return;
+    }
+
+    this.control.patchValue(this.items.map(x => x[this.bindValue]));
+  }
+
+  clearAll() : void {
+    if (this.control == null || this.items == null || this.bindValue == null) {
+      return;
+    }
+
+    this.control.patchValue(null);
+  }
 
 }

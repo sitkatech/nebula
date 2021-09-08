@@ -269,9 +269,7 @@
                                             [labelForId]="'monthsActive'"
                                             [multiple]="true"
                                             [items]="monthData"
-                                            [control]="timeSeriesForm.get('monthsActive')"
-                                            (selectAll)="onSelectAll('monthsActive', monthData)"
-                                            (deselectAll)="onClearAll('monthsActive')">
+                                            [control]="timeSeriesForm.get('monthsActive')">
                                         </ng-select-custom>
                                     </div>
                                     <div *ngIf="f.monthsActive.touched && f.monthsActive.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
@@ -285,15 +283,15 @@
                                         </field-definition>
                                     </label>
                                     <div class="col-sm-6">
-                                        <ng-select #daysActive
-                                            placeholder="Select one or more Weekdays"
-                                            bindLabel="display"
-                                            bindValue="id"
-                                            labelForId="daysActive"
+                                        <ng-select-custom #daysActive
+                                            [placeholder]="'Select one or more Weekdays'"
+                                            [bindLabel]="'display'"
+                                            [bindValue]="'id'"
+                                            [labelForId]="'daysActive'"
                                             [multiple]="true"
                                             [items]="weekdayData"
-                                            formControlName="daysActive"
-                                        ></ng-select>
+                                            [control]="timeSeriesForm.get('daysActive')">
+                                        </ng-select-custom>
                                     </div>
                                     <div *ngIf="f.daysActive.touched && f.daysActive.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                         <div *ngIf="f.daysActive.errors.required">At least one active Weekday must be selected.</div>
@@ -306,15 +304,16 @@
                                         </field-definition>
                                     </label>
                                     <div class="col-sm-6">
-                                        <ng-select #hoursActive
-                                            placeholder="Select one or more Hours"
-                                            bindLabel="display"
-                                            bindValue="id"
-                                            labelForId="hoursActive"
+                                        <ng-select-custom #hoursActive
+                                            [placeholder]="'Select one or more Hours'"
+                                            [bindLabel]="'display'"
+                                            [bindValue]="'id'"
+                                            [labelForId]="'hoursActive'"
                                             [multiple]="true"
                                             [items]="hourData"
-                                            formControlName="hoursActive"
-                                        ></ng-select>
+                                            [numSelectedItemsToShow]="2"
+                                            [control]="timeSeriesForm.get('hoursActive')">
+                                        </ng-select-custom>
                                     </div>
                                     <div *ngIf="f.hoursActive.touched && f.hoursActive.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                         <div *ngIf="f.hoursActive.errors.required">At least one active Hour must be selected.</div>
