@@ -20,13 +20,13 @@ export class LyraService {
     return this.http.get(route);
   }
 
-  getTimeSeriesPlot(timeSeriesObject: Object) : Observable<any> {
-    let route = `${this.baseRoute}/api/plot/multi_variable?json=${JSON.stringify(timeSeriesObject)}`;
+  getMultiVariableMultiSitePlot(multiVariableMultiSiteObject: Object) : Observable<any> {
+    let route = `${this.baseRoute}/api/plot/multi_variable?json=${JSON.stringify(multiVariableMultiSiteObject)}`;
     return this.http.get(route);
   }
 
-  downloadTimeSeriesData(timeSeriesObject: Object) {
-    let route = `${this.baseRoute}/api/plot/multi_variable/data?f=csv&json=${JSON.stringify(timeSeriesObject)}`;
+  downloadMultiVariableMultiSiteData(multiVariableMultiSiteObject: Object) {
+    let route = `${this.baseRoute}/api/plot/multi_variable/data?f=csv&json=${JSON.stringify(multiVariableMultiSiteObject)}`;
     return this.http.get(route, {
       responseType: 'arraybuffer'
     });
@@ -39,6 +39,18 @@ export class LyraService {
 
   downloadRegressionData(regressionObject: Object) {
     let route = `${this.baseRoute}/api/plot/regression/data?f=csv&json=${JSON.stringify(regressionObject)}`;
+    return this.http.get(route, {
+      responseType: 'arraybuffer'
+    });
+  }
+
+  getDiversionScenarioPlot(diversionScenarioObject: Object) : Observable<any> {
+    let route = `${this.baseRoute}/api/plot/diversion_scenario?json=${JSON.stringify(diversionScenarioObject)}`;
+    return this.http.get(route);
+  }
+
+  downloadDiversionScenarioData(diversionScenarioObject: Object) {
+    let route = `${this.baseRoute}/api/plot/diversion_scenario/data?f=csv&json=${JSON.stringify(diversionScenarioObject)}`;
     return this.http.get(route, {
       responseType: 'arraybuffer'
     });

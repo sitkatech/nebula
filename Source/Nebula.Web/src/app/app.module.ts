@@ -45,6 +45,7 @@ import { AppInsightsService } from './shared/services/app-insights.service';
 import { GlobalErrorHandlerService } from './shared/services/global-error-handler.service';
 import { PairedRegressionAnalysisComponent } from './pages/paired-regression-analysis/paired-regression-analysis.component';
 import { DiversionScenarioComponent } from './pages/diversion-scenario/diversion-scenario.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
   return () => appLoadService.init().then(() => {
@@ -74,7 +75,7 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     FieldDefinitionEditComponent,
     MultiVariableMultiSiteComponent,
     PairedRegressionAnalysisComponent,
-    DiversionScenarioComponent,
+    DiversionScenarioComponent
   ],
   imports: [
     AppRoutingModule,
@@ -91,7 +92,8 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     AgGridModule.withComponents([]),
     SelectDropDownModule,
     MyDatePickerModule,
-    CKEditorModule
+    CKEditorModule,
+    NgSelectModule
   ],  
   providers: [
     CookieService,

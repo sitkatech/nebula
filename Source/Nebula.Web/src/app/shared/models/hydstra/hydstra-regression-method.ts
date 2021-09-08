@@ -35,4 +35,8 @@ export class HydstraRegressionMethod {
     toString() {
         return this.key;
     }
+
+    public static all(): HydstraRegressionMethod[] {
+        return Object.values(HydstraRegressionMethod);
+    }
 }

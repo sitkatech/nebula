@@ -25,5 +25,9 @@ export class HydstraAggregationMode {
     toString() {
         return this.key;
     }
+
+    public static all(): HydstraAggregationMode[] {
+        return Object.values(HydstraAggregationMode);
+    }
 }
 

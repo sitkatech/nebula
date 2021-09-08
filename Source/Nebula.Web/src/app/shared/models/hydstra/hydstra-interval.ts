@@ -26,4 +26,8 @@ export class HydstraInterval {
     toString() {
         return this.key;
     }
+
+    public static all(): HydstraInterval[] {
+        return Object.values(HydstraInterval);
+    }
 }
