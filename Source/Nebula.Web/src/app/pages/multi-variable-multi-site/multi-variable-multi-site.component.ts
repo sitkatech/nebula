@@ -52,7 +52,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   public errorOccurred: boolean;
   public errorMessage: string = null;
   public gettingTimeSeriesData: boolean = false;
-  public allStations: any = null;
   public currentlyDisplayingRequestDto: any;
   public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
@@ -68,9 +67,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   ngOnInit() {
     this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
       this.currentUser = currentUser;
-      this.lyraService.getSiteLocationGeoJson().subscribe(result => {
-        this.allStations = result.features;
-      });
     });
   }
 
@@ -223,12 +219,12 @@ export class MultiVariableMultiSiteComponent implements OnInit {
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
     }
     else if (featureProperties.nearest_rainfall_station != null) {
-      let rainfallStationProperties = this.allStations.filter(x => x.properties.index === featureProperties.nearest_rainfall_station)[0].properties;
+      let rainfallStationProperties = featureProperties.nearest_rainfall_station_info;
       let rainfallInfo = rainfallStationProperties.rainfall_info;
       let rainfallSiteVariable = new SiteVariable({
         name: rainfallInfo.name,
         variable: rainfallInfo.variable,
-        gage: rainfallStationProperties.stname,
+        gage: featureProperties.nearest_rainfall_station.stname,
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
         allowedAggregations: rainfallInfo.allowed_aggregations,

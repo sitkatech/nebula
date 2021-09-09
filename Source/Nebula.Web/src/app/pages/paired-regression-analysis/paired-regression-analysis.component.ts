@@ -1,6 +1,8 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LyraService } from 'src/app/services/lyra.service';
+import { UserDetailedDto } from 'src/app/shared/models';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
@@ -18,6 +20,8 @@ declare var vegaEmbed: any;
   styleUrls: ['./paired-regression-analysis.component.scss']
 })
 export class PairedRegressionAnalysisComponent implements OnInit {
+  private watchUserChangeSubscription: any;
+  private currentUser: UserDetailedDto;
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
@@ -52,7 +56,6 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   public errorOccurred: boolean;
   public errorMessage: string = null;
   public gettingTimeSeriesData: boolean = false;
-  public allStations: any = null;
   public currentlyDisplayingRequestDto: any;
   public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
@@ -60,14 +63,15 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private lyraService: LyraService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private authenticationService: AuthenticationService
   ) {
   }
 
   ngOnInit() {
-    this.lyraService.getSiteLocationGeoJson().subscribe(result => {
-      this.allStations = result.features;
-    })
+    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+      this.currentUser = currentUser;
+    });
   }
 
   public onSubmit() {
@@ -79,7 +83,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   }
 
   public getTimeSeriesData() {
-    
+
     if (!this.timeSeriesForm.valid) {
       Object.keys(this.timeSeriesForm.controls).forEach(field => {
         const control = this.timeSeriesForm.get(field);
@@ -213,7 +217,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
     }
     else if (featureProperties.nearest_rainfall_station != null) {
-      let rainfallStationProperties = this.allStations.filter(x => x.properties.index === featureProperties.nearest_rainfall_station)[0].properties;
+      let rainfallStationProperties = featureProperties.nearest_rainfall_station_info;
       let rainfallInfo = rainfallStationProperties.rainfall_info;
       let rainfallSiteVariable = new SiteVariable({
         name: rainfallInfo.name,
