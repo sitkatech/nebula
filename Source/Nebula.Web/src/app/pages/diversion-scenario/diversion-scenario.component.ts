@@ -7,6 +7,7 @@ import { UserDetailedDto } from 'src/app/shared/models';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
+import { SiteFilterEnum } from 'src/app/shared/models/enums/site-filter.enum';
 import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
 import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
 import { HydstraInterval } from 'src/app/shared/models/hydstra/hydstra-interval';
@@ -29,6 +30,7 @@ export class DiversionScenarioComponent implements OnInit {
   public mapID: string = 'DiversionScenarioStationSelectMap';
 
   public richTextTypeID = CustomRichTextType.DiversionScenario;
+  public defaultSelectedMapFilter = SiteFilterEnum.HasDischarge;
 
   public vegaSpec: Object = null;
 
