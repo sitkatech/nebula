@@ -264,7 +264,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   }
 
   public removeVariableFromSelection(index: number): void {
-    this.selectedVariables.splice(index, 1);
     this.removeSiteVariableToQuery(index);
     if (this.selectedVariables.length == 0) {
       this.lyraMessages = [];
@@ -272,7 +271,6 @@ export class MultiVariableMultiSiteComponent implements OnInit {
   }
 
   public clearAllVariables(): void {
-    this.selectedVariables = [];
     this.lyraMessages = [];
     this.siteVariablesToQuery().clear();
   }

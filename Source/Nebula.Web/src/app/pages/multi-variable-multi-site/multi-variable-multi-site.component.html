@@ -32,7 +32,9 @@
                 <div class="card-body table-responsive">
                     <div class="row">
                         <div class="col-md-8">
-                            <nebula-station-select-map [mapID]="mapID" (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)"></nebula-station-select-map>
+                            <nebula-station-select-map [mapID]="mapID"
+                                (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)">
+                            </nebula-station-select-map>
                         </div>
                         <div class="col-md-4">
                             <ng-container *ngIf="!selectedSiteName">
@@ -93,30 +95,10 @@
     </div>
     <div class="row mt-sm-4">
         <div class="col-sm-12">
-            <div class="card">
-                <div class="card-header text-center">
-                    <span class="align-middle">Selected Data</span>
-                    <button (click)="clearAllVariables()"
-                        [disabled]="selectedVariables.length == 0 || isActionBeingPerformed()"
-                        class="float-right btn btn-sm btn-nebula">Clear All</button>
-                </div>
-                <div class="card-body table-responsive">
-                    <ngContainer *ngIf="selectedVariables.length > 0">
-                        <div class="selected-variable" *ngFor="let variable of selectedVariables; let i = index">
-                            <span>{{variable.stationShortName}} - {{variable.name}}</span>
-                            <button (click)="removeVariableFromSelection(i)" [disabled]="isActionBeingPerformed()"
-                                type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </ngContainer>
-                    <div *ngIf="selectedVariables.length == 0" class="row">
-                        <div class="col text-center">
-                            Select a station on the map and an applicable variable to get started!
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <selected-data-card [(selectedVariables)]="selectedVariables"
+                [disableActions]="isActionBeingPerformed()"
+                (singleVariableRemoved)="removeVariableFromSelection($event)"
+                (allVariablesCleared)="clearAllVariables()"></selected-data-card>
         </div>
     </div>
     <div class="row mt-sm-4">
@@ -134,10 +116,10 @@
                     <div *ngIf="selectedVariables.length > 0" class="row">
                         <ng-container *ngIf="lyraMessages.length > 0">
                             <div class="col-12" *ngFor="let alert of lyraMessages; let i = index">
-                                <ngb-alert [type]="alert.context"
-                                [dismissible]="alert.dismissable" (close)="closeAlert(i)">
-                                <span [innerHTML]="alert.message"></span>
-                            </ngb-alert>
+                                <ngb-alert [type]="alert.context" [dismissible]="alert.dismissable"
+                                    (close)="closeAlert(i)">
+                                    <span [innerHTML]="alert.message"></span>
+                                </ngb-alert>
                             </div>
                         </ng-container>
                         <div class="col-lg-6">
@@ -150,18 +132,20 @@
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">Start
                                         Date</label>
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="startDate" id="startDate" type="text" ngbDatepicker container="body"
-                                            #start="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="start.toggle()"
-                                            class="form-control">
+                                        <input formControlName="startDate" id="startDate" type="text" ngbDatepicker
+                                            container="body" #start="ngbDatepicker" placeholder="yyyy-mm-dd"
+                                            (click)="start.toggle()" class="form-control">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary calendar" (click)="start.toggle()"
                                                 type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
                                         </div>
                                     </div>
 
-                                    <div *ngIf="f.startDate.touched && f.startDate.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                    <div *ngIf="f.startDate.touched && f.startDate.invalid"
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                         <div *ngIf="f.startDate.errors.required">Date is required.</div>
-                                        <div *ngIf="f.startDate.errors.ngbDate?.invalid">Date must be in the format 'yyyy-mm-dd'</div>
+                                        <div *ngIf="f.startDate.errors.ngbDate?.invalid">Date must be in the format
+                                            'yyyy-mm-dd'</div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
@@ -169,18 +153,20 @@
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end">End
                                         Date</label>
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="endDate" id="endDate" type="text" ngbDatepicker container="body"
-                                            #end="ngbDatepicker" placeholder="yyyy-mm-dd" (click)="end.toggle()"
-                                            class="form-control">
+                                        <input formControlName="endDate" id="endDate" type="text" ngbDatepicker
+                                            container="body" #end="ngbDatepicker" placeholder="yyyy-mm-dd"
+                                            (click)="end.toggle()" class="form-control">
                                         <div class="input-group-append">
                                             <button class="btn btn-outline-secondary calendar" (click)="end.toggle()"
                                                 type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
                                         </div>
                                     </div>
 
-                                    <div *ngIf="f.endDate.touched && f.endDate.invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                    <div *ngIf="f.endDate.touched && f.endDate.invalid"
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                         <div *ngIf="f.endDate.errors.required">Date is required.</div>
-                                        <div *ngIf="f.endDate.errors.ngbDate?.invalid">Date must be in the format 'yyyy-mm-dd'</div>
+                                        <div *ngIf="f.endDate.errors.ngbDate?.invalid">Date must be in the format
+                                            'yyyy-mm-dd'</div>
                                     </div>
                                 </div>
                                 <ngContainer formArrayName="siteVariablesToQuery" class="form-group w-100 mb-1">
@@ -205,13 +191,16 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('timeInterval').touched && siteVariablesToQuery().controls[i].get('timeInterval').invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                                <div *ngIf="siteVariablesToQuery().controls[i].get('timeInterval').errors.required">Time Interval is required.</div>
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('timeInterval').touched && siteVariablesToQuery().controls[i].get('timeInterval').invalid"
+                                                class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                                <div
+                                                    *ngIf="siteVariablesToQuery().controls[i].get('timeInterval').errors.required">
+                                                    Time Interval is required.</div>
                                             </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">
                                             <label for="filter"
-                                            class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
+                                                class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
                                                 <field-definition [fieldDefinitionType]="'Filter'"></field-definition>
                                             </label>
                                             <div class="col w-100">
@@ -222,8 +211,11 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('filter').touched && siteVariablesToQuery().controls[i].get('filter').invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                                <div *ngIf="siteVariablesToQuery().controls[i].get('filter').errors.required">Filter is required.</div>
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('filter').touched && siteVariablesToQuery().controls[i].get('filter').invalid"
+                                                class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                                <div
+                                                    *ngIf="siteVariablesToQuery().controls[i].get('filter').errors.required">
+                                                    Filter is required.</div>
                                             </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">
@@ -242,8 +234,11 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').touched && siteVariablesToQuery().controls[i].get('aggregationMode').invalid" class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                                <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').errors.required">Aggregation Mode is required.</div>
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').touched && siteVariablesToQuery().controls[i].get('aggregationMode').invalid"
+                                                class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                                <div
+                                                    *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').errors.required">
+                                                    Aggregation Mode is required.</div>
                                             </div>
                                         </div>
                                     </ngContainer>
@@ -270,7 +265,8 @@
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
                             <button *ngIf="currentlyDisplayingRequestDto" (click)="downloadChartData()"
-                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left" [disabled]="isActionBeingPerformed()">
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left"
+                                [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
                                     class="fa fa-spinner loading-spinner"></span>Download</button>
                             <div [ngStyle]="{'visibility':vegaSpec ? '' : 'hidden'}" id="vis" style="width:100%">

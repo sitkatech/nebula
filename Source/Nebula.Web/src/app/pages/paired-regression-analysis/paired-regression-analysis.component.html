@@ -95,30 +95,11 @@
     </div>
     <div class="row mt-sm-4">
         <div class="col-sm-12">
-            <div class="card">
-                <div class="card-header text-center">
-                    <span class="align-middle">Selected Data (x,y)</span>
-                    <button (click)="clearAllVariables()"
-                        [disabled]="selectedVariables.length == 0 || isActionBeingPerformed()"
-                        class="float-right btn btn-sm btn-nebula">Clear All</button>
-                </div>
-                <div class="card-body table-responsive">
-                    <ngContainer *ngIf="selectedVariables.length > 0">
-                        <div class="selected-variable" *ngFor="let variable of selectedVariables; let i = index">
-                            <span>{{variable.stationShortName}} - {{variable.name}}</span>
-                            <button (click)="removeVariableFromSelection(i)" [disabled]="isActionBeingPerformed()"
-                                type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </ngContainer>
-                    <div *ngIf="selectedVariables.length == 0" class="row">
-                        <div class="col text-center">
-                            Select a station on the map and an applicable variable to get started!
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <selected-data-card [(selectedVariables)]="selectedVariables"
+                [disableActions]="isActionBeingPerformed()"
+                [headerText]="'Selected Data (x,y)'"
+                (singleVariableRemoved)="removeVariableFromSelection($event)"
+                (allVariablesCleared)="clearAllVariables()"></selected-data-card>
         </div>
     </div>
     <div class="row mt-sm-4">

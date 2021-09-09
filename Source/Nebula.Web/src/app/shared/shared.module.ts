@@ -23,6 +23,7 @@ import { FieldDefinitionGridHeaderComponent } from './components/field-definitio
 import { StationSelectMapComponent } from './components/station-select-map/station-select-map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select-custom.component';
+import { SelectedDataCardComponent } from './components/selected-data-card/selected-data-card.component';
 
 @NgModule({
     declarations: [
@@ -40,7 +41,8 @@ import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select
         FieldDefinitionComponent,
         FieldDefinitionGridHeaderComponent,
         StationSelectMapComponent,
-        NgSelectCustomComponent
+        NgSelectCustomComponent,
+        SelectedDataCardComponent
     ],
     imports: [
         CommonModule,
@@ -65,7 +67,8 @@ import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select
         FieldDefinitionComponent,
         FieldDefinitionGridHeaderComponent,
         StationSelectMapComponent,
-        NgSelectCustomComponent
+        NgSelectCustomComponent,
+        SelectedDataCardComponent
     ],
     entryComponents:[
         WatershedDetailPopupComponent,

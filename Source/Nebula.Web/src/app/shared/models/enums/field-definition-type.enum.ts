@@ -11,5 +11,6 @@ export enum FieldDefinitionTypeEnum {
     InfiltrationRate = 10,
     MonthsActive = 11,
     WeekdaysActive = 12,
-    HoursActive = 13
+    HoursActive = 13,
+    NearestRainfallStation = 14
 }

@@ -6,7 +6,8 @@ values (6, 'DiversionRate', 'Diversion Rate (cfs)'),
 (10, 'InfiltrationRate', 'Infiltration Rate (in/hr)'),
 (11, 'MonthsActive', 'Months Active'),
 (12, 'WeekdaysActive', 'Weekdays Active'),
-(13, 'HoursActive', 'Hours Active')
+(13, 'HoursActive', 'Hours Active'),
+(14, 'NearestRainfallStation', 'Nearest Rainfall Station')
 
 insert into dbo.FieldDefinition (FieldDefinitionTypeID, FieldDefinitionValue)
 select FieldDefinitionTypeID, 'Default definition for ' + FieldDefinitionTypeName

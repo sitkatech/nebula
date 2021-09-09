@@ -12,7 +12,8 @@ USING (VALUES
 (10, 'InfiltrationRate', 'Infiltration Rate (in/hr)'),
 (11, 'MonthsActive', 'Months Active'),
 (12, 'WeekdaysActive', 'Weekdays Active'),
-(13, 'HoursActive', 'Hours Active')
+(13, 'HoursActive', 'Hours Active'),
+(14, 'NearestRainfallStation', 'Nearest Rainfall Station')
 )
 AS Source (FieldDefinitionTypeID, FieldDefinitionTypeName, FieldDefinitionTypeDisplayName)
 ON Target.FieldDefinitionTypeID = Source.FieldDefinitionTypeID

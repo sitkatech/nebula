@@ -40,12 +40,12 @@ export class DiversionScenarioComponent implements OnInit {
   public selectedSiteAvailableVariables: SiteVariable[] = [];
   public selectedSiteStation: string = null;
   public selectedSiteName: string = null;
-  public selectedVariable: SiteVariable = null;
+  public selectedVariables: SiteVariable[] = [];
 
   public errorOccurred: boolean;
   public errorMessage: string = null;
   public gettingTimeSeriesData: boolean = false;
-  public dischargeAndRainfallStations: any = null;
+  public rainfallStations: any = null;
   public currentlyDisplayingRequestDto: any;
   public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
@@ -113,6 +113,7 @@ export class DiversionScenarioComponent implements OnInit {
     storageArea: new FormControl(0, [Validators.required]),
     infiltrationRate: new FormControl(0, [Validators.required]),
     filter: new FormControl(HydstraFilter.Both.value, [Validators.required]),
+    nearestRainfallStation: new FormControl(null, [Validators.required]),
     monthsActive: new FormControl(this.monthData.map(x => x.id), [Validators.required]),
     daysActive: new FormControl(this.weekdayData.map(x => x.id), [Validators.required]),
     hoursActive: new FormControl(this.hourData.map(x => x.id), [Validators.required]),
@@ -131,7 +132,7 @@ export class DiversionScenarioComponent implements OnInit {
     this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
       this.currentUser = currentUser;
       this.lyraService.getSiteLocationGeoJson().subscribe(result => {
-        this.dischargeAndRainfallStations = result.features.filter(x => x.properties.has_discharge || x.properties.has_rainfall);
+        this.rainfallStations = result.features.filter(x => x.properties.has_rainfall);
       });
     });
   }
@@ -163,6 +164,7 @@ export class DiversionScenarioComponent implements OnInit {
       storage_area_sqft: this.timeSeriesForm.get('storageArea').value,
       infiltration_rate_inhr: this.timeSeriesForm.get('infiltrationRate').value,
       operated_weather_condition: this.timeSeriesForm.get('filter').value,
+      nearest_rainfall_station: this.timeSeriesForm.get('nearestRainfallStation').value,
       diversion_months_active: this.timeSeriesForm.get('monthsActive').value,
       diversion_days_active: this.timeSeriesForm.get('daysActive').value,
       diversion_hours_active: this.timeSeriesForm.get('hoursActive').value
@@ -242,7 +244,14 @@ export class DiversionScenarioComponent implements OnInit {
 
   public getDischargeVariableIfPresent(featureProperties: any) {
     this.selectedSiteAvailableVariables = [];
-    let baseSiteVariable = new SiteVariable({ stationShortName: featureProperties.shortname, station: featureProperties.station });
+    let baseSiteVariable = new SiteVariable(
+      { 
+        stationShortName: featureProperties.shortname, 
+        station: featureProperties.station, 
+        nearestRainfallStationInfo: {
+          stationLongName: featureProperties.nearest_rainfall_station_info.stname,
+          station: featureProperties.nearest_rainfall_station_info.station
+        }});
 
     if (featureProperties.has_discharge) {
       let dischargeInfo = featureProperties.discharge_info;
@@ -261,12 +270,13 @@ export class DiversionScenarioComponent implements OnInit {
   }
 
   public addVariableToSelection(variable: SiteVariable): void {
-    this.selectedVariable = variable;
+    this.selectedVariables = [];
+    this.selectedVariables.push(variable);
     this.timeSeriesForm.patchValue({ site: variable.station });
+    this.timeSeriesForm.patchValue({ nearestRainfallStation: variable.nearestRainfallStationInfo.station})
   }
 
   public removeVariableFromSelection(): void {
-    this.selectedVariable = null
     this.timeSeriesForm.patchValue({ site: null });
     this.lyraMessages = [];
   }
