@@ -36,24 +36,6 @@ export class DiversionScenarioComponent implements OnInit {
 
   public hydstraFilters: HydstraFilter[] = HydstraFilter.all();
 
-  public currentDate = new Date();
-  public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    site: new FormControl(null, [Validators.required]),
-    diversionRate: new FormControl(0, [Validators.required]),
-    storageMaxDepth: new FormControl(0, [Validators.required]),
-    storageInitialDepth: new FormControl(0, [Validators.required]),
-    storageArea: new FormControl(0, [Validators.required]),
-    infiltrationRate: new FormControl(0, [Validators.required]),
-    filter: new FormControl(HydstraFilter.Both.value, [Validators.required]),
-    monthsActive: new FormControl([], [Validators.required]),
-    daysActive: new FormControl([], [Validators.required]),
-    hoursActive: new FormControl([], [Validators.required]),
-  });
-
-  public timeSeriesFormDefault = this.timeSeriesForm.value;
-
   public selectedSiteProperties: any;
   public selectedSiteAvailableVariables: SiteVariable[] = [];
   public selectedSiteStation: string = null;
@@ -119,6 +101,23 @@ export class DiversionScenarioComponent implements OnInit {
     { id: 22, display: '10 PM' },
     { id: 23, display: '11 PM' },
   ]
+
+  public currentDate = new Date();
+  public timeSeriesForm = new FormGroup({
+    startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    site: new FormControl(null, [Validators.required]),
+    diversionRate: new FormControl(0, [Validators.required]),
+    storageMaxDepth: new FormControl(0, [Validators.required]),
+    storageInitialDepth: new FormControl(0, [Validators.required]),
+    storageArea: new FormControl(0, [Validators.required]),
+    infiltrationRate: new FormControl(0, [Validators.required]),
+    filter: new FormControl(HydstraFilter.Both.value, [Validators.required]),
+    monthsActive: new FormControl(this.monthData.map(x => x.id), [Validators.required]),
+    daysActive: new FormControl(this.weekdayData.map(x => x.id), [Validators.required]),
+    hoursActive: new FormControl(this.hourData.map(x => x.id), [Validators.required]),
+  });
+  public timeSeriesFormDefault = this.timeSeriesForm.value;
 
 
   constructor(
