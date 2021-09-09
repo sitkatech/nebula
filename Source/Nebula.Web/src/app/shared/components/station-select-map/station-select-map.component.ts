@@ -4,13 +4,13 @@ import * as esri from 'esri-leaflet'
 import { GestureHandling } from "leaflet-gesture-handling";
 import 'leaflet.snogylop';
 import 'leaflet-loading';
-import 'leaflet.markercluster';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { environment } from 'src/environments/environment';
 import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { forkJoin } from 'rxjs';
 import { LyraService } from 'src/app/services/lyra.service';
 import './leaflet.topojson.js'
+import { SiteFilterEnum } from '../../models/enums/site-filter.enum.js';
 
 declare var $: any;
 
@@ -38,8 +38,7 @@ export class StationSelectMapComponent implements OnInit {
   @Input()
   public defaultMapZoom = 12;
   @Input()
-  public selectableStations: any;
-
+  public defaultSelectedFilter:number = SiteFilterEnum.AllSites
   @Output()
   public afterSetControl = new EventEmitter();
   @Output()
@@ -56,13 +55,27 @@ export class StationSelectMapComponent implements OnInit {
   public overlayLayers: { [key: string]: any } = {};
   public maskLayer: any;
   public siteLocationLayer: any;
-  public markerClusterGroup;
   public wmsParams: any;
   public currentMask: L.Layers;
   public iconDefault: any;
   public selectedIconDefault: any;
   public selectedStationProperties: any;
   public selectedStationTributaryAreaLayer: any;
+  public allStationsLayer: any;
+  public hasRainfallLayer: any;
+  public hasDischargeLayer: any;
+  public hasConductivityLayer: any;
+  public rainfallIconDefault: any;
+  public dischargeIconDefault: any;
+  public conductivityIconDefault: any;
+  public currentlySelectedLayer: any;
+  public currentlySelectedUnderlyingLayer: any;
+  public markers: L.FeatureGroup;
+
+  public allStations: any;
+
+  public stationFilterTypes: StationFilterSelect[] = [];
+  public selectedStationFilter: StationFilterSelect;
 
   public topoJSONrsbs: any;
 
@@ -76,7 +89,6 @@ export class StationSelectMapComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
-    this.markerClusterGroup = L.markerClusterGroup({removeOutsideVisibleBounds: true});
     this.tileLayers = Object.assign({}, {
       "Aerial": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Aerial',
@@ -151,9 +163,10 @@ export class StationSelectMapComponent implements OnInit {
 
     forkJoin([
       this.watershedService.getWatershedMask("Aliso Creek"),
-      this.lyraService.getRSBTopoJson()
+      this.lyraService.getRSBTopoJson(),
+      this.lyraService.getSiteLocationGeoJson()
     ])
-    .subscribe(([maskString, topoJSON]) => {
+    .subscribe(([maskString, topoJSON, sites]) => {
       this.maskLayer = L.geoJSON(maskString, {
         invert: true,
         style: function (feature) {
@@ -198,29 +211,91 @@ export class StationSelectMapComponent implements OnInit {
         "<span><img src='../../assets/data-dashboard/regionalSubbasin.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>"] = topoJSONOverlay;
 
       this.setControl();
-      this.siteLocationLayer = L.geoJSON(this.selectableStations, {
-        onEachFeature: function (feature, layer) {
-          layer.bindPopup(`<div class="text-center"><p>${feature.properties.stname}</p>${feature.properties.upstream !== null && feature.properties.upstream !== undefined ? '<button class="btn btn-sm btn-nebula view-tributary-area">View Tributary Area</button></div>' : '<p class="font-italic">No Tributary Area information found</p>'}`);
-          layer.on('click', () => {
-            this.errorOccurred = false;
-            if (this.currentlySelectedLayer) {
-              this.currentlySelectedLayer.setIcon(this.iconDefault);
-            }
-            if (this.selectedStationTributaryAreaLayer) {
-              this.map.removeLayer(this.selectedStationTributaryAreaLayer);
-              this.selectedStationTributaryAreaLayer = null;
-            }
-            layer.setIcon(this.selectedIconDefault);
-            this.currentlySelectedLayer = layer;
-            this.selectedStationProperties = feature.properties;
-            this.selectedStationPropertiesUpdateEvent.emit(this.selectedStationProperties);
-          });
-        }.bind(this)
-      });
-      this.markerClusterGroup.addLayer(this.siteLocationLayer);
-      this.markerClusterGroup.addTo(this.map);
-      this.markerClusterGroup.bringToFront();
+
+      this.allStations = sites.features;
+      this.setupStationFilterAndLayers();
+
+      this.selectedStationFilter = this.stationFilterTypes.filter(x => x.SiteFilterEnum == this.defaultSelectedFilter)[0];
+      this.updateMarkerDisplay();
     });
+  }
+
+  public onEachFeature(feature, layer, layerIcon) {
+    layer.on('click', () => {
+      if (this.currentlySelectedLayer) {
+        this.currentlySelectedLayer.closePopup();
+        this.markers.clearLayers();
+        if (this.currentlySelectedUnderlyingLayer) {
+          this.map.addLayer(this.currentlySelectedUnderlyingLayer);
+        }
+        this.currentlySelectedUnderlyingLayer = null;
+        this.currentlySelectedLayer = null;
+      }
+
+      if (this.selectedStationTributaryAreaLayer) {
+        this.map.removeLayer(this.selectedStationTributaryAreaLayer);
+        this.selectedStationTributaryAreaLayer = null;
+      }
+
+      //Keep track of the marker we are copying in case we need to bring it back later
+      this.currentlySelectedUnderlyingLayer = layer;
+      this.map.removeLayer(this.currentlySelectedUnderlyingLayer);
+      
+      this.currentlySelectedLayer = L.marker(layer.getLatLng(), {icon:this.selectedIconDefault, zIndexOffset:1000});
+      this.currentlySelectedLayer.bindPopup(`<div class="text-center"><p>${feature.properties.stname}</p>${feature.properties.upstream !== null && feature.properties.upstream !== undefined ? '<button class="btn btn-sm btn-nebula view-tributary-area">View Tributary Area</button></div>' : '<p class="font-italic">No Tributary Area information found</p>'}`);
+      this.markers.addLayer(this.currentlySelectedLayer);
+      this.currentlySelectedLayer.openPopup();
+      this.selectedStationProperties = feature.properties;
+      if (this.selectedStationProperties.nearest_rainfall_station != null) {
+        this.selectedStationProperties.nearest_rainfall_station_info = this.allStations.filter(x => x.properties.index === this.selectedStationProperties.nearest_rainfall_station)[0].properties;
+      }
+      this.selectedStationPropertiesUpdateEvent.emit(this.selectedStationProperties);
+    });
+  }
+
+  public setupStationFilterAndLayers() {
+    this.allStationsLayer = L.geoJSON(this.allStations, {
+      onEachFeature: function(feature, layer) {
+        this.onEachFeature(feature, layer, this.iconDefault);
+      }.bind(this),
+    });
+
+    let allSitesOption = new StationFilterSelect({Display:"All Sites", SiteFilterEnum:SiteFilterEnum.AllSites, Layer:this.allStationsLayer});
+
+    this.hasRainfallLayer = L.geoJSON(this.allStations.filter(x => x.properties.has_rainfall), {
+      onEachFeature: function(feature, layer) {
+        this.onEachFeature(feature, layer, this.rainfallIconDefault);
+      }.bind(this),
+      pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {icon: this.rainfallIconDefault});
+      }.bind(this)
+    });
+
+    let rainfallOption = new StationFilterSelect({Display:"Has Rainfall Data", SiteFilterEnum:SiteFilterEnum.HasRainfall, Layer:this.hasRainfallLayer});
+
+    this.hasDischargeLayer = L.geoJSON(this.allStations.filter(x => x.properties.has_discharge), {
+      onEachFeature: function(feature, layer) {
+        this.onEachFeature(feature, layer, this.dischargeIconDefault);
+      }.bind(this),
+      pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {icon: this.dischargeIconDefault});
+      }.bind(this)
+    });
+
+    let dischargeOption = new StationFilterSelect({Display:"Has Discharge Data", SiteFilterEnum:SiteFilterEnum.HasDischarge, Layer:this.hasDischargeLayer});
+
+    this.hasConductivityLayer = L.geoJSON(this.allStations.filter(x => x.properties.has_conductivity), {
+      onEachFeature: function(feature, layer) {
+        this.onEachFeature(feature, layer, this.conductivityIconDefault);
+      }.bind(this),
+      pointToLayer: function(feature, latlng) {
+        return L.marker(latlng, {icon: this.conductivityIconDefault});
+      }.bind(this)
+    });
+
+    let conductivityOption = new StationFilterSelect({Display:"Has Conductivity Data", SiteFilterEnum:SiteFilterEnum.HasConductivity, Layer:this.hasConductivityLayer});
+
+    this.stationFilterTypes = [allSitesOption, rainfallOption, dischargeOption, conductivityOption];
   }
 
   public initializePanes(): void {
@@ -289,6 +364,12 @@ export class StationSelectMapComponent implements OnInit {
   //We could do some kind of custom marker which would require less extra, but this should work for now
   public setupMarkers() {
     this.iconDefault = this.buildMarker('assets/marker-icon.png', 'assets/marker-icon-2x.png');
+    this.rainfallIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-orange.png', '/assets/main/map-icons/marker-icon-2x-orange.png');
+    this.dischargeIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-red.png', '/assets/main/map-icons/marker-icon-2x-red.png');
+    this.conductivityIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-violet.png', '/assets/main/map-icons/marker-icon-2x-violet.png');
+    
+    //this will be for the selected icon
+    this.markers = new L.FeatureGroup().addTo(this.map);
     this.selectedIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-selected.png', '/assets/main/map-icons/marker-icon-2x-selected.png');
 
     L.Marker.prototype.options.icon = this.iconDefault;
@@ -312,6 +393,7 @@ export class StationSelectMapComponent implements OnInit {
     if (!this.selectedStationProperties || !this.selectedStationProperties.upstream) {
       return;
     }
+
     let upstreamCatchIDNs = JSON.parse(this.selectedStationProperties.upstream);
     let tempRSBs = Object.assign({}, this.topoJSONrsbs);
     let topoJSONObjects = tempRSBs.objects.data.geometries.filter(x => upstreamCatchIDNs.includes(x.properties.CatchIDN));
@@ -336,5 +418,39 @@ export class StationSelectMapComponent implements OnInit {
     this.selectedStationTributaryAreaLayer.addTo(this.map);
     this.selectedStationTributaryAreaLayer.bringToFront();
     this.map.fitBounds(this.selectedStationTributaryAreaLayer.getBounds(), {maxZoom:this.defaultMapZoom});
+  }
+
+  public updateMarkerDisplay() {
+    if (!this.stationFilterTypes) {
+      return;
+    }
+
+    if (this.currentlySelectedUnderlyingLayer) {
+      this.currentlySelectedUnderlyingLayer = null;
+    }
+
+    if (this.siteLocationLayer) {
+      this.map.removeLayer(this.siteLocationLayer);
+      this.siteLocationLayer = null;
+    }
+
+    if (this.selectedStationTributaryAreaLayer) {
+      this.map.removeLayer(this.selectedStationTributaryAreaLayer);
+      this.selectedStationTributaryAreaLayer = null;
+    }
+
+    this.siteLocationLayer = this.selectedStationFilter.Layer;
+    this.siteLocationLayer.addTo(this.map);
+    this.map.fitBounds(this.siteLocationLayer.getBounds(), {maxZoom:this.defaultMapZoom});
+  }
+}
+
+export class StationFilterSelect {
+  Display: string;
+  SiteFilterEnum: SiteFilterEnum
+  Layer: any;
+
+  public constructor(obj?:any) {
+    Object.assign(this, obj);
   }
 }

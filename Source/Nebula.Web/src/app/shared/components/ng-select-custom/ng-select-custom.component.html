@@ -16,10 +16,10 @@
             <input type="text" appAutofocus class="form-control input-sm ng-select-search-box" placeholder="Filter"
                 (input)="ngSelectControl.filter($event.target.value)">
         </div>
-        <div>
-            <button class="btn btn-sm btn-nebula mr-1" (click)="selectAll()">Select
+        <div class="btn-group btn-group-sm btn-block">
+            <button class="btn btn-sm btn-light" (click)="selectAll()">Select
                 All</button>
-            <button class="btn btn-sm btn-nebula" (click)="clearAll()">Clear All</button>
+            <button class="btn btn-sm btn-light" (click)="clearAll()">Clear All</button>
         </div>
     </ng-template>
     <ng-template ng-multi-label-tmp let-items="items" let-clear="clear">
