@@ -71,6 +71,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   ngOnInit() {
     this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
       this.currentUser = currentUser;
+      this.setupFormChangeListener();
     });
   }
 
@@ -105,7 +106,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     this.vegaSpec = null;
     this.currentlyDisplayingRequestDto = null;
     this.lyraMessages = [];
-    this.timeSeriesForm.disable();
+    this.timeSeriesForm.disable({emitEvent: false});
     this.lyraService.getRegressionPlot(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
         if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
@@ -122,7 +123,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
         }
       }
       this.gettingTimeSeriesData = false;
-      this.timeSeriesForm.enable();
+      this.timeSeriesForm.enable({emitEvent: false});
       this.cdr.detectChanges();
     },
       error => {
@@ -135,7 +136,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
         }
         this.errorOccurred = true;
         this.gettingTimeSeriesData = false;
-        this.timeSeriesForm.enable();
+        this.timeSeriesForm.enable({emitEvent: false});
       });
   }
 
@@ -145,7 +146,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     }
 
     this.downloadingChartData = true;
-    this.timeSeriesForm.disable();
+    this.timeSeriesForm.disable({emitEvent: false});
     this.lyraService.downloadRegressionData(this.currentlyDisplayingRequestDto).subscribe(result => {
       const blob = new Blob([result], {
         type: 'text/csv'
@@ -163,7 +164,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
       a.click();
       window.URL.revokeObjectURL(url);
       this.downloadingChartData = false;
-      this.timeSeriesForm.enable();
+      this.timeSeriesForm.enable({emitEvent: false});
     })
   }
 
@@ -262,6 +263,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   public addVariableToSelection(variable: SiteVariable): void {
     this.selectedVariables.push(variable);
     this.addSiteVariableToQuery(variable);
+    this.clearResults();
     this.cdr.detectChanges();
   }
 
@@ -270,11 +272,13 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     if (this.selectedVariables.length == 0) {
       this.lyraMessages = [];
     }
+    this.clearResults();
   }
 
   public clearAllVariables(): void {
     this.lyraMessages = [];
     this.siteVariablesToQuery().clear();
+    this.clearResults();
   }
 
   public variableNotPresentInSelectedVariables(variable: SiteVariable): boolean {
@@ -315,6 +319,11 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     this.lyraMessages.splice(index, 1);
   }
 
+  public clearResults() {
+    this.vegaSpec = null;
+    this.currentlyDisplayingRequestDto = null;
+  }
+
   //#region Form Functionality
 
   get f() {
@@ -351,6 +360,12 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   public getDateFromTimeSeriesFormDateObject(formFieldName: string): string {
     let date = this.timeSeriesForm.get(formFieldName).value;
     return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
+  }
+
+  public setupFormChangeListener() {
+    this.timeSeriesForm.valueChanges.subscribe(val => {
+      this.clearResults();
+    })
   }
 
   //#endregion

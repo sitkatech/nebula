@@ -359,13 +359,11 @@
                             <ngContainer *ngIf="!vegaSpec && !errorOccurred">
                                 <span *ngIf="gettingTimeSeriesData">Loading chart values <span
                                         class="fa fa-spinner loading-spinner"></span></span>
-                                <span *ngIf="!isActionBeingPerformed() && !gettingAvailableVariables">Choose some
-                                    metrics to
-                                    get started</span>
+                                <span *ngIf="!isActionBeingPerformed() && !gettingAvailableVariables">Complete and submit the form to get started</span>
                             </ngContainer>
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
-                            <button *ngIf="currentlyDisplayingRequestDto" (click)="downloadChartData()"
+                            <button *ngIf="vegaSpec && currentlyDisplayingRequestDto" (click)="downloadChartData()"
                                 class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left"
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
