@@ -14,10 +14,11 @@ export class StationSelectCardComponent implements OnInit {
   @Input()
   public mapID: string;
   @Input()
-  public defaultSelectedFilter:number = SiteFilterEnum.AllSites
-  @Input() 
+  public defaultSelectedMapFilter: number = SiteFilterEnum.AllSites
+  @Input()
   public selectedVariables: SiteVariable[];
-
+  @Input()
+  public variableNamesAllowedToBeAdded: string[] = ["All"];
   @Input()
   public disableAddingVariables: boolean = false;
 
@@ -45,44 +46,33 @@ export class StationSelectCardComponent implements OnInit {
 
   public getAvailableVariables(featureProperties: any) {
     this.selectedSiteAvailableVariables = [];
-    let baseSiteVariable = new SiteVariable({ stationShortName: featureProperties.shortname, station: featureProperties.station });
+    let baseSiteVariable = new SiteVariable(
+      {
+        stationShortName: featureProperties.shortname,
+        station: featureProperties.station,
+        nearestRainfallStationInfo: {
+          stationLongName: featureProperties.nearest_rainfall_station_info.stname,
+          station: featureProperties.nearest_rainfall_station_info.station
+        }
+      });
 
-    if (featureProperties.has_conductivity) {
-      let conductivityInfo = featureProperties.conductivity_info;
-      let conductivitySiteVariable = Object.assign(new SiteVariable({
-        name: conductivityInfo.name,
-        variable: conductivityInfo.variable,
-        startDate: new Date(`${conductivityInfo.period_start.slice(0, 4)}-${conductivityInfo.period_start.slice(4, 6)}-${conductivityInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${conductivityInfo.period_end.slice(0, 4)}-${conductivityInfo.period_end.slice(4, 6)}-${conductivityInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: conductivityInfo.allowed_aggregations
-      }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(conductivitySiteVariable);
+    if (featureProperties.variables == null || featureProperties.variables.length == 0) {
+      return;
     }
 
-    if (featureProperties.has_discharge) {
-      let dischargeInfo = featureProperties.discharge_info;
-      let dischargeSiteVariable = Object.assign(new SiteVariable({
-        name: dischargeInfo.name,
-        variable: dischargeInfo.variable,
-        startDate: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: dischargeInfo.allowed_aggregations
+    for (let variableName of featureProperties.variables) {
+      let variableInfo = featureProperties[variableName];
+      let siteVariable = Object.assign(new SiteVariable({
+        name: variableInfo.name,
+        variable: variableInfo.variable,
+        startDate: new Date(`${variableInfo.period_start.slice(0, 4)}-${variableInfo.period_start.slice(4, 6)}-${variableInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
+        endDate: new Date(`${variableInfo.period_end.slice(0, 4)}-${variableInfo.period_end.slice(4, 6)}-${variableInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        allowedAggregations: variableInfo.allowed_aggregations
       }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
+      this.selectedSiteAvailableVariables.push(siteVariable);
     }
 
-    if (featureProperties.has_rainfall) {
-      let rainfallInfo = featureProperties.rainfall_info;
-      let rainfallSiteVariable = Object.assign(new SiteVariable({
-        name: rainfallInfo.name,
-        variable: rainfallInfo.variable,
-        startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: rainfallInfo.allowed_aggregations
-      }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
-    }
-    else if (featureProperties.nearest_rainfall_station != null) {
+    if (!featureProperties.has_rainfall && featureProperties.nearest_rainfall_station != null) {
       let rainfallStationProperties = featureProperties.nearest_rainfall_station_info;
       let rainfallInfo = rainfallStationProperties.rainfall_info;
       let rainfallSiteVariable = new SiteVariable({
@@ -97,28 +87,18 @@ export class StationSelectCardComponent implements OnInit {
       });
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
     }
-
-    if (featureProperties.has_raw_level) {
-      let rawLevelInfo = featureProperties.raw_level_info;
-      let rawLevelSiteVariable = Object.assign(new SiteVariable({
-        name: rawLevelInfo.name,
-        variable: rawLevelInfo.variable,
-        startDate: new Date(`${rawLevelInfo.period_start.slice(0, 4)}-${rawLevelInfo.period_start.slice(4, 6)}-${rawLevelInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${rawLevelInfo.period_end.slice(0, 4)}-${rawLevelInfo.period_end.slice(4, 6)}-${rawLevelInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-        allowedAggregations: rawLevelInfo.allowed_aggregations
-      }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(rawLevelSiteVariable);
-    }
-
-    // this.selectedSiteAvailableVariables.push(Object.assign(new SiteVariable({
-    //   name: "Estimated Urban Drool",
-    //   variable: "urban_drool",
-    //   allowedAggregations: this.hydstraAggregationModes.filter(x => x.value == "tot").map(x => x.value)
-    // }), baseSiteVariable));
   }
 
   public siteSelectedAndVariablesFound(): boolean {
     return this.selectedSiteName && this.selectedSiteAvailableVariables != null && this.selectedSiteAvailableVariables.length > 0
+  }
+
+  public variableNameCanBeAddedToSelection(variableName: string): boolean {
+    if (this.variableNamesAllowedToBeAdded.length == 1 && this.variableNamesAllowedToBeAdded[0] == "All") {
+      return true;
+    }
+
+    return this.variableNamesAllowedToBeAdded.length > 0 && this.variableNamesAllowedToBeAdded.includes(variableName);
   }
 
   public addVariableToSelection(variable: SiteVariable): void {
@@ -128,7 +108,6 @@ export class StationSelectCardComponent implements OnInit {
   }
 
   public variableNotPresentInSelectedVariables(variable: SiteVariable): boolean {
-    debugger;
     return this.selectedVariables.length == 0 || !this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
   }
 }

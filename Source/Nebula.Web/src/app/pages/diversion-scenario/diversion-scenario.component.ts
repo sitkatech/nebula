@@ -50,6 +50,8 @@ export class DiversionScenarioComponent implements OnInit {
   public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
 
+  public variableNamesAllowedToAddToScenario = ["Discharge"];
+
   public monthData = [
     { id: 1, display: 'January' },
     { id: 2, display: 'February' },

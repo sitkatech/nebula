@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-8">
                 <nebula-station-select-map [mapID]="mapID"
-                    [defaultSelectedFilter]="defaultSelectedFilter"
+                    [defaultSelectedFilter]="defaultSelectedMapFilter"
                     (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)">
                 </nebula-station-select-map>
             </div>
@@ -50,7 +50,7 @@
                                                 {{variable.startDate}} -
                                                 {{variable.endDate}}</small>
                                         </div>
-                                        <div class="col-3 align-self-center text-center">
+                                        <div *ngIf="variableNameCanBeAddedToSelection(variable.name)" class="col-3 align-self-center text-center">
                                             <button class="btn btn-sm btn-nebula"
                                                 [disabled]="!variableNotPresentInSelectedVariables(variable) || disableAddingVariables"
                                                 (click)="addVariableToSelection(variable)">Add</button>

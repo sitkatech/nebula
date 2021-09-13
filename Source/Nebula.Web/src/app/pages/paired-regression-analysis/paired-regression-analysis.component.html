@@ -25,18 +25,15 @@
 <div class="container">
     <div class="row mt-sm-4">
         <div class="col-sm-12">
-            <station-select-card [(selectedVariables)]="selectedVariables"
-            [mapID]="mapID"
-                [disableAddingVariables]="!canSelectVariable()"
-                (addingVariableEvent)="addVariableToSelection($event)"></station-select-card>
+            <station-select-card [(selectedVariables)]="selectedVariables" [mapID]="mapID"
+                [disableAddingVariables]="!canSelectVariable()" (addingVariableEvent)="addVariableToSelection($event)">
+            </station-select-card>
         </div>
     </div>
     <div class="row mt-sm-4">
         <div class="col-sm-12">
-            <selected-data-card [(selectedVariables)]="selectedVariables"
-                [disableActions]="isActionBeingPerformed()"
-                [headerText]="'Selected Data (x,y)'"
-                (singleVariableRemoved)="removeVariableFromSelection($event)"
+            <selected-data-card [(selectedVariables)]="selectedVariables" [disableActions]="isActionBeingPerformed()"
+                [headerText]="'Selected Data (x,y)'" (singleVariableRemoved)="removeVariableFromSelection($event)"
                 (allVariablesCleared)="clearAllVariables()"></selected-data-card>
         </div>
     </div>
@@ -212,7 +209,8 @@
                             <ngContainer *ngIf="!vegaSpec && !errorOccurred">
                                 <span *ngIf="gettingTimeSeriesData">Loading chart values <span
                                         class="fa fa-spinner loading-spinner"></span></span>
-                                <span *ngIf="!isActionBeingPerformed() && !gettingAvailableVariables">Complete and submit the form to get started</span>
+                                <span *ngIf="!isActionBeingPerformed() && !gettingAvailableVariables">Complete and
+                                    submit the form to get started</span>
                             </ngContainer>
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
@@ -221,7 +219,7 @@
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
                                     class="fa fa-spinner loading-spinner"></span>Download</button>
-                            <div [ngStyle]="{'visibility':vegaSpec ? '' : 'hidden'}" id="vis" style="width:100%">
+                            <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>
                     </div>
