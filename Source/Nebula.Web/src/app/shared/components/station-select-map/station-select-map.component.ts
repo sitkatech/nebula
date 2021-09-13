@@ -30,7 +30,7 @@ export class StationSelectMapComponent implements OnInit {
 
 
   @Input()
-  public mapID: string = '';
+  public mapID: string;
   @Input()
   public mapHeight: string = "500px";
   @Input()
@@ -247,7 +247,7 @@ export class StationSelectMapComponent implements OnInit {
       this.currentlySelectedLayer.openPopup();
       this.selectedStationProperties = feature.properties;
       if (this.selectedStationProperties.nearest_rainfall_station != null) {
-        this.selectedStationProperties.nearest_rainfall_station_info = this.allStations.filter(x => x.properties.index === this.selectedStationProperties.nearest_rainfall_station)[0].properties;
+        this.selectedStationProperties.nearest_rainfall_station_info = this.allStations.filter(x => x.properties.station === this.selectedStationProperties.nearest_rainfall_station)[0].properties;
       }
       this.selectedStationPropertiesUpdateEvent.emit(this.selectedStationProperties);
     });
@@ -394,7 +394,7 @@ export class StationSelectMapComponent implements OnInit {
       return;
     }
 
-    let upstreamCatchIDNs = JSON.parse(this.selectedStationProperties.upstream);
+    let upstreamCatchIDNs = this.selectedStationProperties.upstream;
     let tempRSBs = Object.assign({}, this.topoJSONrsbs);
     let topoJSONObjects = tempRSBs.objects.data.geometries.filter(x => upstreamCatchIDNs.includes(x.properties.CatchIDN));
     tempRSBs.objects = topoJSONObjects;

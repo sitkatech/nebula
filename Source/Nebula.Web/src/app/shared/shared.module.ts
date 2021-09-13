@@ -24,6 +24,7 @@ import { StationSelectMapComponent } from './components/station-select-map/stati
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select-custom.component';
 import { SelectedDataCardComponent } from './components/selected-data-card/selected-data-card.component';
+import { StationSelectCardComponent } from './components/station-select-card/station-select-card.component';
 
 @NgModule({
     declarations: [
@@ -42,7 +43,8 @@ import { SelectedDataCardComponent } from './components/selected-data-card/selec
         FieldDefinitionGridHeaderComponent,
         StationSelectMapComponent,
         NgSelectCustomComponent,
-        SelectedDataCardComponent
+        SelectedDataCardComponent,
+        StationSelectCardComponent
     ],
     imports: [
         CommonModule,
@@ -68,7 +70,8 @@ import { SelectedDataCardComponent } from './components/selected-data-card/selec
         FieldDefinitionGridHeaderComponent,
         StationSelectMapComponent,
         NgSelectCustomComponent,
-        SelectedDataCardComponent
+        SelectedDataCardComponent,
+        StationSelectCardComponent
     ],
     entryComponents:[
         WatershedDetailPopupComponent,
