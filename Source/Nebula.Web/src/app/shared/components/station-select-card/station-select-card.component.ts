@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { SiteFilterEnum } from '../../models/enums/site-filter.enum';
 import { SiteVariable } from '../../models/site-variable';
+import { StationSelectMapComponent } from '../station-select-map/station-select-map.component';
 
 @Component({
   selector: 'station-select-card',
@@ -10,6 +11,8 @@ import { SiteVariable } from '../../models/site-variable';
 export class StationSelectCardComponent implements OnInit {
 
   @ViewChild("mapDiv") mapElement: ElementRef;
+  @ViewChild(StationSelectMapComponent)
+  private mapComponent!: StationSelectMapComponent;
 
   @Input()
   public mapID: string;
@@ -21,7 +24,6 @@ export class StationSelectCardComponent implements OnInit {
   public variableNamesAllowedToBeAdded: string[] = ["All"];
   @Input()
   public disableAddingVariables: boolean = false;
-
   @Output()
   public addingVariableEvent = new EventEmitter<SiteVariable>();
 
@@ -29,6 +31,8 @@ export class StationSelectCardComponent implements OnInit {
   public selectedSiteAvailableVariables: SiteVariable[] = [];
   public selectedSiteStation: string = null;
   public selectedSiteName: string = null;
+  public canViewTributaryArea: boolean = false;
+  public canZoomTributaryArea: boolean = false;
 
   constructor(
     private cdr: ChangeDetectorRef
@@ -87,6 +91,8 @@ export class StationSelectCardComponent implements OnInit {
       });
       this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
     }
+
+    this.canViewTributaryArea = featureProperties.upstream;
   }
 
   public siteSelectedAndVariablesFound(): boolean {
@@ -109,5 +115,18 @@ export class StationSelectCardComponent implements OnInit {
 
   public variableNotPresentInSelectedVariables(variable: SiteVariable): boolean {
     return this.selectedVariables.length == 0 || !this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
+  }
+
+  public viewTributaryArea() {
+    this.mapComponent.viewTributaryArea();
+  }
+
+  public updateCanZoomTributaryArea(value : boolean) {
+    debugger;
+    this.canZoomTributaryArea = value;
+  }
+
+  public zoomInOnTributaryArea() {
+    this.mapComponent.zoomInOnTributaryArea();
   }
 }

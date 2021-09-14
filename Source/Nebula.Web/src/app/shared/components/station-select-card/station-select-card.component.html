@@ -7,7 +7,8 @@
             <div class="col-md-8">
                 <nebula-station-select-map [mapID]="mapID"
                     [defaultSelectedFilter]="defaultSelectedMapFilter"
-                    (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)">
+                    (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)"
+                    (displayingTributaryAreaLayerUpdateEvent)="updateCanZoomTributaryArea($event)">
                 </nebula-station-select-map>
             </div>
             <div class="col-md-4">
@@ -19,6 +20,11 @@
                         <dt class="text-sm-left col-sm-6 col-xs-12">Selected Station:</dt>
                         <dd class="col-sm-6 col-xs-12">
                             {{selectedSiteName}}
+                        </dd>
+                        <dd class="col-sm-6 offset-sm-6 col-md-12 offset-md-0 col-xs-12">
+                            <em *ngIf="!canViewTributaryArea">No Tributary Information Available</em>
+                            <button *ngIf="canViewTributaryArea && !canZoomTributaryArea" (click)="viewTributaryArea()" class="btn btn-sm btn-nebula float-md-right"><i class="fas fa-map-marker-alt"></i> View Tributary Area</button>
+                            <button *ngIf="canViewTributaryArea && canZoomTributaryArea" (click)="zoomInOnTributaryArea()" class="btn btn-sm btn-nebula float-md-right"><i class="fas fa-search-plus"></i> Zoom to Tributary Area</button>
                         </dd>
                     </dl>
                     <dl class="row">

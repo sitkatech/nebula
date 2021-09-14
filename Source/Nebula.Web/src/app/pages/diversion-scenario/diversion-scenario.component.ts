@@ -323,6 +323,8 @@ export class DiversionScenarioComponent implements OnInit {
   public clearResults() {
     this.vegaSpec = null;
     this.currentlyDisplayingRequestDto = null;
+    this.lyraMessages = [];
+    this.errorOccurred = false;
   }
 
   //#region Form Functionality

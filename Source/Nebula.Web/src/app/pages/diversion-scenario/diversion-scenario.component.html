@@ -305,7 +305,7 @@
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
                                     class="fa fa-spinner loading-spinner"></span>Download</button>
-                            <div *ngIf="vegaSpec" [ngStyle]="{'visibility':vegaSpec ? '' : 'hidden'}" id="vis" style="width:100%">
+                            <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>
                     </div>

@@ -47,6 +47,8 @@ export class StationSelectMapComponent implements OnInit {
   public onMapMoveEnd = new EventEmitter();
   @Output()
   public selectedStationPropertiesUpdateEvent = new EventEmitter();
+  @Output()
+  public displayingTributaryAreaLayerUpdateEvent = new EventEmitter<boolean>();
 
   public map: L.Map;
   public featureLayer: any;
@@ -232,17 +234,13 @@ export class StationSelectMapComponent implements OnInit {
         this.currentlySelectedLayer = null;
       }
 
-      if (this.selectedStationTributaryAreaLayer) {
-        this.map.removeLayer(this.selectedStationTributaryAreaLayer);
-        this.selectedStationTributaryAreaLayer = null;
-      }
+      this.clearTributaryAreaLayer();
 
       //Keep track of the marker we are copying in case we need to bring it back later
       this.currentlySelectedUnderlyingLayer = layer;
       this.map.removeLayer(this.currentlySelectedUnderlyingLayer);
       
       this.currentlySelectedLayer = L.marker(layer.getLatLng(), {icon:this.selectedIconDefault, zIndexOffset:1000});
-      this.currentlySelectedLayer.bindPopup(`<div class="text-center"><p>${feature.properties.stname}</p>${feature.properties.upstream !== null && feature.properties.upstream !== undefined ? '<button class="btn btn-sm btn-nebula view-tributary-area">View Tributary Area</button></div>' : '<p class="font-italic">No Tributary Area information found</p>'}`);
       this.markers.addLayer(this.currentlySelectedLayer);
       this.currentlySelectedLayer.openPopup();
       this.selectedStationProperties = feature.properties;
@@ -391,6 +389,7 @@ export class StationSelectMapComponent implements OnInit {
 
   public viewTributaryArea() {
     if (!this.selectedStationProperties || !this.selectedStationProperties.upstream) {
+      this.displayingTributaryAreaLayerUpdateEvent.emit(false);
       return;
     }
 
@@ -417,7 +416,16 @@ export class StationSelectMapComponent implements OnInit {
 
     this.selectedStationTributaryAreaLayer.addTo(this.map);
     this.selectedStationTributaryAreaLayer.bringToFront();
-    this.map.fitBounds(this.selectedStationTributaryAreaLayer.getBounds(), {maxZoom:this.defaultMapZoom});
+    this.displayingTributaryAreaLayerUpdateEvent.emit(true);
+  }
+
+  public zoomInOnTributaryArea() {
+    if (!this.selectedStationTributaryAreaLayer) {
+      this.displayingTributaryAreaLayerUpdateEvent.emit(false);
+      return;
+    }
+
+    this.map.fitBounds(this.selectedStationTributaryAreaLayer.getBounds());
   }
 
   public updateMarkerDisplay() {
@@ -434,14 +442,20 @@ export class StationSelectMapComponent implements OnInit {
       this.siteLocationLayer = null;
     }
 
-    if (this.selectedStationTributaryAreaLayer) {
-      this.map.removeLayer(this.selectedStationTributaryAreaLayer);
-      this.selectedStationTributaryAreaLayer = null;
-    }
+    this.clearTributaryAreaLayer();
 
     this.siteLocationLayer = this.selectedStationFilter.Layer;
     this.siteLocationLayer.addTo(this.map);
     this.map.fitBounds(this.siteLocationLayer.getBounds(), {maxZoom:this.defaultMapZoom});
+  }
+
+  clearTributaryAreaLayer() {
+    if (!this.selectedStationTributaryAreaLayer) {
+      return;
+    }
+    this.map.removeLayer(this.selectedStationTributaryAreaLayer);
+    this.selectedStationTributaryAreaLayer = null;
+    this.displayingTributaryAreaLayerUpdateEvent.emit(false);
   }
 }
 
