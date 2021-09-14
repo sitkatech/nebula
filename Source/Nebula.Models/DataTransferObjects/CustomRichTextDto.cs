@@ -1,8 +1,7 @@
 ﻿namespace Nebula.Models.DataTransferObjects
 {
-    public class CustomRichTextDto
+    public partial class CustomRichTextDto
     {
-        public string CustomRichTextContent { get; set; }
         public bool IsEmptyContent { get; set; }
     }
 }

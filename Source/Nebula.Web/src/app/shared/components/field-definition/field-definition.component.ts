@@ -1,12 +1,12 @@
 import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Alert } from '../../models/alert';
-import { UserDto } from '../../models';
+import { UserDetailedDto } from '../../models';
 import { FieldDefinitionService } from '../../services/field-definition-service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { AlertService } from '../../services/alert.service';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { AlertContext } from '../../models/enums/alert-context.enum';
-import { FieldDefinitionDto } from '../../models/field-definition-dto';
+import { FieldDefinitionDto } from '../../models/generated/field-definition-dto';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { FieldDefinitionTypeEnum } from '../../models/enums/field-definition-type.enum';
 
@@ -31,7 +31,7 @@ export class FieldDefinitionComponent implements OnInit {
   public editedContent: string;
   public editor;
 
-  currentUser: UserDto;
+  currentUser: UserDetailedDto;
 
   public ckConfig = {"removePlugins": ["MediaEmbed", "ImageUpload"]};
 
@@ -43,7 +43,7 @@ export class FieldDefinitionComponent implements OnInit {
 
   ngOnInit() {
     this.fieldDefinitionService.getFieldDefinition(FieldDefinitionTypeEnum[this.fieldDefinitionType]).subscribe(x => {
-      this.loadFieldDefiniton(x);
+      this.loadFieldDefinition(x);
     });
   }
 
@@ -63,7 +63,7 @@ export class FieldDefinitionComponent implements OnInit {
   }
 
   public enterEdit(): void {
-    this.editedContent = this.fieldDefinition.Definition ?? "";
+    this.editedContent = this.fieldDefinition.FieldDefinitionValue ?? "";
     this.isEditing = true;
   }
 
@@ -75,19 +75,19 @@ export class FieldDefinitionComponent implements OnInit {
   public saveEdit(): void {
     this.isEditing = false;
     this.isLoading = true;
-    this.fieldDefinition.Definition = this.editedContent;
+    this.fieldDefinition.FieldDefinitionValue = this.editedContent;
     this.fieldDefinitionService.updateFieldDefinition(this.fieldDefinition).subscribe(x => {
-      this.loadFieldDefiniton(x);
+      this.loadFieldDefinition(x);
     }, error => {
       this.isLoading = false;
       this.alertService.pushAlert(new Alert("There was an error updating the field definition", AlertContext.Danger, true));
     });
   }
 
-  private loadFieldDefiniton(fieldDefinition:FieldDefinitionDto)
+  private loadFieldDefinition(fieldDefinition:FieldDefinitionDto)
   {
     this.fieldDefinition = fieldDefinition;
-    this.emptyContent = fieldDefinition.Definition?.length > 0 ? false : true;
+    this.emptyContent = fieldDefinition.FieldDefinitionValue?.length > 0 ? false : true;
     this.isLoading = false;
   }
 

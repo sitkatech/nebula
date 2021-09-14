@@ -52,7 +52,7 @@ namespace Nebula.API.Controllers
                 OriginalFileExtension = extension,
             };
 
-            _dbContext.FileResource.Add(fileResource);
+            _dbContext.FileResources.Add(fileResource);
             _dbContext.SaveChanges();
 
             return Ok(new { imageUrl = $"/FileResource/{fileResourceGuid}" });
@@ -65,7 +65,7 @@ namespace Nebula.API.Controllers
             var isStringAGuid = Guid.TryParse(fileResourceGuidAsString, out var fileResourceGuid);
             if (isStringAGuid)
             {
-                var fileResource = _dbContext.FileResource.Include(x => x.FileResourceMimeType).SingleOrDefault(x => x.FileResourceGUID == fileResourceGuid);
+                var fileResource = _dbContext.FileResources.Include(x => x.FileResourceMimeType).SingleOrDefault(x => x.FileResourceGUID == fileResourceGuid);
 
                 return DisplayResourceImpl(fileResourceGuidAsString, fileResource);
             }

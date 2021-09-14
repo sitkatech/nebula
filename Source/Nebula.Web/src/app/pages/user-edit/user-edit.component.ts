@@ -4,8 +4,8 @@ import { FormArray, FormControl, FormGroup, Validators } from "@angular/forms";
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { RoleService } from 'src/app/services/role/role.service';
-import { UserDto } from 'src/app/shared/models';
-import { RoleDto } from 'src/app/shared/models/role/role-dto';
+import { UserDetailedDto } from 'src/app/shared/models';
+import { RoleDto } from 'src/app/shared/models/generated/role-dto';
 import { forkJoin } from 'rxjs';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { Alert } from 'src/app/shared/models/alert';
@@ -21,10 +21,10 @@ import { UserUpdateDto } from 'src/app/shared/models/user/user-update-dto';
 })
 export class UserEditComponent implements OnInit, OnDestroy {
   private watchUserChangeSubscription: any;
-  private currentUser: UserDto;
+  private currentUser: UserDetailedDto;
 
   public userID: number;
-  public user: UserDto;
+  public user: UserDetailedDto;
   public model: UserUpdateDto;
   public roles: Array<RoleDto>;
   public isLoadingSubmit: boolean = false;
@@ -58,7 +58,7 @@ export class UserEditComponent implements OnInit, OnDestroy {
       ).subscribe(([user, roles]) => {
         this.user = user instanceof Array
           ? null
-          : user as UserDto;
+          : user as UserDetailedDto;
 
         this.roles = roles.sort((a: RoleDto, b: RoleDto) => {
           if (a.RoleDisplayName > b.RoleDisplayName)

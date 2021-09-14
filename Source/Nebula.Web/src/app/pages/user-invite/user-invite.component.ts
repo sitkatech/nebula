@@ -5,9 +5,9 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { Router, ActivatedRoute } from '@angular/router';
-import { RoleDto } from 'src/app/shared/models/role/role-dto';
+import { RoleDto } from 'src/app/shared/models/generated/role-dto';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserDto } from 'src/app/shared/models';
+import { UserDetailedDto } from 'src/app/shared/models';
 import { forkJoin } from 'rxjs';
 import { UserInviteDto } from 'src/app/shared/models/user/user-invite-dto';
 import { environment } from 'src/environments/environment';
@@ -22,7 +22,7 @@ import { environment } from 'src/environments/environment';
 })
 export class UserInviteComponent implements OnInit, OnDestroy {
     private watchUserChangeSubscription: any;
-    private currentUser: UserDto;
+    private currentUser: UserDetailedDto;
 
     public roles: Array<RoleDto>;
     public model: UserInviteDto;
@@ -51,7 +51,7 @@ export class UserInviteComponent implements OnInit, OnDestroy {
                     {
                         let userToInvite = user instanceof Array
                             ? null
-                            : user as UserDto;
+                            : user as UserDetailedDto;
                         this.model.Email = userToInvite.Email;
                         this.model.FirstName = userToInvite.FirstName;
                         this.model.LastName = userToInvite.LastName;

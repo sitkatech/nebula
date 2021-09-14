@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { UserService } from './user/user.service';
-import { UserDto } from '../shared/models';
+import { UserDetailedDto } from '../shared/models';
 import { Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { CookieStorageService } from '../shared/services/cookies/cookie-storage.service';
@@ -17,11 +17,11 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private currentUser: UserDto;
+  private currentUser: UserDetailedDto;
 
   private getUserObservable: any;
 
-  private _currentUserSetSubject = new Subject<UserDto>();
+  private _currentUserSetSubject = new Subject<UserDetailedDto>();
   public currentUserSetObservable = this._currentUserSetSubject.asObservable();
 
 
@@ -71,24 +71,28 @@ export class AuthenticationService {
     this.router.events
       .pipe(filter(e => e instanceof NavigationStart))
       .subscribe((e: NavigationStart) => {
-        if (this.isAuthenticated() && !this.currentUser) {
-          var claims = this.oauthService.getIdentityClaims();
-          var globalID = claims["sub"];
-          console.log("Authenticated but no user found...")
-          this.getUserObservable = this.userService.getUserFromGlobalID(globalID).subscribe(user => {
-            this.currentUser = user;
-            this._currentUserSetSubject.next(this.currentUser);
-          });
-        }
+        this.checkAuthentication();
       })
   }
 
-  private getUserCallback(user: UserDto) {
+  public checkAuthentication() {
+    if (this.isAuthenticated() && !this.currentUser) {
+      var claims = this.oauthService.getIdentityClaims();
+      var globalID = claims["sub"];
+      console.log("Authenticated but no user found...");
+      this.getUserObservable = this.userService.getUserFromGlobalID(globalID).subscribe(user => {
+        this.currentUser = user;
+        this._currentUserSetSubject.next(this.currentUser);
+      });
+    }
+  }
+
+  private getUserCallback(user: UserDetailedDto) {
     this.currentUser = user;
     this._currentUserSetSubject.next(this.currentUser);
   }
 
-  public refreshUserInfo(user: UserDto) {
+  public refreshUserInfo(user: UserDetailedDto) {
     this.getUserCallback(user);
   }
 
@@ -105,13 +109,16 @@ export class AuthenticationService {
   }
 
   public login() {
-    this.oauthService.initImplicitFlow();
+    this.oauthService.initCodeFlow();
   }
 
   public createAccount() {
     localStorage.setItem("loginOnReturn", "true");
-    const redirectUrl = encodeURIComponent(environment.createAccountRedirectUrl);
-    window.location.href = `${environment.createAccountUrl}${redirectUrl}`;
+    window.location.href = `${environment.keystoneAuthConfiguration.issuer}/Account/Register?${this.getClientIDAndRedirectUrlForKeystone()}`;
+  }
+
+  public getClientIDAndRedirectUrlForKeystone() {
+    return `ClientID=${environment.keystoneAuthConfiguration.clientId}&RedirectUrl=${encodeURIComponent(environment.createAccountRedirectUrl)}`;
   }
 
   public logout() {
@@ -122,7 +129,7 @@ export class AuthenticationService {
     });
   }
 
-  public isUserAnAdministrator(user: UserDto): boolean {
+  public isUserAnAdministrator(user: UserDetailedDto): boolean {
     const role = user && user.Role
       ? user.Role.RoleID
       : null;
@@ -133,14 +140,14 @@ export class AuthenticationService {
     return this.isUserAnAdministrator(this.currentUser);
   }
 
-  public isUserUnassigned(user: UserDto): boolean {
+  public isUserUnassigned(user: UserDetailedDto): boolean {
     const role = user && user.Role
       ? user.Role.RoleID
       : null;
     return role === RoleEnum.Unassigned;
   }
 
-  public isUserRoleDisabled(user: UserDto): boolean {
+  public isUserRoleDisabled(user: UserDetailedDto): boolean {
     const role = user && user.Role
       ? user.Role.RoleID
       : null;

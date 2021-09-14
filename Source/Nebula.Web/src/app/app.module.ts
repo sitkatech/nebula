@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
@@ -22,7 +22,7 @@ import { DecimalPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer/link-renderer.component';
 
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { ComboSeriesVerticalComponent } from './shared/components/combo-chart/combo-series-vertical.component'
 import { FontAwesomeIconLinkRendererComponent } from './shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
@@ -39,9 +39,20 @@ import { FieldDefinitionListComponent } from './pages/field-definition-list/fiel
 import { FieldDefinitionEditComponent } from './pages/field-definition-edit/field-definition-edit.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { HttpErrorInterceptor } from './shared/interceptors/httpErrorInterceptor';
+import { MultiVariableMultiSiteComponent } from './pages/multi-variable-multi-site/multi-variable-multi-site.component';
+import { environment } from 'src/environments/environment';
+import { AppInsightsService } from './shared/services/app-insights.service';
+import { GlobalErrorHandlerService } from './shared/services/global-error-handler.service';
+import { PairedRegressionAnalysisComponent } from './pages/paired-regression-analysis/paired-regression-analysis.component';
+import { DiversionScenarioComponent } from './pages/diversion-scenario/diversion-scenario.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
-export function init_app(appLoadService: AppInitService) {
-  return () => appLoadService.init();
+export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
+  return () => appLoadService.init().then(() => {
+    if (environment.appInsightsInstrumentationKey) {
+      appInsightsService.initAppInsights();
+    }
+  });
 }
 
 @NgModule({
@@ -62,6 +73,9 @@ export function init_app(appLoadService: AppInitService) {
     DisclaimerComponent,
     FieldDefinitionListComponent,
     FieldDefinitionEditComponent,
+    MultiVariableMultiSiteComponent,
+    PairedRegressionAnalysisComponent,
+    DiversionScenarioComponent
   ],
   imports: [
     AppRoutingModule,
@@ -72,19 +86,24 @@ export function init_app(appLoadService: AppInitService) {
     OAuthModule.forRoot(),
     SharedModule.forRoot(),
     FormsModule,
+    ReactiveFormsModule,
     NgxChartsModule,
     BrowserAnimationsModule,
     AgGridModule.withComponents([]),
     SelectDropDownModule,
     MyDatePickerModule,
-    CKEditorModule
+    CKEditorModule,
+    NgSelectModule
   ],  
   providers: [
     CookieService,
     AppInitService,
-    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService], multi: true },
+    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService, AppInsightsService], multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: HttpErrorInterceptor, multi: true },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandlerService
+    },
     DecimalPipe, CurrencyPipe, DatePipe
   ],
   entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],

@@ -5,7 +5,11 @@ USING (VALUES
 (3, 'Home page', 'Home page'),
 (4, 'Help', 'Help'),
 (5, 'LabelsAndDefinitionsList', 'Labels and Definitions List'),
-(6, 'WatershedList', 'Watershed List')
+(6, 'WatershedList', 'Watershed List'),
+(7, 'MultiVariableMultiSite', 'Multi-Variable Multi-Site'),
+(8, 'PairedRegressionAnalysis', 'Paired Regression Analysis'),
+(9, 'DiversionScenario', 'Diversion Scenario')
+
 )
 AS Source (CustomRichTextTypeID, CustomRichTextTypeName, CustomRichTextTypeDisplayName)
 ON Target.CustomRichTextTypeID = Source.CustomRichTextTypeID

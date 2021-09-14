@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UserDto } from 'src/app/shared/models';
 import { ApiService } from 'src/app/shared/services';
 import { Observable } from 'rxjs';
 import { UserCreateDto } from 'src/app/shared/models/user/user-create-dto';
@@ -12,12 +11,12 @@ import { UserDetailedDto } from 'src/app/shared/models/user/user-detailed-dto';
 export class UserService {
     constructor(private apiService: ApiService) { }
 
-    inviteUser(userInviteDto: any): Observable<UserDto> {
+    inviteUser(userInviteDto: any): Observable<UserDetailedDto> {
         let route = `/users/invite`;
         return this.apiService.postToApi(route, userInviteDto);
     }
 
-    createNewUser(userCreateDto: UserCreateDto): Observable<UserDto> {
+    createNewUser(userCreateDto: UserCreateDto): Observable<UserDetailedDto> {
         let route = `/users/`;
         return this.apiService.postToApi(route, userCreateDto);
     }
@@ -27,17 +26,17 @@ export class UserService {
         return this.apiService.getFromApi(route);
     }
 
-    getUserFromUserID(userID: number): Observable<UserDto> {
+    getUserFromUserID(userID: number): Observable<UserDetailedDto> {
         let route = `/users/${userID}`;
         return this.apiService.getFromApi(route);
     }
 
-    getUserFromGlobalID(globalID: string): Observable<UserDto> {
+    getUserFromGlobalID(globalID: string): Observable<UserDetailedDto> {
         let route = `/user-claims/${globalID}`;
         return this.apiService.getFromApi(route);
     }
 
-    updateUser(userID: number, userUpdateDto: any): Observable<UserDto> {
+    updateUser(userID: number, userUpdateDto: any): Observable<UserDetailedDto> {
         let route = `/users/${userID}`;
         return this.apiService.putToApi(route, userUpdateDto);
     }
@@ -47,7 +46,7 @@ export class UserService {
         return this.apiService.getFromApi(route);
     }
 
-    setDisclaimerAcknowledgedDate(userID: number): Observable<UserDto> {
+    setDisclaimerAcknowledgedDate(userID: number): Observable<UserDetailedDto> {
         let route = `/users/set-disclaimer-acknowledged-date`
         return this.apiService.putToApi(route, userID);
     }

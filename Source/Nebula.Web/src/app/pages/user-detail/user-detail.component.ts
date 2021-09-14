@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { UserDto } from 'src/app/shared/models';
+import { UserDetailedDto } from 'src/app/shared/models';
 import { UserService } from 'src/app/services/user/user.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -13,9 +13,9 @@ import { forkJoin } from 'rxjs';
 })
 export class UserDetailComponent implements OnInit, OnDestroy {
     private watchUserChangeSubscription: any;
-    private currentUser: UserDto;
+    private currentUser: UserDetailedDto;
 
-    public user: UserDto;
+    public user: UserDetailedDto;
 
     constructor(
         private route: ActivatedRoute,
@@ -38,7 +38,7 @@ export class UserDetailComponent implements OnInit, OnDestroy {
                 ).subscribe(([user]) => {
                     this.user = user instanceof Array
                         ? null
-                        : user as UserDto;
+                        : user as UserDetailedDto;
                     this.cdr.detectChanges();
                 });
             }

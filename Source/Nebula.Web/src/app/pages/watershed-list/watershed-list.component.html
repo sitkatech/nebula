@@ -40,11 +40,11 @@
             [rowData]="watersheds" [columnDefs]="columnDefs" [pagination]="true" [paginationPageSize]="100">
         </ag-grid-angular>
     </div>
-    <div class="row mt-sm-4" *ngIf="watersheds">
+    <div class="row mt-sm-4">
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-body table-responsive">
-                    <watershed-map mapID="watershedsMap" [selectedWatershedIDs]="getSelectedWatershedIDs()"
+                    <watershed-map mapID="watershedsMap"
                         mapHeight="500px">
                     </watershed-map>
                 </div>

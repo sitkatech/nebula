@@ -3,8 +3,8 @@ import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { forkJoin } from 'rxjs';
-import { WatershedDto } from 'src/app/shared/models/watershed/watershed-dto';
-import { UserDto } from 'src/app/shared/models';
+import { WatershedDto } from 'src/app/shared/models/generated/watershed-dto';
+import { UserDetailedDto } from 'src/app/shared/models';
 
 @Component({
   selector: 'template-watershed-detail',
@@ -13,7 +13,7 @@ import { UserDto } from 'src/app/shared/models';
 })
 export class WatershedDetailComponent implements OnInit, OnDestroy {
   private watchUserChangeSubscription: any;
-  private currentUser: UserDto;
+  private currentUser: UserDetailedDto;
 
   public watershed: WatershedDto;
 

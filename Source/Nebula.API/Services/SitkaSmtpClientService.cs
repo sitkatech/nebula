@@ -158,11 +158,6 @@ Subject: {mm.Subject}
             return String.Join("; ", addresses.Select(x => x.ToString()));
         }
 
-        public static void AddReplyToEmail(MailMessage mailMessage)
-        {
-            mailMessage.ReplyToList.Add("admin@rrbwsd.com");
-        }
-
         public string GetDefaultEmailSignature()
         {
             string defaultEmailSignature = $@"<br /><br />

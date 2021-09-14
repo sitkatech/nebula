@@ -1,5 +1,6 @@
 ﻿using Nebula.Models.DataTransferObjects;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace Nebula.EFModels.Entities
 {
@@ -7,7 +8,8 @@ namespace Nebula.EFModels.Entities
     {
         public static CustomRichTextDto GetByCustomRichTextTypeID(NebulaDbContext dbContext, int customRichTextTypeID)
         {
-            var customRichText = dbContext.CustomRichText
+            var customRichText = dbContext.CustomRichTexts
+                .Include(x => x.CustomRichTextType)
                 .SingleOrDefault(x => x.CustomRichTextTypeID == customRichTextTypeID);
 
             return customRichText?.AsDto();
@@ -16,7 +18,7 @@ namespace Nebula.EFModels.Entities
         public static CustomRichTextDto UpdateCustomRichText(NebulaDbContext dbContext, int customRichTextTypeID,
             CustomRichTextDto customRichTextUpdateDto)
         {
-            var customRichText = dbContext.CustomRichText
+            var customRichText = dbContext.CustomRichTexts
                 .SingleOrDefault(x => x.CustomRichTextTypeID == customRichTextTypeID);
 
             // null check occurs in calling endpoint method.

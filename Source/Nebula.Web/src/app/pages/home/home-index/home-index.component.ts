@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserDto } from 'src/app/shared/models';
+import { UserDetailedDto } from 'src/app/shared/models';
 import { error } from 'protractor';
 import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
 import { environment } from 'src/environments/environment';
@@ -13,7 +13,7 @@ import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text
 })
 export class HomeIndexComponent implements OnInit, OnDestroy {
     public watchUserChangeSubscription: any;
-    public currentUser: UserDto;
+    public currentUser: UserDetailedDto;
 
     public richTextTypeID : number = CustomRichTextType.Homepage;
 
@@ -63,15 +63,15 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
     }
 
     public forgotPasswordUrl() :string{
-        return `${environment.keystoneSupportBaseUrl}/ForgotPassword`;
+        return `${environment.keystoneAuthConfiguration.issuer}/Account/ForgotPassword?${this.authenticationService.getClientIDAndRedirectUrlForKeystone()}`;
     }
 
     public forgotUsernameUrl() :string{
-        return `${environment.keystoneSupportBaseUrl}/ForgotUsername`;
+        return `${environment.keystoneAuthConfiguration.issuer}/Account/ForgotUsername?${this.authenticationService.getClientIDAndRedirectUrlForKeystone()}`;
     }
 
     public keystoneSupportUrl():string{
-        return `${environment.keystoneSupportBaseUrl}/Support/20`;
+        return `${environment.keystoneAuthConfiguration.issuer}/Account/Support/20?${this.authenticationService.getClientIDAndRedirectUrlForKeystone()}`;
     }
 
     public platformLongName():string{
