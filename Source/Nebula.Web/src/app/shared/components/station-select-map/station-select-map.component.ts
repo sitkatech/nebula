@@ -446,7 +446,6 @@ export class StationSelectMapComponent implements OnInit {
 
     this.siteLocationLayer = this.selectedStationFilter.Layer;
     this.siteLocationLayer.addTo(this.map);
-    this.map.fitBounds(this.siteLocationLayer.getBounds(), {maxZoom:this.defaultMapZoom});
   }
 
   clearTributaryAreaLayer() {
