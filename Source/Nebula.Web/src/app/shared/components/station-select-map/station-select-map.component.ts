@@ -133,7 +133,7 @@ export class StationSelectMapComponent implements OnInit {
 
     this.overlayLayers = Object.assign({}, {
       "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
-      "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
+      "<span><img src='../../assets/data-dashboard/watershed.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
       "<span>Stormwater Network <br/> <img src='../../assets/data-dashboard/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
     })
 
@@ -152,7 +152,7 @@ export class StationSelectMapComponent implements OnInit {
       layers: [
         this.tileLayers["Street"],
         this.overlayLayers["<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-        this.overlayLayers["<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"],
+        this.overlayLayers["<span><img src='../../assets/data-dashboard/watershed.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"],
       ],
       gestureHandling: true,
       loadingControl: true
@@ -446,7 +446,6 @@ export class StationSelectMapComponent implements OnInit {
 
     this.siteLocationLayer = this.selectedStationFilter.Layer;
     this.siteLocationLayer.addTo(this.map);
-    this.map.fitBounds(this.siteLocationLayer.getBounds(), {maxZoom:this.defaultMapZoom});
   }
 
   clearTributaryAreaLayer() {
