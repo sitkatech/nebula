@@ -12,7 +12,6 @@ import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { forkJoin } from 'rxjs';
 import { LyraService } from 'src/app/services/lyra.service';
 import './leaflet.topojson.js'
-import { RULE } from 'vega-lite/build/src/mark';
 
 declare var $: any;
 
@@ -243,7 +242,7 @@ export class StationSelectCardComponent implements OnInit {
     if (this.canAddDuplicateVariable) {
       return false;
     }
-    
+
     return this.variablePresentInSelectedVariables(variable);
   }
 
