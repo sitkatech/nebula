@@ -5,9 +5,9 @@ import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
-import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
+import { HydstraAggregationMethod } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
 import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval";
-import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
+import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { UserDetailedDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
@@ -31,9 +31,9 @@ export class MultiVariableMultiSiteComponent implements OnInit {
 
   public vegaSpec: Object = null;
 
-  public hydstraAggregationModes: HydstraAggregationMode[] = Object.values(HydstraAggregationMode);
+  public hydstraAggregationMethods: HydstraAggregationMethod[] = Object.values(HydstraAggregationMethod);
   public hydstraIntervals: HydstraInterval[] = Object.values(HydstraInterval);
-  public hydstraFilters: HydstraFilter[] = Object.values(HydstraFilter)
+  public hydstraWeatherConditions: HydstraWeatherCondition[] = Object.values(HydstraWeatherCondition)
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
@@ -170,8 +170,8 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     })
   }
 
-  public getAvailableAggregationModes(variable: SiteVariable): HydstraAggregationMode[] {
-    return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
+  public getAvailableAggregationMethods(variable: SiteVariable): HydstraAggregationMethod[] {
+    return this.hydstraAggregationMethods.filter(x => variable.allowedAggregations.includes(x.value));
   }
 
   public addVariableToSelection(variable: SiteVariable): void {
@@ -249,8 +249,8 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     return this.formBuilder.group({
       variable: variable,
       timeInterval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
-      aggregationMode: new FormControl(variable.allowedAggregations[0], [Validators.required]),
-      filter: new FormControl(HydstraFilter.Both.value, [Validators.required])
+      aggregationMethod: new FormControl(variable.allowedAggregations[0], [Validators.required]),
+      weatherCondition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required])
     })
   }
 
@@ -267,8 +267,8 @@ export class MultiVariableMultiSiteComponent implements OnInit {
       variable: x.variable.variable,
       site: x.variable.station,
       interval: x.timeInterval,
-      weather_condition: x.filter,
-      aggregation_method: x.aggregationMode
+      weather_condition: x.weatherCondition,
+      aggregation_method: x.aggregationMethod
     }))
   }
 

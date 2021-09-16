@@ -1,20 +1,20 @@
-export class HydstraAggregationMode {
-    static readonly Total = new HydstraAggregationMode(
+export class HydstraAggregationMethod {
+    static readonly Total = new HydstraAggregationMethod(
         "Total",
         "tot"
     );
 
-    static readonly Average = new HydstraAggregationMode(
+    static readonly Average = new HydstraAggregationMethod(
         "Average",
         "mean"
     );
 
-    static readonly Maximum = new HydstraAggregationMode(
+    static readonly Maximum = new HydstraAggregationMethod(
         "Maximum",
         "max"
     );
 
-    static readonly Minimum = new HydstraAggregationMode(
+    static readonly Minimum = new HydstraAggregationMethod(
         "Minimum",
         "min"
     );
@@ -26,8 +26,8 @@ export class HydstraAggregationMode {
         return this.key;
     }
 
-    public static all(): HydstraAggregationMode[] {
-        return Object.values(HydstraAggregationMode);
+    public static all(): HydstraAggregationMethod[] {
+        return Object.values(HydstraAggregationMethod);
     }
 }
 

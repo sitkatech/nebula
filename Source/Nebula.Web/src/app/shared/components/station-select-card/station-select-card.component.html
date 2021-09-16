@@ -3,23 +3,46 @@
         Station Selection
     </div>
     <div class="card-body table-responsive">
-        <div class="row">
-            <div class="col-md-8">
-                <nebula-station-select-map [mapID]="mapID"
-                    [defaultSelectedFilter]="defaultSelectedMapFilter"
-                    (selectedStationPropertiesUpdateEvent)="updateSelectedStation($event)"
-                    (displayingTributaryAreaLayerUpdateEvent)="updateCanZoomTributaryArea($event)">
-                </nebula-station-select-map>
+        <div class="form-group row mb-1">
+            <div class="col-12">
+                <label for="filter"
+                class="col-form-label">
+                    Filter Sites By:
+                </label>
+                <div class="d-inline-block ml-1">
+                    <select [(ngModel)]="selectedStationFilter" id="filter" class="form-control" (change)="updateMarkerDisplay()" >
+                        <option *ngFor="let type of stationFilterTypes" [ngValue]="type">
+                            {{type.Display}}
+                        </option>
+                    </select>
+                </div>
             </div>
-            <div class="col-md-4">
-                <ng-container *ngIf="!selectedSiteName">
+        </div>
+        <div class="row">
+            <div class="col-md-7 col-xl-8">
+                <div id={{mapID}} class="location-card"
+                                    style="height:100%" [style.min-height]="mapHeight"></div>
+            </div>
+            <div class="col-md-5 col-xl-4">
+                <ng-container *ngIf="!selectedSiteStation">
                     <p>Click a station on the map to get started!</p>
                 </ng-container>
-                <ng-container *ngIf="selectedSiteName">
-                    <dl class="row">
-                        <dt class="text-sm-left col-sm-6 col-xs-12">Selected Station:</dt>
+                <ng-container *ngIf="selectedSiteStation">
+                    <dl class="row no-gutters">
+                        <dt class="text-sm-left col-sm-6 col-xs-12"><field-definition [fieldDefinitionType]="'StationID'" class="d-inline-block">
+                        </field-definition>:</dt>
                         <dd class="col-sm-6 col-xs-12">
-                            {{selectedSiteName}}
+                            {{selectedSiteStation}}
+                        </dd>
+                        <dt class="text-sm-left col-sm-6 col-xs-12"><field-definition [fieldDefinitionType]="'StationShortName'" class="d-inline-block">
+                        </field-definition>:</dt>
+                        <dd class="col-sm-6 col-xs-12">
+                            {{selectedSiteShortName}}
+                        </dd>
+                        <dt class="text-sm-left col-sm-6 col-xs-12"><field-definition [fieldDefinitionType]="'StationDescription'" class="d-inline-block">
+                        </field-definition>:</dt>
+                        <dd class="col-sm-6 col-xs-12">
+                            {{selectedSiteDescription}}
                         </dd>
                         <dd class="col-sm-6 offset-sm-6 col-md-12 offset-md-0 col-xs-12">
                             <em *ngIf="!canViewTributaryArea">No Tributary Information Available</em>

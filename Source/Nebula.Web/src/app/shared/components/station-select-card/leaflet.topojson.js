@@ -1,4 +1,4 @@
-import * as topojson from '../../../../../node_modules/topojson-client';
+import * as topojson from 'topojson-client';
 
 //This is not an official leaflet plugin nor is it one that is actively maintained.
 //The code in defineTopoJSON came directly from Austin Orr, the rest is just boilerplate found in  other leaflet plugins 

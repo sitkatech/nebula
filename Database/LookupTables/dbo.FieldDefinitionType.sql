@@ -1,9 +1,9 @@
 MERGE INTO dbo.FieldDefinitionType AS Target
 USING (VALUES
 (1, 'Name', 'Name'),
-(2, 'AggregationMode', 'Aggregation Mode'),
+(2, 'AggregationMethod', 'Aggregation Method'),
 (3, 'TimeInterval', 'Time Interval'),
-(4, 'Filter', 'Filter'),
+(4, 'WeatherCondition', 'Weather Condition'),
 (5, 'RegressionMethod', 'Regression Method'),
 (6, 'DiversionRate', 'Diversion Rate (cfs)'),
 (7, 'StorageMaxDepth', 'Storage Max Depth (ft)'),
@@ -13,7 +13,10 @@ USING (VALUES
 (11, 'MonthsActive', 'Months Active'),
 (12, 'WeekdaysActive', 'Weekdays Active'),
 (13, 'HoursActive', 'Hours Active'),
-(14, 'NearestRainfallStation', 'Nearest Rainfall Station')
+(14, 'NearestRainfallStation', 'Nearest Rainfall Station'),
+(15, 'StationID', 'Station ID'),
+(16, 'StationShortName', 'Short Name'),
+(17, 'StationDescription', 'Description')
 )
 AS Source (FieldDefinitionTypeID, FieldDefinitionTypeName, FieldDefinitionTypeDisplayName)
 ON Target.FieldDefinitionTypeID = Source.FieldDefinitionTypeID

@@ -125,21 +125,21 @@
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="filter"
+                                    <label for="weatherCondition"
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
-                                        <field-definition [fieldDefinitionType]="'Filter'"></field-definition>
+                                        <field-definition [fieldDefinitionType]="'WeatherCondition'"></field-definition>
                                     </label>
                                     <div class="col w-100">
-                                        <select formControlName="filter" id="filter" class="form-control">
-                                            <option *ngFor="let filter of hydstraFilters" [value]="filter.value">
-                                                {{filter.key}}
+                                        <select formControlName="weatherCondition" id="weatherCondition" class="form-control">
+                                            <option *ngFor="let weatherCondition of hydstraWeatherConditions" [value]="weatherCondition.value">
+                                                {{weatherCondition.key}}
                                             </option>
                                         </select>
                                     </div>
-                                    <div *ngIf="f.filter.touched && f.filter.invalid"
+                                    <div *ngIf="f.weatherCondition.touched && f.weatherCondition.invalid"
                                         class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.filter.errors.required">
-                                            Filter is required.</div>
+                                        <div *ngIf="f.weatherCondition.errors.required">
+                                            WeatherCondition is required.</div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
@@ -170,25 +170,25 @@
                                             <span>{{control.value.variable.name}}</span>
                                         </div>
                                         <div class="form-group w-100 mb-1">
-                                            <label for="aggregationMode"
+                                            <label for="aggregationMethod"
                                                 class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
-                                                <field-definition [fieldDefinitionType]="'AggregationMode'">
+                                                <field-definition [fieldDefinitionType]="'AggregationMethod'">
                                                 </field-definition>
                                             </label>
                                             <div class="col-sm-6 w-100">
-                                                <select formControlName="aggregationMode" id="aggregationMode"
+                                                <select formControlName="aggregationMethod" id="aggregationMethod"
                                                     class="form-control">
                                                     <option
-                                                        *ngFor="let mode of getAvailableAggregationModes(control.value.variable)"
+                                                        *ngFor="let mode of getAvailableAggregationMethods(control.value.variable)"
                                                         [value]="mode.value">
                                                         {{mode.key}}
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').touched && siteVariablesToQuery().controls[i].get('aggregationMode').invalid"
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMethod').touched && siteVariablesToQuery().controls[i].get('aggregationMethod').invalid"
                                                 class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                                 <div
-                                                    *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').errors.required">
+                                                    *ngIf="siteVariablesToQuery().controls[i].get('aggregationMethod').errors.required">
                                                     Aggregation Mode is required.</div>
                                             </div>
                                         </div>
