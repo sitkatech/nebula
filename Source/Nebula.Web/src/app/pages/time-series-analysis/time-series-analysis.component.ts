@@ -15,19 +15,19 @@ declare var $: any;
 declare var vegaEmbed: any;
 
 @Component({
-  selector: 'nebula-multi-variable-multi-site',
-  templateUrl: './multi-variable-multi-site.component.html',
-  styleUrls: ['./multi-variable-multi-site.component.scss']
+  selector: 'nebula-time-series-analysis',
+  templateUrl: './time-series-analysis.component.html',
+  styleUrls: ['./time-series-analysis.component.scss']
 })
-export class MultiVariableMultiSiteComponent implements OnInit {
+export class TimeSeriesAnalysisComponent implements OnInit {
   public watchUserChangeSubscription: any;
   public currentUser: UserDetailedDto;
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
-  public mapID: string = 'MultiVariableMultiSiteStationSelectMap';
+  public mapID: string = 'TimeSeriesAnalysisStationSelectMap';
 
-  public richTextTypeID = CustomRichTextType.MultiVariableMultiSite;
+  public richTextTypeID = CustomRichTextType.TimeSeriesAnalysis;
 
   public vegaSpec: Object = null;
 
@@ -109,7 +109,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
     this.currentlyDisplayingRequestDto = null;
     this.lyraMessages = [];
     this.timeSeriesForm.disable({emitEvent: false});
-    this.lyraService.getMultiVariableMultiSitePlot(swnTimeSeriesRequestDto).subscribe(result => {
+    this.lyraService.getTimeSeriesAnalysisPlot(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
         if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
           this.lyraMessages.push(...result.data.messages.filter(x => x != "").map(x => new Alert(x, AlertContext.Warning, true)));
@@ -149,7 +149,7 @@ export class MultiVariableMultiSiteComponent implements OnInit {
 
     this.downloadingChartData = true;
     this.timeSeriesForm.disable({emitEvent: false});
-    this.lyraService.downloadMultiVariableMultiSiteData(this.currentlyDisplayingRequestDto).subscribe(result => {
+    this.lyraService.downloadTimeSeriesAnalysisData(this.currentlyDisplayingRequestDto).subscribe(result => {
       const blob = new Blob([result], {
         type: 'text/csv'
       });

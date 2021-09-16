@@ -301,10 +301,10 @@
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
                             <button *ngIf="vegaSpec && currentlyDisplayingRequestDto" (click)="downloadChartData()"
-                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left"
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right "
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
-                                    class="fa fa-spinner loading-spinner"></span>Download</button>
+                                    class="fa fa-spinner loading-spinner"></span>Download Data (.csv)</button>
                             <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>

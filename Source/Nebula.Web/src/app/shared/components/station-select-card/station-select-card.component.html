@@ -46,8 +46,8 @@
                         </dd>
                         <dd class="col-sm-6 offset-sm-6 col-md-12 offset-md-0 col-xs-12">
                             <em *ngIf="!canViewTributaryArea">No Tributary Information Available</em>
-                            <button *ngIf="canViewTributaryArea && !canZoomTributaryArea" (click)="viewTributaryArea()" class="btn btn-sm btn-nebula float-md-right"><i class="fas fa-map-marker-alt"></i> View Tributary Area</button>
-                            <button *ngIf="canViewTributaryArea && canZoomTributaryArea" (click)="zoomInOnTributaryArea()" class="btn btn-sm btn-nebula float-md-right"><i class="fas fa-search-plus"></i> Zoom to Tributary Area</button>
+                            <button *ngIf="canViewTributaryArea && !canZoomTributaryArea" (click)="viewTributaryArea()" class="btn btn-sm btn-nebula float-right"><i class="fas fa-map-marker-alt"></i> View Tributary Area</button>
+                            <button *ngIf="canViewTributaryArea && canZoomTributaryArea" (click)="zoomInOnTributaryArea()" class="btn btn-sm btn-nebula float-right"><i class="fas fa-search-plus"></i> Zoom to Tributary Area</button>
                         </dd>
                     </dl>
                     <dl class="row">
@@ -79,7 +79,7 @@
                                                 {{variable.startDate}} -
                                                 {{variable.endDate}}</small>
                                         </div>
-                                        <div *ngIf="variableNameCanBeAddedToSelection(variable.name)" class="col-3 align-self-center text-center">
+                                        <div *ngIf="variableNameCanBeAddedToSelection(variable.name)" class="col-3 align-self-center text-right">
                                             <button class="btn btn-sm btn-nebula"
                                                 [disabled]="!variableNotPresentInSelectedVariables(variable) || disableAddingVariables"
                                                 (click)="addVariableToSelection(variable)">Add</button>

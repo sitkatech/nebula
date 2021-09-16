@@ -2,7 +2,7 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-empty">
-                <li class="breadcrumb-item active" aria-current="page">Multi-Variable Multi-Site</li>
+                <li class="breadcrumb-item active" aria-current="page">Time Series Analysis</li>
             </ol>
         </nav>
     </div>
@@ -13,7 +13,7 @@
 
     <div class="row">
         <div class="col">
-            <h2 class="d-inline-block">Multi-Variable Multi-Site</h2>
+            <h2 class="d-inline-block">Time Series Analysis</h2>
         </div>
     </div>
     <div class="row mt-1 mb-2">
@@ -200,10 +200,10 @@
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
                             <button *ngIf="vegaSpec && currentlyDisplayingRequestDto" (click)="downloadChartData()"
-                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left"
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right "
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
-                                    class="fa fa-spinner loading-spinner"></span>Download</button>
+                                    class="fa fa-spinner loading-spinner"></span>Download Data (.csv)</button>
                             <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>

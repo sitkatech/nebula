@@ -17,3 +17,8 @@ update dbo.FieldDefinitionType
 set FieldDefinitionTypeName = 'WeatherCondition',
 FieldDefinitionTypeDisplayName = 'Weather Condition'
 where FieldDefinitionTypeID = 4
+
+update dbo.CustomRichTextType
+set CustomRichTextTypeName = 'TimeSeriesAnalysis',
+CustomRichTextTypeDisplayName = 'Time Series Analysis'
+where CustomRichTextTypeID = 7
