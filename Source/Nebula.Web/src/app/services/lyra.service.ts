@@ -20,12 +20,12 @@ export class LyraService {
     return this.http.get(route);
   }
 
-  getMultiVariableMultiSitePlot(multiVariableMultiSiteObject: Object) : Observable<any> {
+  getTimeSeriesAnalysisPlot(multiVariableMultiSiteObject: Object) : Observable<any> {
     let route = `${this.baseRoute}/api/plot/multi_variable?json=${JSON.stringify(multiVariableMultiSiteObject)}`;
     return this.http.get(route);
   }
 
-  downloadMultiVariableMultiSiteData(multiVariableMultiSiteObject: Object) {
+  downloadTimeSeriesAnalysisData(multiVariableMultiSiteObject: Object) {
     let route = `${this.baseRoute}/api/plot/multi_variable/data?f=csv&json=${JSON.stringify(multiVariableMultiSiteObject)}`;
     return this.http.get(route, {
       responseType: 'arraybuffer'

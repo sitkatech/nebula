@@ -1,6 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { AnonymousSubject } from 'rxjs/internal/Subject';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LyraService } from 'src/app/services/lyra.service';
 import { UserDetailedDto } from 'src/app/shared/models';
@@ -8,9 +7,7 @@ import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { SiteFilterEnum } from 'src/app/shared/models/enums/site-filter.enum';
-import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
-import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
-import { HydstraInterval } from 'src/app/shared/models/hydstra/hydstra-interval';
+import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 
 declare var $: any;
@@ -34,7 +31,7 @@ export class DiversionScenarioComponent implements OnInit {
 
   public vegaSpec: Object = null;
 
-  public hydstraFilters: HydstraFilter[] = HydstraFilter.all();
+  public hydstraWeatherConditions: HydstraWeatherCondition[] = HydstraWeatherCondition.all();
 
   public selectedSiteProperties: any;
   public selectedSiteAvailableVariables: SiteVariable[] = [];
@@ -114,7 +111,7 @@ export class DiversionScenarioComponent implements OnInit {
     storageInitialDepth: new FormControl(0, [Validators.required]),
     storageArea: new FormControl(0, [Validators.required]),
     infiltrationRate: new FormControl(0, [Validators.required]),
-    filter: new FormControl(HydstraFilter.Both.value, [Validators.required]),
+    weatherCondition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required]),
     nearestRainfallStation: new FormControl(null, [Validators.required]),
     monthsActive: new FormControl(this.monthData.map(x => x.id), [Validators.required]),
     daysActive: new FormControl(this.weekdayData.map(x => x.id), [Validators.required]),
@@ -166,7 +163,7 @@ export class DiversionScenarioComponent implements OnInit {
       storage_initial_depth_ft: this.timeSeriesForm.get('storageInitialDepth').value,
       storage_area_sqft: this.timeSeriesForm.get('storageArea').value,
       infiltration_rate_inhr: this.timeSeriesForm.get('infiltrationRate').value,
-      operated_weather_condition: this.timeSeriesForm.get('filter').value,
+      operated_weather_condition: this.timeSeriesForm.get('weatherCondition').value,
       nearest_rainfall_station: this.timeSeriesForm.get('nearestRainfallStation').value,
       diversion_months_active: this.timeSeriesForm.get('monthsActive').value,
       diversion_days_active: this.timeSeriesForm.get('daysActive').value,

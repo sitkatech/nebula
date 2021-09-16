@@ -6,8 +6,8 @@ import { UserDetailedDto } from 'src/app/shared/models';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
-import { HydstraAggregationMode } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
-import { HydstraFilter } from 'src/app/shared/models/hydstra/hydstra-filter';
+import { HydstraAggregationMethod } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
+import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { HydstraInterval } from 'src/app/shared/models/hydstra/hydstra-interval';
 import { HydstraRegressionMethod } from 'src/app/shared/models/hydstra/hydstra-regression-method';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
@@ -32,16 +32,16 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   public vegaSpec: Object = null;
 
   public hydstraIntervals: HydstraInterval[] = HydstraInterval.all();
-  public hydstraFilters: HydstraFilter[] = HydstraFilter.all();
+  public hydstraWeatherConditions: HydstraWeatherCondition[] = HydstraWeatherCondition.all();
   public hydstraRegressionMethods: HydstraRegressionMethod[] = HydstraRegressionMethod.all();
-  public hydstraAggregationModes: HydstraAggregationMode[] = HydstraAggregationMode.all();
+  public hydstraAggregationMethods: HydstraAggregationMethod[] = HydstraAggregationMethod.all();
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
     startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
     endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
     interval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
-    filter: new FormControl(HydstraFilter.Both.value, [Validators.required]),
+    weatherCondition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required]),
     regression_method: new FormControl(HydstraRegressionMethod.Linear.value, [Validators.required]),
     siteVariablesToQuery: new FormArray([])
   });
@@ -168,8 +168,8 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     })
   }
 
-  public getAvailableAggregationModes(variable: SiteVariable): HydstraAggregationMode[] {
-    return this.hydstraAggregationModes.filter(x => variable.allowedAggregations.includes(x.value));
+  public getAvailableAggregationMethods(variable: SiteVariable): HydstraAggregationMethod[] {
+    return this.hydstraAggregationMethods.filter(x => variable.allowedAggregations.includes(x.value));
   }
 
   public canSelectVariable(): boolean {
@@ -246,7 +246,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   newSiteVariableToQuery(variable: SiteVariable): FormGroup {
     return this.formBuilder.group({
       variable: variable,
-      aggregationMode: new FormControl(variable.allowedAggregations[0], [Validators.required])
+      aggregationMethod: new FormControl(variable.allowedAggregations[0], [Validators.required])
     })
   }
 
@@ -262,7 +262,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     return this.siteVariablesToQuery().value.map(x => ({
       variable: x.variable.variable,
       site: x.variable.station,
-      aggregation_method: x.aggregationMode
+      aggregation_method: x.aggregationMethod
     }))
   }
 
