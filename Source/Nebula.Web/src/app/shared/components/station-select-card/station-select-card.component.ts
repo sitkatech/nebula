@@ -37,6 +37,8 @@ export class StationSelectCardComponent implements OnInit {
   @Input()
   public selectedVariables: SiteVariable[];
   @Input()
+  public lyraStationAvailableVariablesKey: string = "variables";
+  @Input()
   public variableNamesAllowedToBeAdded: string[] = ["All"];
   @Input()
   public disableAddingVariables: boolean = false;
@@ -177,11 +179,11 @@ export class StationSelectCardComponent implements OnInit {
         }
       });
 
-    if (featureProperties.variables == null || featureProperties.variables.length == 0) {
+    if (featureProperties[this.lyraStationAvailableVariablesKey] == null || featureProperties[this.lyraStationAvailableVariablesKey].length == 0) {
       return;
     }
 
-    for (let variableName of featureProperties.variables) {
+    for (let variableName of featureProperties[this.lyraStationAvailableVariablesKey]) {
       let variableInfo = featureProperties[variableName];
       let siteVariable = Object.assign(new SiteVariable({
         name: variableInfo.name,

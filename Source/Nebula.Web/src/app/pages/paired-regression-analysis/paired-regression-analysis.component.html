@@ -28,6 +28,7 @@
             <station-select-card [(selectedVariables)]="selectedVariables" [mapID]="mapID"
                 [disableAddingVariables]="!canSelectVariable()" 
                 [canAddDuplicateVariable]="true"
+                [lyraStationAvailableVariablesKey]="'variables_regression'"
                 (addingVariableEvent)="addVariableToSelection($event)">
             </station-select-card>
         </div>

@@ -28,6 +28,7 @@
             <station-select-card [(selectedVariables)]="selectedVariables" [mapID]="mapID"
                 [disableAddingVariables]="isActionBeingPerformed()"
                 [defaultSelectedMapFilter]="defaultSelectedMapFilter"
+                [lyraStationAvailableVariablesKey]="'variables_diversion_scenario'"
                 [variableNamesAllowedToBeAdded]="variableNamesAllowedToAddToScenario"
                 (addingVariableEvent)="addVariableToSelection($event)"></station-select-card>
         </div>
