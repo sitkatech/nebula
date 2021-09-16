@@ -27,6 +27,7 @@
         <div class="col-sm-12">
             <station-select-card [(selectedVariables)]="selectedVariables" [mapID]="mapID"
                 [disableAddingVariables]="isActionBeingPerformed()"
+                [canAddDuplicateVariable]="true"
                 (addingVariableEvent)="addVariableToSelection($event)"></station-select-card>
         </div>
     </div>
@@ -151,7 +152,7 @@
                                                 class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                                 <div
                                                     *ngIf="siteVariablesToQuery().controls[i].get('weatherCondition').errors.required">
-                                                    WeatherCondition is required.</div>
+                                                    Weather Condition is required.</div>
                                             </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">

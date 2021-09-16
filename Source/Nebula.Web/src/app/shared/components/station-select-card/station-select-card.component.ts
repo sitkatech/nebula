@@ -12,6 +12,7 @@ import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { forkJoin } from 'rxjs';
 import { LyraService } from 'src/app/services/lyra.service';
 import './leaflet.topojson.js'
+import { RULE } from 'vega-lite/build/src/mark';
 
 declare var $: any;
 
@@ -46,6 +47,8 @@ export class StationSelectCardComponent implements OnInit {
   public layerControlOpen: boolean = false;
   @Input()
   public defaultMapZoom = 12;
+  @Input()
+  public canAddDuplicateVariable: boolean = false;
   @Output()
   public addingVariableEvent = new EventEmitter<SiteVariable>();
   @Output()
@@ -228,8 +231,20 @@ export class StationSelectCardComponent implements OnInit {
     this.cdr.detectChanges();
   }
 
-  public variableNotPresentInSelectedVariables(variable: SiteVariable): boolean {
-    return this.selectedVariables.length == 0 || !this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
+  public variablePresentInSelectedVariables(variable: SiteVariable): boolean {
+    return this.selectedVariables.length > 0 && this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
+  }
+
+  public disableAddingVariable(variable : SiteVariable): boolean {
+    if (this.disableAddingVariables) {
+      return true;
+    }
+
+    if (this.canAddDuplicateVariable) {
+      return false;
+    }
+    
+    return this.variablePresentInSelectedVariables(variable);
   }
 
   public ngAfterViewInit(): void {

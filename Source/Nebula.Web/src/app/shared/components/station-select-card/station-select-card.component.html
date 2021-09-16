@@ -81,7 +81,7 @@
                                         </div>
                                         <div *ngIf="variableNameCanBeAddedToSelection(variable.name)" class="col-3 align-self-center text-right">
                                             <button class="btn btn-sm btn-nebula"
-                                                [disabled]="!variableNotPresentInSelectedVariables(variable) || disableAddingVariables"
+                                                [disabled]="disableAddingVariable(variable)"
                                                 (click)="addVariableToSelection(variable)">Add</button>
                                         </div>
                                     </div>
