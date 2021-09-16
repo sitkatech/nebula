@@ -24,6 +24,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select-custom.component';
 import { SelectedDataCardComponent } from './components/selected-data-card/selected-data-card.component';
 import { StationSelectCardComponent } from './components/station-select-card/station-select-card.component';
+import { AutoCompleteModule } from "primeng/autocomplete"
 
 @NgModule({
     declarations: [
@@ -54,7 +55,8 @@ import { StationSelectCardComponent } from './components/station-select-card/sta
         SelectDropDownModule,
         CKEditorModule,
         NgbModule,
-        NgSelectModule
+        NgSelectModule,
+        AutoCompleteModule
     ],
     exports: [
         AlertDisplayComponent,

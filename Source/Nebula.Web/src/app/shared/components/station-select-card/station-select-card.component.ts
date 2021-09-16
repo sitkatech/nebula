@@ -94,13 +94,17 @@ export class StationSelectCardComponent implements OnInit {
   public currentlySelectedLayer: any;
   public currentlySelectedUnderlyingLayer: any;
   public markers: L.FeatureGroup;
-
+  public topoJSONrsbs: any;
+ 
   public allStations: any;
 
   public stationFilterTypes: StationFilterSelect[] = [];
   public selectedStationFilter: StationFilterSelect;
 
-  public topoJSONrsbs: any;
+  public searchText: string;
+  public searchSuggestions: any[];
+  public isSearching: boolean;
+  public availableSitesToSearchFrom: any[];
 
   constructor(
     private appRef: ApplicationRef,
@@ -247,7 +251,7 @@ export class StationSelectCardComponent implements OnInit {
 
     return this.variablePresentInSelectedVariables(variable);
   }
-
+//#region mapFunctions
   public ngAfterViewInit(): void {
     this.initializeMap();
   }
@@ -366,9 +370,10 @@ export class StationSelectCardComponent implements OnInit {
       }.bind(this),
     });
 
-    let allSitesOption = new StationFilterSelect({Display:"All Sites", SiteFilterEnum:SiteFilterEnum.AllSites, Layer:this.allStationsLayer});
+    let allSitesOption = new StationFilterSelect({Display:"All Sites", SiteFilterEnum:SiteFilterEnum.AllSites, Layer:this.allStationsLayer, Stations: this.allStations});
 
-    this.hasRainfallLayer = L.geoJSON(this.allStations.filter(x => x.properties.has_rainfall), {
+    let rainfallOptions = this.allStations.filter(x => x.properties.has_rainfall);
+    this.hasRainfallLayer = L.geoJSON(rainfallOptions, {
       onEachFeature: function(feature, layer) {
         this.onEachFeature(feature, layer, this.rainfallIconDefault);
       }.bind(this),
@@ -377,9 +382,10 @@ export class StationSelectCardComponent implements OnInit {
       }.bind(this)
     });
 
-    let rainfallOption = new StationFilterSelect({Display:"Has Rainfall Data", SiteFilterEnum:SiteFilterEnum.HasRainfall, Layer:this.hasRainfallLayer});
+    let rainfallOption = new StationFilterSelect({Display:"Has Rainfall Data", SiteFilterEnum:SiteFilterEnum.HasRainfall, Layer:this.hasRainfallLayer, Stations: rainfallOptions});
 
-    this.hasDischargeLayer = L.geoJSON(this.allStations.filter(x => x.properties.has_discharge), {
+    let dischargeOptions = this.allStations.filter(x => x.properties.has_discharge)
+    this.hasDischargeLayer = L.geoJSON(dischargeOptions, {
       onEachFeature: function(feature, layer) {
         this.onEachFeature(feature, layer, this.dischargeIconDefault);
       }.bind(this),
@@ -388,9 +394,10 @@ export class StationSelectCardComponent implements OnInit {
       }.bind(this)
     });
 
-    let dischargeOption = new StationFilterSelect({Display:"Has Discharge Data", SiteFilterEnum:SiteFilterEnum.HasDischarge, Layer:this.hasDischargeLayer});
+    let dischargeOption = new StationFilterSelect({Display:"Has Discharge Data", SiteFilterEnum:SiteFilterEnum.HasDischarge, Layer:this.hasDischargeLayer, Stations: dischargeOptions});
 
-    this.hasConductivityLayer = L.geoJSON(this.allStations.filter(x => x.properties.has_conductivity), {
+    let conductivityOptions = this.allStations.filter(x => x.properties.has_conductivity)
+    this.hasConductivityLayer = L.geoJSON(conductivityOptions, {
       onEachFeature: function(feature, layer) {
         this.onEachFeature(feature, layer, this.conductivityIconDefault);
       }.bind(this),
@@ -399,7 +406,7 @@ export class StationSelectCardComponent implements OnInit {
       }.bind(this)
     });
 
-    let conductivityOption = new StationFilterSelect({Display:"Has Conductivity Data", SiteFilterEnum:SiteFilterEnum.HasConductivity, Layer:this.hasConductivityLayer});
+    let conductivityOption = new StationFilterSelect({Display:"Has Conductivity Data", SiteFilterEnum:SiteFilterEnum.HasConductivity, Layer:this.hasConductivityLayer, Stations: conductivityOptions});
 
     this.stationFilterTypes = [allSitesOption, rainfallOption, dischargeOption, conductivityOption];
   }
@@ -555,6 +562,8 @@ export class StationSelectCardComponent implements OnInit {
 
     this.siteLocationLayer = this.selectedStationFilter.Layer;
     this.siteLocationLayer.addTo(this.map);
+
+    this.availableSitesToSearchFrom = this.selectedStationFilter.Stations;
   }
 
   clearTributaryAreaLayer() {
@@ -566,12 +575,77 @@ export class StationSelectCardComponent implements OnInit {
     this.canZoomTributaryArea = false;
     this.canViewTributaryArea = false;
   }
+  //#endregion
+
+  public select(event) {
+    console.log(event);
+    this.searchText = event.StationPropertyValue;
+  }
+
+  public search(event) {
+    this.isSearching = true;
+    this.searchSuggestions = [];
+
+    let searchText = event.query.trim();
+    if (searchText == null || searchText == undefined) {
+      this.isSearching = false;
+      return;
+    }
+
+    this.availableSitesToSearchFrom.forEach(x => {
+        if (x.properties.station != null && x.properties.station != undefined && x.properties.station.includes(searchText)) {
+          let obj = {
+            StationProperty : 'StationID',
+            StationPropertyValue : x.properties.station
+          }
+          this.searchSuggestions.push(obj);
+        }
+
+        if (x.properties.shortname != null && x.properties.shortname != undefined && x.properties.shortname.includes(searchText)) {
+          let obj = {
+            StationProperty : 'Short Name',
+            StationPropertyValue : x.properties.shortname
+          }
+          this.searchSuggestions.push(obj);
+        }
+
+        if (x.properties.stname != null && x.properties.stname != undefined && x.properties.stname.includes(searchText)) {
+          let obj = {
+            StationProperty : 'Description',
+            StationPropertyValue : x.properties.stname
+          }
+          this.searchSuggestions.push(obj);
+        }
+    });
+
+    if (this.searchSuggestions && this.searchSuggestions.length > 0) {
+      this.searchSuggestions.sort((a, b) => {
+        if (a.StationPropertyValue > b.StationPropertyValue) {
+          return 1;
+        }
+
+        if (a.StationPropertyValue < b.StationPropertyValue) {
+          return  -1;
+        }
+
+        return 0;
+      })
+    }
+}
+
+  //The dropdown closes when we remove focus, so if we go back in and still have text we should show the search suggestions
+  reFocus(stationMapSearch) {
+    if (this.searchText != undefined && this.searchText != '') {
+      stationMapSearch.show();
+    }
+}
 }
 
 export class StationFilterSelect {
   Display: string;
   SiteFilterEnum: SiteFilterEnum
   Layer: any;
+  Stations: any[];
 
   public constructor(obj?:any) {
     Object.assign(this, obj);
