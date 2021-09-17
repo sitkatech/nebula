@@ -169,11 +169,7 @@ export class StationSelectCardComponent implements OnInit {
     let baseSiteVariable = new SiteVariable(
       {
         stationShortName: featureProperties.shortname,
-        station: featureProperties.station,
-        nearestRainfallStationInfo: {
-          stationLongName: featureProperties.nearest_rainfall_station_info.stname,
-          station: featureProperties.nearest_rainfall_station_info.station
-        }
+        station: featureProperties.station
       });
 
     if (featureProperties[this.lyraStationAvailableVariablesKey] == null || featureProperties[this.lyraStationAvailableVariablesKey].length == 0) {
@@ -198,7 +194,7 @@ export class StationSelectCardComponent implements OnInit {
       let rainfallSiteVariable = new SiteVariable({
         name: rainfallInfo.name,
         variable: rainfallInfo.variable,
-        gage: featureProperties.nearest_rainfall_station.stname,
+        gage: rainfallStationProperties.stname,
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${rainfallInfo.period_end.slice(0, 4)}-${rainfallInfo.period_end.slice(4, 6)}-${rainfallInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
         allowedAggregations: rainfallInfo.allowed_aggregations,

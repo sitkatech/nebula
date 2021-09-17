@@ -4,7 +4,7 @@
     </div>
     <div class="card-body table-responsive">
         <div class="form-group row mb-1">
-            <div class="col-md-7 col-xl-8">
+            <div class="col-xl-8">
                 <label for="filter"
                 class="col-form-label">
                     Filter Sites By:
@@ -16,7 +16,7 @@
                         </option>
                     </select>
                 </div>
-                <p-autoComplete #stationMapSearch styleClass="custom" class="float-right"  appendTo="body" placeholder="Search..." emptyMessage="No Results"
+                <p-autoComplete #stationMapSearch id="stationMapSearch" styleClass="custom" class="d-inline-block float-md-right"  appendTo="body" placeholder="Search..." emptyMessage="No Results"
                     [(ngModel)]="searchText" [suggestions]="searchSuggestions" (completeMethod)="search($event)"
                     (onFocus)="reFocus(stationMapSearch)" (onSelect)="select($event)" type="search">
                     <ng-template let-result pTemplate="item">
