@@ -21,13 +21,6 @@ declare var $: any;
   styleUrls: ['./station-select-card.component.scss']
 })
 export class StationSelectCardComponent implements OnInit {
-  @HostListener('document:click', ['$event']) 
-  clickout(event) 
-  { 
-    if(event.target.classList.contains("view-tributary-area"))
-      this.viewTributaryArea(); 
-  }
-
   @ViewChild("mapDiv") mapElement: ElementRef;
 
   @Input()
@@ -95,7 +88,7 @@ export class StationSelectCardComponent implements OnInit {
   public currentlySelectedUnderlyingLayer: any;
   public markers: L.FeatureGroup;
   public topoJSONrsbs: any;
- 
+
   public allStations: any;
 
   public stationFilterTypes: StationFilterSelect[] = [];
@@ -104,7 +97,7 @@ export class StationSelectCardComponent implements OnInit {
   public searchText: string;
   public searchSuggestions: any[];
   public isSearching: boolean;
-  public availableSitesToSearchFrom: any[];
+  public availableSitesToSearchFrom: any;
 
   constructor(
     private appRef: ApplicationRef,
@@ -240,7 +233,7 @@ export class StationSelectCardComponent implements OnInit {
     return this.selectedVariables.length > 0 && this.selectedVariables.some(x => x.name == variable.name && x.station == variable.station);
   }
 
-  public disableAddingVariable(variable : SiteVariable): boolean {
+  public disableAddingVariable(variable: SiteVariable): boolean {
     if (this.disableAddingVariables) {
       return true;
     }
@@ -251,7 +244,8 @@ export class StationSelectCardComponent implements OnInit {
 
     return this.variablePresentInSelectedVariables(variable);
   }
-//#region mapFunctions
+
+  //#region mapFunctions
   public ngAfterViewInit(): void {
     this.initializeMap();
   }
@@ -280,133 +274,114 @@ export class StationSelectCardComponent implements OnInit {
       this.lyraService.getRSBTopoJson(),
       this.lyraService.getSiteLocationGeoJson()
     ])
-    .subscribe(([maskString, topoJSON, sites]) => {
-      this.maskLayer = L.geoJSON(maskString, {
-        invert: true,
-        style: function (feature) {
-          return {
-            fillColor: "#323232",
-            fill: true,
-            fillOpacity: 0.2,
-            color: "#3388ff",
-            weight: 5,
-            stroke: true
-          };
-        }
+      .subscribe(([maskString, topoJSON, sites]) => {
+        this.maskLayer = L.geoJSON(maskString, {
+          invert: true,
+          style: function (feature) {
+            return {
+              fillColor: "#323232",
+              fill: true,
+              fillOpacity: 0.2,
+              color: "#3388ff",
+              weight: 5,
+              stroke: true
+            };
+          }
+        });
+
+        L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
+
+        this.maskLayer.addTo(this.map);
+        this.defaultFitBounds();
+
+        this.setupMarkers();
+
+        this.topoJSONrsbs = topoJSON;
+
+        var topoJSONOverlay = L.topoJson(topoJSON, {
+          style: function (feature) {
+            return {
+              color: "#ff4500",
+              opacity: 1,
+              weight: 1,
+              fillColor: "#35495d",
+              fillOpacity: 0.0,
+            };
+          },
+          onEachFeature: function (feature, layer) {
+            layer.bindPopup(
+              "<p>" + `CatchIDN: ${feature.properties.CatchIDN}` + "</p>"
+            );
+          },
+        });
+
+        this.overlayLayers[
+          "<span><img src='../../assets/data-dashboard/regionalSubbasin.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>"] = topoJSONOverlay;
+
+        this.setControl();
+
+        this.allStations = sites.features;
+        this.setupStationFilterAndLayers();
+
+        this.selectedStationFilter = this.stationFilterTypes.filter(x => x.SiteFilterEnum == this.defaultSelectedMapFilter)[0];
+        this.updateMarkerDisplay();
       });
-
-      L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
-
-      this.maskLayer.addTo(this.map);
-      this.defaultFitBounds();
-
-      this.setupMarkers();
-
-      this.topoJSONrsbs = topoJSON;
-
-      var topoJSONOverlay = L.topoJson(topoJSON, {
-        style: function (feature) {
-          return {
-            color: "#ff4500",
-            opacity: 1,
-            weight: 1,
-            fillColor: "#35495d",
-            fillOpacity: 0.0,
-          };
-        },
-        onEachFeature: function (feature, layer) {
-          layer.bindPopup(
-            "<p>" + `CatchIDN: ${feature.properties.CatchIDN}` + "</p>"
-          );
-        },
-      });
-
-      this.overlayLayers[
-        "<span><img src='../../assets/data-dashboard/regionalSubbasin.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>"] = topoJSONOverlay;
-
-      this.setControl();
-
-      this.allStations = sites.features;
-      this.setupStationFilterAndLayers();
-
-      this.selectedStationFilter = this.stationFilterTypes.filter(x => x.SiteFilterEnum == this.defaultSelectedMapFilter)[0];
-      this.updateMarkerDisplay();
-    });
   }
 
-  public onEachFeature(feature, layer, layerIcon) {
-    layer.on('click', () => {
-      if (this.currentlySelectedLayer) {
-        this.currentlySelectedLayer.closePopup();
-        this.markers.clearLayers();
-        if (this.currentlySelectedUnderlyingLayer) {
-          this.map.addLayer(this.currentlySelectedUnderlyingLayer);
-        }
-        this.currentlySelectedUnderlyingLayer = null;
-        this.currentlySelectedLayer = null;
-      }
+  public selectFeature(feature) {
+    if (this.currentlySelectedLayer) {
+      this.markers.clearLayers();
+      this.currentlySelectedLayer = null;
+    }
 
-      this.clearTributaryAreaLayer();
+    this.clearTributaryAreaLayer();
 
-      //Keep track of the marker we are copying in case we need to bring it back later
-      this.currentlySelectedUnderlyingLayer = layer;
-      this.map.removeLayer(this.currentlySelectedUnderlyingLayer);
-      
-      this.currentlySelectedLayer = L.marker(layer.getLatLng(), {icon:this.selectedIconDefault, zIndexOffset:1000});
-      this.markers.addLayer(this.currentlySelectedLayer);
-      this.currentlySelectedLayer.openPopup();
-      this.selectedStationProperties = feature.properties;
-      if (this.selectedStationProperties.nearest_rainfall_station != null) {
-        this.selectedStationProperties.nearest_rainfall_station_info = this.allStations.filter(x => x.properties.station === this.selectedStationProperties.nearest_rainfall_station)[0].properties;
+    this.currentlySelectedLayer = new L.GeoJSON(feature, {
+      pointToLayer: (feature, latlng) => {
+        return L.marker(latlng, { icon: this.selectedIconDefault, zIndexOffset: 1000 });
       }
-      this.updateSelectedStation(this.selectedStationProperties);
     });
+
+    this.markers.addLayer(this.currentlySelectedLayer);
+    this.map.setView(this.currentlySelectedLayer.getBounds().getCenter());
+    this.selectedStationProperties = feature.properties;
+    if (this.selectedStationProperties.nearest_rainfall_station != null) {
+      this.selectedStationProperties.nearest_rainfall_station_info = this.allStations.filter(x => x.properties.station === this.selectedStationProperties.nearest_rainfall_station)[0].properties;
+    }
+    this.updateSelectedStation(this.selectedStationProperties);
   }
 
   public setupStationFilterAndLayers() {
-    this.allStationsLayer = L.geoJSON(this.allStations, {
-      onEachFeature: function(feature, layer) {
-        this.onEachFeature(feature, layer, this.iconDefault);
-      }.bind(this),
-    });
+    this.allStationsLayer = L.geoJSON(this.allStations);
 
-    let allSitesOption = new StationFilterSelect({Display:"All Sites", SiteFilterEnum:SiteFilterEnum.AllSites, Layer:this.allStationsLayer, Stations: this.allStations});
+    let allSitesOption = new StationFilterSelect({ Display: "All Sites", SiteFilterEnum: SiteFilterEnum.AllSites, Layer: this.allStationsLayer, Stations: this.allStations });
 
     let rainfallOptions = this.allStations.filter(x => x.properties.has_rainfall);
     this.hasRainfallLayer = L.geoJSON(rainfallOptions, {
-      onEachFeature: function(feature, layer) {
-        this.onEachFeature(feature, layer, this.rainfallIconDefault);
-      }.bind(this),
-      pointToLayer: function(feature, latlng) {
-        return L.marker(latlng, {icon: this.rainfallIconDefault});
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, { icon: this.rainfallIconDefault });
       }.bind(this)
     });
 
-    let rainfallOption = new StationFilterSelect({Display:"Has Rainfall Data", SiteFilterEnum:SiteFilterEnum.HasRainfall, Layer:this.hasRainfallLayer, Stations: rainfallOptions});
+    let rainfallOption = new StationFilterSelect({ Display: "Has Rainfall Data", SiteFilterEnum: SiteFilterEnum.HasRainfall, Layer: this.hasRainfallLayer, Stations: rainfallOptions });
 
     let dischargeOptions = this.allStations.filter(x => x.properties.has_discharge)
     this.hasDischargeLayer = L.geoJSON(dischargeOptions, {
-      onEachFeature: function(feature, layer) {
-        this.onEachFeature(feature, layer, this.dischargeIconDefault);
-      }.bind(this),
-      pointToLayer: function(feature, latlng) {
-        return L.marker(latlng, {icon: this.dischargeIconDefault});
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, { icon: this.dischargeIconDefault });
       }.bind(this)
     });
 
-    let dischargeOption = new StationFilterSelect({Display:"Has Discharge Data", SiteFilterEnum:SiteFilterEnum.HasDischarge, Layer:this.hasDischargeLayer, Stations: dischargeOptions});
+    let dischargeOption = new StationFilterSelect({ Display: "Has Discharge Data", SiteFilterEnum: SiteFilterEnum.HasDischarge, Layer: this.hasDischargeLayer, Stations: dischargeOptions });
 
     let conductivityOptions = this.allStations.filter(x => x.properties.has_conductivity)
     this.hasConductivityLayer = L.geoJSON(conductivityOptions, {
-      onEachFeature: function(feature, layer) {
-        this.onEachFeature(feature, layer, this.conductivityIconDefault);
-      }.bind(this),
-      pointToLayer: function(feature, latlng) {
-        return L.marker(latlng, {icon: this.conductivityIconDefault});
+      pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, { icon: this.conductivityIconDefault });
       }.bind(this)
     });
 
-    let conductivityOption = new StationFilterSelect({Display:"Has Conductivity Data", SiteFilterEnum:SiteFilterEnum.HasConductivity, Layer:this.hasConductivityLayer, Stations: conductivityOptions});
+    let conductivityOption = new StationFilterSelect({ Display: "Has Conductivity Data", SiteFilterEnum: SiteFilterEnum.HasConductivity, Layer: this.hasConductivityLayer, Stations: conductivityOptions });
 
     this.stationFilterTypes = [allSitesOption, rainfallOption, dischargeOption, conductivityOption];
   }
@@ -480,7 +455,7 @@ export class StationSelectCardComponent implements OnInit {
     this.rainfallIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-orange.png', '/assets/main/map-icons/marker-icon-2x-orange.png');
     this.dischargeIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-red.png', '/assets/main/map-icons/marker-icon-2x-red.png');
     this.conductivityIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-violet.png', '/assets/main/map-icons/marker-icon-2x-violet.png');
-    
+
     //this will be for the selected icon
     this.markers = new L.FeatureGroup().addTo(this.map);
     this.selectedIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-selected.png', '/assets/main/map-icons/marker-icon-2x-selected.png');
@@ -561,6 +536,10 @@ export class StationSelectCardComponent implements OnInit {
     this.clearTributaryAreaLayer();
 
     this.siteLocationLayer = this.selectedStationFilter.Layer;
+    this.siteLocationLayer.on("click", (event: L.LeafletEvent) => {
+      this.selectFeature(event.propagatedFrom.feature);
+    })
+
     this.siteLocationLayer.addTo(this.map);
 
     this.availableSitesToSearchFrom = this.selectedStationFilter.Stations;
@@ -578,8 +557,9 @@ export class StationSelectCardComponent implements OnInit {
   //#endregion
 
   public select(event) {
-    console.log(event);
     this.searchText = event.StationPropertyValue;
+    let selectedFeature = this.availableSitesToSearchFrom.find(x => x.properties.station === event.StationID);
+    this.selectFeature(selectedFeature);
   }
 
   public search(event) {
@@ -593,29 +573,32 @@ export class StationSelectCardComponent implements OnInit {
     }
 
     this.availableSitesToSearchFrom.forEach(x => {
-        if (x.properties.station != null && x.properties.station != undefined && x.properties.station.includes(searchText)) {
-          let obj = {
-            StationProperty : 'StationID',
-            StationPropertyValue : x.properties.station
-          }
-          this.searchSuggestions.push(obj);
+      if (x.properties.station != null && x.properties.station != undefined && x.properties.station.includes(searchText)) {
+        let obj = {
+          StationProperty: 'StationID',
+          StationPropertyValue: x.properties.station,
+          StationID: x.properties.station
         }
+        this.searchSuggestions.push(obj);
+      }
 
-        if (x.properties.shortname != null && x.properties.shortname != undefined && x.properties.shortname.includes(searchText)) {
-          let obj = {
-            StationProperty : 'Short Name',
-            StationPropertyValue : x.properties.shortname
-          }
-          this.searchSuggestions.push(obj);
+      if (x.properties.shortname != null && x.properties.shortname != undefined && x.properties.shortname.includes(searchText)) {
+        let obj = {
+          StationProperty: 'Short Name',
+          StationPropertyValue: x.properties.shortname,
+          StationID: x.properties.station
         }
+        this.searchSuggestions.push(obj);
+      }
 
-        if (x.properties.stname != null && x.properties.stname != undefined && x.properties.stname.includes(searchText)) {
-          let obj = {
-            StationProperty : 'Description',
-            StationPropertyValue : x.properties.stname
-          }
-          this.searchSuggestions.push(obj);
+      if (x.properties.stname != null && x.properties.stname != undefined && x.properties.stname.includes(searchText)) {
+        let obj = {
+          StationProperty: 'Description',
+          StationPropertyValue: x.properties.stname,
+          StationID: x.properties.station
         }
+        this.searchSuggestions.push(obj);
+      }
     });
 
     if (this.searchSuggestions && this.searchSuggestions.length > 0) {
@@ -625,20 +608,20 @@ export class StationSelectCardComponent implements OnInit {
         }
 
         if (a.StationPropertyValue < b.StationPropertyValue) {
-          return  -1;
+          return -1;
         }
 
         return 0;
       })
     }
-}
+  }
 
   //The dropdown closes when we remove focus, so if we go back in and still have text we should show the search suggestions
   reFocus(stationMapSearch) {
     if (this.searchText != undefined && this.searchText != '') {
       stationMapSearch.show();
     }
-}
+  }
 }
 
 export class StationFilterSelect {
@@ -647,7 +630,7 @@ export class StationFilterSelect {
   Layer: any;
   Stations: any[];
 
-  public constructor(obj?:any) {
+  public constructor(obj?: any) {
     Object.assign(this, obj);
   }
 }
