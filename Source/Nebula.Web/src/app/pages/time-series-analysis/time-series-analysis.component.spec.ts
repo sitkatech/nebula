@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StationSelectMapComponent } from './station-select-map.component';
+import { TimeSeriesAnalysisComponent } from './time-series-analysis.component';
 
-describe('StationSelectMapComponent', () => {
-  let component: StationSelectMapComponent;
-  let fixture: ComponentFixture<StationSelectMapComponent>;
+describe('TimeSeriesAnalysisComponent', () => {
+  let component: TimeSeriesAnalysisComponent;
+  let fixture: ComponentFixture<TimeSeriesAnalysisComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StationSelectMapComponent ]
+      declarations: [ TimeSeriesAnalysisComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(StationSelectMapComponent);
+    fixture = TestBed.createComponent(TimeSeriesAnalysisComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

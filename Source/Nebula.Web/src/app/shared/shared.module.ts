@@ -20,11 +20,11 @@ import { FieldDefinitionComponent } from './components/field-definition/field-de
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AlertDisplayComponent } from './components/alert-display/alert-display.component';
 import { FieldDefinitionGridHeaderComponent } from './components/field-definition-grid-header/field-definition-grid-header.component';
-import { StationSelectMapComponent } from './components/station-select-map/station-select-map.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select-custom.component';
 import { SelectedDataCardComponent } from './components/selected-data-card/selected-data-card.component';
 import { StationSelectCardComponent } from './components/station-select-card/station-select-card.component';
+import { AutoCompleteModule } from "primeng/autocomplete"
 
 @NgModule({
     declarations: [
@@ -41,7 +41,6 @@ import { StationSelectCardComponent } from './components/station-select-card/sta
         CustomRichTextComponent,
         FieldDefinitionComponent,
         FieldDefinitionGridHeaderComponent,
-        StationSelectMapComponent,
         NgSelectCustomComponent,
         SelectedDataCardComponent,
         StationSelectCardComponent
@@ -56,7 +55,8 @@ import { StationSelectCardComponent } from './components/station-select-card/sta
         SelectDropDownModule,
         CKEditorModule,
         NgbModule,
-        NgSelectModule
+        NgSelectModule,
+        AutoCompleteModule
     ],
     exports: [
         AlertDisplayComponent,
@@ -68,7 +68,6 @@ import { StationSelectCardComponent } from './components/station-select-card/sta
         CustomRichTextComponent,
         FieldDefinitionComponent,
         FieldDefinitionGridHeaderComponent,
-        StationSelectMapComponent,
         NgSelectCustomComponent,
         SelectedDataCardComponent,
         StationSelectCardComponent

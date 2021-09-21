@@ -28,6 +28,7 @@
             <station-select-card [(selectedVariables)]="selectedVariables" [mapID]="mapID"
                 [disableAddingVariables]="isActionBeingPerformed()"
                 [defaultSelectedMapFilter]="defaultSelectedMapFilter"
+                [lyraStationAvailableVariablesKey]="'variables_diversion_scenario'"
                 [variableNamesAllowedToBeAdded]="variableNamesAllowedToAddToScenario"
                 (addingVariableEvent)="addVariableToSelection($event)"></station-select-card>
         </div>
@@ -44,7 +45,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header text-center" #timeSeriesCard>
-                    Timeseries View and Download
+                    Time Series View and Download
                 </div>
                 <div class="card-body table-responsive">
                     <div *ngIf="selectedVariables.length == 0" class="row">
@@ -191,20 +192,20 @@
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="filter"
+                                    <label for="weatherCondition"
                                         class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
-                                        <field-definition [fieldDefinitionType]="'Filter'"></field-definition>
+                                        <field-definition [fieldDefinitionType]="'WeatherCondition'"></field-definition>
                                     </label>
                                     <div class="col w-100">
-                                        <select formControlName="filter" id="filter" class="form-control">
-                                            <option *ngFor="let filter of hydstraFilters" [value]="filter.value">
-                                                {{filter.key}}
+                                        <select formControlName="weatherCondition" id="weatherCondition" class="form-control">
+                                            <option *ngFor="let weatherCondition of hydstraWeatherConditions" [value]="weatherCondition.value">
+                                                {{weatherCondition.key}}
                                             </option>
                                         </select>
                                     </div>
-                                    <div *ngIf="f.filter.touched && f.filter.invalid"
+                                    <div *ngIf="f.weatherCondition.touched && f.weatherCondition.invalid"
                                         class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.filter.errors.required">Filter is required.</div>
+                                        <div *ngIf="f.weatherCondition.errors.required">Weather Condition is required.</div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
@@ -301,10 +302,10 @@
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
                             <button *ngIf="vegaSpec && currentlyDisplayingRequestDto" (click)="downloadChartData()"
-                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left"
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right "
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
-                                    class="fa fa-spinner loading-spinner"></span>Download</button>
+                                    class="fa fa-spinner loading-spinner"></span>Download Data (.csv)</button>
                             <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>

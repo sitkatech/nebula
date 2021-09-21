@@ -2,7 +2,7 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-empty">
-                <li class="breadcrumb-item active" aria-current="page">Multi-Variable Multi-Site</li>
+                <li class="breadcrumb-item active" aria-current="page">Time Series Analysis</li>
             </ol>
         </nav>
     </div>
@@ -13,7 +13,7 @@
 
     <div class="row">
         <div class="col">
-            <h2 class="d-inline-block">Multi-Variable Multi-Site</h2>
+            <h2 class="d-inline-block">Time Series Analysis</h2>
         </div>
     </div>
     <div class="row mt-1 mb-2">
@@ -27,6 +27,7 @@
         <div class="col-sm-12">
             <station-select-card [(selectedVariables)]="selectedVariables" [mapID]="mapID"
                 [disableAddingVariables]="isActionBeingPerformed()"
+                [canAddDuplicateVariable]="true"
                 (addingVariableEvent)="addVariableToSelection($event)"></station-select-card>
         </div>
     </div>
@@ -41,7 +42,7 @@
         <div class="col-sm-12">
             <div class="card">
                 <div class="card-header text-center" #timeSeriesCard>
-                    Timeseries View and Download
+                    Time Series View and Download
                 </div>
                 <div class="card-body table-responsive">
                     <div *ngIf="selectedVariables.length == 0" class="row">
@@ -135,45 +136,45 @@
                                             </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">
-                                            <label for="filter"
+                                            <label for="weatherCondition"
                                                 class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
-                                                <field-definition [fieldDefinitionType]="'Filter'"></field-definition>
+                                                <field-definition [fieldDefinitionType]="'WeatherCondition'"></field-definition>
                                             </label>
                                             <div class="col w-100">
-                                                <select formControlName="filter" id="filter" class="form-control">
-                                                    <option *ngFor="let filter of hydstraFilters"
-                                                        [value]="filter.value">
-                                                        {{filter.key}}
+                                                <select formControlName="weatherCondition" id="weatherCondition" class="form-control">
+                                                    <option *ngFor="let weatherCondition of hydstraWeatherConditions"
+                                                        [value]="weatherCondition.value">
+                                                        {{weatherCondition.key}}
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('filter').touched && siteVariablesToQuery().controls[i].get('filter').invalid"
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('weatherCondition').touched && siteVariablesToQuery().controls[i].get('weatherCondition').invalid"
                                                 class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                                 <div
-                                                    *ngIf="siteVariablesToQuery().controls[i].get('filter').errors.required">
-                                                    Filter is required.</div>
+                                                    *ngIf="siteVariablesToQuery().controls[i].get('weatherCondition').errors.required">
+                                                    Weather Condition is required.</div>
                                             </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">
-                                            <label for="aggregationMode"
+                                            <label for="aggregationMethod"
                                                 class="col-sm-6 col-form-label required justify-content-start justify-content-sm-end d-flex">
-                                                <field-definition [fieldDefinitionType]="'AggregationMode'">
+                                                <field-definition [fieldDefinitionType]="'AggregationMethod'">
                                                 </field-definition>
                                             </label>
                                             <div class="col-sm-6 w-100">
-                                                <select formControlName="aggregationMode" id="aggregationMode"
+                                                <select formControlName="aggregationMethod" id="aggregationMethod"
                                                     class="form-control">
                                                     <option
-                                                        *ngFor="let mode of getAvailableAggregationModes(control.value.variable)"
+                                                        *ngFor="let mode of getAvailableAggregationMethods(control.value.variable)"
                                                         [value]="mode.value">
                                                         {{mode.key}}
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').touched && siteVariablesToQuery().controls[i].get('aggregationMode').invalid"
+                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMethod').touched && siteVariablesToQuery().controls[i].get('aggregationMethod').invalid"
                                                 class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                                 <div
-                                                    *ngIf="siteVariablesToQuery().controls[i].get('aggregationMode').errors.required">
+                                                    *ngIf="siteVariablesToQuery().controls[i].get('aggregationMethod').errors.required">
                                                     Aggregation Mode is required.</div>
                                             </div>
                                         </div>
@@ -200,10 +201,10 @@
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
                             <button *ngIf="vegaSpec && currentlyDisplayingRequestDto" (click)="downloadChartData()"
-                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right float-lg-left"
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right "
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
-                                    class="fa fa-spinner loading-spinner"></span>Download</button>
+                                    class="fa fa-spinner loading-spinner"></span>Download Data (.csv)</button>
                             <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>

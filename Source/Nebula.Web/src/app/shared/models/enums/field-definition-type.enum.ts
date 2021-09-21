@@ -1,8 +1,8 @@
 export enum FieldDefinitionTypeEnum {
     Name = 1,
-    AggregationMode = 2,
+    AggregationMethod = 2,
     TimeInterval = 3,
-    Filter = 4,
+    WeatherCondition = 4,
     RegressionMethod = 5,
     DiversionRate = 6,
     StorageMaxDepth = 7,
@@ -12,5 +12,8 @@ export enum FieldDefinitionTypeEnum {
     MonthsActive = 11,
     WeekdaysActive = 12,
     HoursActive = 13,
-    NearestRainfallStation = 14
+    NearestRainfallStation = 14,
+    StationID = 15,
+    StationShortName = 16,
+    StationDescription = 17
 }
