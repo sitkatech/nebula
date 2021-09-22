@@ -98,6 +98,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
       start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
       end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
       interval: this.timeSeriesForm.get('interval').value,
+      weather_condition: this.timeSeriesForm.get('weatherCondition').value,
       regression_method: this.timeSeriesForm.get('regression_method').value,
       timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
     };
