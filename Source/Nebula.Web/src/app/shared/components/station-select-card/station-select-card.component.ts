@@ -568,8 +568,10 @@ export class StationSelectCardComponent implements OnInit {
       return;
     }
 
+    searchText = searchText.toLowerCase();
+
     this.availableSitesToSearchFrom.forEach(x => {
-      if (x.properties.station != null && x.properties.station != undefined && x.properties.station.includes(searchText)) {
+      if (x.properties.station != null && x.properties.station != undefined && x.properties.station.toLowerCase().includes(searchText)) {
         let obj = {
           StationProperty: 'StationID',
           StationPropertyValue: x.properties.station,
@@ -578,7 +580,7 @@ export class StationSelectCardComponent implements OnInit {
         this.searchSuggestions.push(obj);
       }
 
-      if (x.properties.shortname != null && x.properties.shortname != undefined && x.properties.shortname.includes(searchText)) {
+      if (x.properties.shortname != null && x.properties.shortname != undefined && x.properties.shortname.toLowerCase().includes(searchText)) {
         let obj = {
           StationProperty: 'Short Name',
           StationPropertyValue: x.properties.shortname,
@@ -587,7 +589,7 @@ export class StationSelectCardComponent implements OnInit {
         this.searchSuggestions.push(obj);
       }
 
-      if (x.properties.stname != null && x.properties.stname != undefined && x.properties.stname.includes(searchText)) {
+      if (x.properties.stname != null && x.properties.stname != undefined && x.properties.stname.toLowerCase().includes(searchText)) {
         let obj = {
           StationProperty: 'Description',
           StationPropertyValue: x.properties.stname,

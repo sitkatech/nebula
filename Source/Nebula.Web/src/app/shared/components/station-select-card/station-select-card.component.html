@@ -4,19 +4,23 @@
     </div>
     <div class="card-body table-responsive">
         <div class="form-group row mb-1">
-            <div class="col-xl-8">
+            <div class="col">
                 <label for="filter"
                 class="col-form-label">
                     Filter Sites By:
                 </label>
-                <div class="d-inline-block ml-1">
+                <div class="d-inline-block ml-2 ml-lg-1">
                     <select [(ngModel)]="selectedStationFilter" id="filter" class="form-control" (change)="updateMarkerDisplay()" >
                         <option *ngFor="let type of stationFilterTypes" [ngValue]="type">
                             {{type.Display}}
                         </option>
                     </select>
                 </div>
-                <p-autoComplete #stationMapSearch id="stationMapSearch" styleClass="custom" class="d-inline-block float-md-right"  appendTo="body" placeholder="Search..." emptyMessage="No Results"
+                <div class="d-inline-block float-lg-right">
+                    <label class="col-form-label">
+                        Station Search:
+                    </label>
+                    <p-autoComplete #stationMapSearch id="stationMapSearch" styleClass="custom" class="d-inline-block ml-1"  appendTo="body" placeholder="Station Name, ID, or Description" emptyMessage="No Results"
                     [(ngModel)]="searchText" [suggestions]="searchSuggestions" (completeMethod)="search($event)"
                     (onFocus)="reFocus(stationMapSearch)" (onSelect)="select($event)" type="search">
                     <ng-template let-result pTemplate="item">
@@ -28,8 +32,10 @@
                         </div>
                     </ng-template>
                 </p-autoComplete>
+                </div>
             </div>
         </div>
+        <hr>
         <div class="row">
             <div class="col-md-7 col-xl-8">
                 <div id={{mapID}} class="location-card"
