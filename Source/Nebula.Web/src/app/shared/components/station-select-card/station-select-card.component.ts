@@ -169,7 +169,11 @@ export class StationSelectCardComponent implements OnInit {
     let baseSiteVariable = new SiteVariable(
       {
         stationShortName: featureProperties.shortname,
-        station: featureProperties.station
+        station: featureProperties.station,
+        nearestRainfallStationInfo: {
+          stationLongName: featureProperties.nearest_rainfall_station_info.stname,
+          station: featureProperties.nearest_rainfall_station_info.station
+        }
       });
 
     if (featureProperties[this.lyraStationAvailableVariablesKey] == null || featureProperties[this.lyraStationAvailableVariablesKey].length == 0) {

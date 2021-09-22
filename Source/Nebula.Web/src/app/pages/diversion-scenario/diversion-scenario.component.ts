@@ -131,7 +131,17 @@ export class DiversionScenarioComponent implements OnInit {
     this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
       this.currentUser = currentUser;
       this.lyraService.getSiteLocationGeoJson().subscribe(result => {
-        this.rainfallStations = result.features.filter(x => x.properties.has_rainfall);
+        this.rainfallStations = result.features.filter(x => x.properties.has_rainfall).sort((x, y) => {
+          if (x.properties.stname > y.properties.stname) {
+            return 1;
+          }
+
+          if (x.properties.stname < y.properties.stname) {
+            return -1;
+          }
+
+          return 0;
+        });
       });
       this.setupFormChangeListener();
     });

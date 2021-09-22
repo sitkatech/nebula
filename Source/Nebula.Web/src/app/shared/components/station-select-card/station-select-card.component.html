@@ -4,7 +4,7 @@
     </div>
     <div class="card-body table-responsive">
         <div class="form-group row mb-1">
-            <div class="col">
+            <div class="col-xl-8">
                 <label for="filter"
                 class="col-form-label">
                     Filter Sites By:
@@ -78,8 +78,7 @@
                         </dt>
                         <ng-container *ngIf="!gettingAvailableVariables">
                             <span class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1"
-                                *ngIf="!siteSelectedAndVariablesFound()">No variables found for selected
-                                station. Please make another selection</span>
+                                *ngIf="!siteSelectedAndVariablesFound()">No relevant variables available on the selected station. Please make another selection</span>
                             <ng-container *ngIf="siteSelectedAndVariablesFound()">
                                 <dt class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1"
                                     *ngFor="let variable of selectedSiteAvailableVariables">
