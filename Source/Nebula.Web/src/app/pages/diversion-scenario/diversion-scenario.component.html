@@ -192,20 +192,75 @@
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="weatherCondition"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end d-flex">
-                                        <field-definition [fieldDefinitionType]="'WeatherCondition'"></field-definition>
+                                    <label for="rainfallEventShutdown"
+                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'RainfallEventShutdown'">
+                                        </field-definition>
                                     </label>
-                                    <div class="col w-100">
-                                        <select formControlName="weatherCondition" id="weatherCondition" class="form-control">
-                                            <option *ngFor="let weatherCondition of hydstraWeatherConditions" [value]="weatherCondition.value">
-                                                {{weatherCondition.key}}
-                                            </option>
-                                        </select>
+                                    <div class="col-sm-6 input-group">
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" class="form-check-input" formControlName="rainfallEventShutdown" name="rainfallEventShutdown" id="rainfallEventShutdownTrue"
+                                            [value]="true"/>
+                                            <label class="form-check-label" for="rainfallEventShutdownTrue">True</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="radio" class="form-check-input" formControlName="rainfallEventShutdown" name="rainfallEventShutdown" id="rainfallEventShutdownFalse"
+                                             [value]="false"/>
+                                            <label class="form-check-label" for="rainfallEventShutdownFalse">False</label>
+                                        </div>
                                     </div>
-                                    <div *ngIf="f.weatherCondition.touched && f.weatherCondition.invalid"
+                                    <div *ngIf="f.rainfallEventShutdown.touched && f.rainfallEventShutdown.invalid"
                                         class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.weatherCondition.errors.required">Weather Condition is required.</div>
+                                        <div *ngIf="f.rainfallEventShutdown.errors.required">Rainfall Event Depth Threshold is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="rainfallEventDepthThreshold"
+                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'RainfallEventDepthThreshold'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input formControlName="rainfallEventDepthThreshold" id="rainfallEventDepthThreshold" type="number"
+                                            class="form-control w-100">
+                                    </div>
+                                    <div *ngIf="f.rainfallEventDepthThreshold.touched && f.rainfallEventDepthThreshold.invalid"
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.rainfallEventDepthThreshold.errors.required">Rainfall Event Depth Threshold is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="eventSeperationTime"
+                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'EventSeperationTime'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input formControlName="eventSeperationTime" id="eventSeperationTime" type="number"
+                                            class="form-control w-100">
+                                    </div>
+                                    <div *ngIf="f.eventSeperationTime.touched && f.eventSeperationTime.invalid"
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.eventSeperationTime.errors.required">Event Seperation Time is required.
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group w-100 mb-1">
+                                    <label for="afterRainDelay"
+                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        <field-definition [fieldDefinitionType]="'AfterRainDelay'">
+                                        </field-definition>
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input formControlName="afterRainDelay" id="afterRainDelay" type="number"
+                                            class="form-control w-100">
+                                    </div>
+                                    <div *ngIf="f.afterRainDelay.touched && f.afterRainDelay.invalid"
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                        <div *ngIf="f.afterRainDelay.errors.required">Resume Diversion After Delay is required.
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">

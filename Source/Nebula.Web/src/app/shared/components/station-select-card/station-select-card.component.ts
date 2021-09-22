@@ -184,6 +184,7 @@ export class StationSelectCardComponent implements OnInit {
       let variableInfo = featureProperties[variableName];
       let siteVariable = Object.assign(new SiteVariable({
         name: variableInfo.name,
+        description: variableInfo.description,
         variable: variableInfo.variable,
         startDate: new Date(`${variableInfo.period_start.slice(0, 4)}-${variableInfo.period_start.slice(4, 6)}-${variableInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${variableInfo.period_end.slice(0, 4)}-${variableInfo.period_end.slice(4, 6)}-${variableInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
@@ -197,6 +198,7 @@ export class StationSelectCardComponent implements OnInit {
       let rainfallInfo = rainfallStationProperties.rainfall_info;
       let rainfallSiteVariable = new SiteVariable({
         name: rainfallInfo.name,
+        description: rainfallInfo.description,
         variable: rainfallInfo.variable,
         gage: rainfallStationProperties.stname,
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),

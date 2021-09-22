@@ -1,5 +1,6 @@
 export class SiteVariable {
     name: string;
+    description: string;
     variable: string;
     gage: string;
     stationShortName: string;

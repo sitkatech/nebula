@@ -16,7 +16,11 @@ USING (VALUES
 (14, 'NearestRainfallStation', 'Nearest Rainfall Station'),
 (15, 'StationID', 'Station ID'),
 (16, 'StationShortName', 'Short Name'),
-(17, 'StationDescription', 'Description')
+(17, 'StationDescription', 'Description'),
+(18, 'RainfallEventShutdown', 'Shutdown Diversion During Rain Events'),
+(19, 'RainfallEventDepthThreshold', 'Rainfall Event Depth Threshold (inches)'),
+(20, 'EventSeperationTime', 'Event Separation Time (hours)'),
+(21, 'AfterRainDelay', 'Resume Diversion After Delay (hours)') 
 )
 AS Source (FieldDefinitionTypeID, FieldDefinitionTypeName, FieldDefinitionTypeDisplayName)
 ON Target.FieldDefinitionTypeID = Source.FieldDefinitionTypeID

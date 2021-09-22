@@ -83,9 +83,19 @@
                                 <dt class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1"
                                     *ngFor="let variable of selectedSiteAvailableVariables">
                                     <div class="row no-gutters">
-                                        <div class="col-9">
+                                        <div class="col-10">
                                             {{variable.name}}
                                             <br />
+                                            <ng-container *ngIf="variable.description">
+                                                <div class="row no-gutters" style="line-height:1">
+                                                    <div class="col-3 col-md-6 col-lg-4">
+                                                        <small style="font-weight:400">Description:</small>
+                                                    </div>
+                                                    <div class="col-9 col-md-6 col-lg-8">
+                                                        <small>{{variable.description}}</small>
+                                                    </div>
+                                                </div>
+                                            </ng-container>
                                             <ng-container *ngIf="variable.gage != null">
                                                 <small style="font-weight:400">Gage:
                                                     {{variable.gage}}</small>
@@ -96,7 +106,7 @@
                                                 {{variable.startDate}} -
                                                 {{variable.endDate}}</small>
                                         </div>
-                                        <div *ngIf="variableNameCanBeAddedToSelection(variable.name)" class="col-3 align-self-center text-right">
+                                        <div *ngIf="variableNameCanBeAddedToSelection(variable.name)" class="col-2 align-self-center text-right">
                                             <button class="btn btn-sm btn-nebula"
                                                 [disabled]="disableAddingVariable(variable)"
                                                 (click)="addVariableToSelection(variable)">Add</button>
