@@ -10,7 +10,8 @@ import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval"
 import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { UserDetailedDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -25,6 +26,8 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   public currentUser: UserDetailedDto;
 
   @ViewChild("mapDiv") mapElement: ElementRef;
+
+  @ViewChild("stationSelect") stationSelect : StationSelectCardComponent;
 
   public mapID: string = 'TimeSeriesAnalysisStationSelectMap';
 
@@ -63,7 +66,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     private lyraService: LyraService,
     private formBuilder: FormBuilder,
     private authenticationService: AuthenticationService,
-    private router: Router
+    private route: ActivatedRoute
   ) {
   }
 
@@ -289,4 +292,61 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   }
 
   //#endregion
+
+  public loadStationsFromURL() {
+    this.route.queryParams.subscribe(params => {
+      if (params == null || params == undefined || !params.hasOwnProperty("json")) {
+        return;
+      }
+
+      let queriedParams = JSON.parse(params["json"]);
+
+      //Don't bother if we don't have any timeseries
+      if (!queriedParams.hasOwnProperty("timeseries")) {
+        return;
+      }
+
+      if (queriedParams["start_date"] != null) {
+        let startDate = new Date(queriedParams["start_date"]);
+        this.timeSeriesForm.patchValue({startDate : { year: startDate.getUTCFullYear(), month: startDate.getUTCMonth() + 1, day: startDate.getUTCDate() }});
+      }
+
+      if (queriedParams["end_date"] != null) {
+        let endDate = new Date(queriedParams["end_date"]);
+        this.timeSeriesForm.patchValue({endDate : { year: endDate.getUTCFullYear(), month: endDate.getUTCMonth() + 1, day: endDate.getUTCDate() }});
+      }
+
+      let failuresToDecrementBy = 0;
+      let errorMessagesToDisplay = [];
+
+      queriedParams["timeseries"].forEach((x, index) => {
+        let message = this.stationSelect.externalAddSiteVariableReturnMessageIfFailed(x["site"], x["variable"]);
+        if (message != null && message != undefined) {
+          errorMessagesToDisplay.push(new Alert(message, AlertContext.Danger, true));
+          failuresToDecrementBy++;
+          return;
+        }
+
+        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", "aggregationMethod", index-failuresToDecrementBy, this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y["aggregation_method"]), errorMessagesToDisplay)        
+        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "interval", "timeInterval", index-failuresToDecrementBy, HydstraInterval.all(), ((x, y) => x.value == y["interval"]), errorMessagesToDisplay)        
+        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "weather_condition", "weatherCondition", index-failuresToDecrementBy, HydstraWeatherCondition.all(), ((x, y) => x.value == y["weather_condition"]), errorMessagesToDisplay)        
+     })
+
+      this.lyraMessages = errorMessagesToDisplay
+    })
+  }
+
+  public updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, formKey : string, index : number, basisOfLambda : any, lambda : any, errors : any) {
+    if (jsonObject[key] == null || jsonObject[key] == undefined) {
+      errors.push(new Alert(`Station with ID:${jsonObject["site"]} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
+      return;
+    }
+    
+    if (!basisOfLambda.some(y => lambda(y, jsonObject))) {
+      errors.push(new Alert(`Station with ID:${jsonObject["site"]} provided an invalid value for key:${key}. Will use default. Invalid value was:${jsonObject[key]}`, AlertContext.Warning, true));
+      return;
+    }
+
+    this.siteVariablesToQuery().controls[index].patchValue({[formKey] : jsonObject[key]});
+  }
 }
