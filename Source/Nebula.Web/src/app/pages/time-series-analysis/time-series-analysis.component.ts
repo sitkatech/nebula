@@ -41,9 +41,9 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    siteVariablesToQuery: new FormArray([])
+    start_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    end_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    timeseries: new FormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
@@ -87,15 +87,15 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
   public getTimeSeriesData() {
 
-    if (!this.timeSeriesForm.valid || !this.siteVariablesToQuery().valid) {
+    if (!this.timeSeriesForm.valid || !this.timeseries().valid) {
       Object.keys(this.timeSeriesForm.controls).forEach(field => {
         const control = this.timeSeriesForm.get(field);
         control.markAsTouched({ onlySelf: true });
       });
-      for (let [index, formGroup] of this.siteVariablesToQuery().controls.entries()) {
+      for (let [index, formGroup] of this.timeseries().controls.entries()) {
         if (formGroup instanceof FormGroup) {
           Object.keys(formGroup.controls).forEach(field => {
-            const control = this.siteVariablesToQuery().controls[index].get(field);
+            const control = this.timeseries().controls[index].get(field);
             control.markAsTouched({ onlySelf: true });
           })
         }
@@ -105,8 +105,8 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
     let swnTimeSeriesRequestDto =
     {
-      start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
-      end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
+      start_date: this.getDateFromTimeSeriesFormDateObject('start_date'),
+      end_date: this.getDateFromTimeSeriesFormDateObject('end_date'),
       timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
     };
     this.gettingTimeSeriesData = true;
@@ -194,7 +194,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   }
 
   public clearAllVariables(): void {
-    this.siteVariablesToQuery().clear();
+    this.timeseries().clear();
     this.clearResults();
   }
 
@@ -218,8 +218,8 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
   // public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
   //   this.scroll(el);
-  //   this.timeSeriesForm.controls.startDate.setValue(this.formatDateForNgbDatepicker(variable.startDate));
-  //   this.timeSeriesForm.controls.endDate.setValue(this.formatDateForNgbDatepicker(variable.endDate));
+  //   this.timeSeriesForm.controls.start_date.setValue(this.formatDateForNgbDatepicker(variable.start_date));
+  //   this.timeSeriesForm.controls.end_date.setValue(this.formatDateForNgbDatepicker(variable.end_date));
   //   this.getTimeSeriesData();
   // }
 
@@ -249,34 +249,34 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     return this.timeSeriesForm.controls;
   }
 
-  siteVariablesToQuery(): FormArray {
-    return this.timeSeriesForm.get("siteVariablesToQuery") as FormArray
+  timeseries(): FormArray {
+    return this.timeSeriesForm.get("timeseries") as FormArray
   }
 
   newSiteVariableToQuery(variable: SiteVariable): FormGroup {
     return this.formBuilder.group({
       variable: variable,
-      timeInterval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
-      aggregationMethod: new FormControl(variable.allowedAggregations[0], [Validators.required]),
-      weatherCondition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required])
+      interval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
+      aggregation_method: new FormControl(variable.allowedAggregations[0], [Validators.required]),
+      weather_condition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required])
     })
   }
 
   addSiteVariableToQuery(variable) {
-    this.siteVariablesToQuery().push(this.newSiteVariableToQuery(variable));
+    this.timeseries().push(this.newSiteVariableToQuery(variable));
   }
 
   removeSiteVariableToQuery(i: number) {
-    this.siteVariablesToQuery().removeAt(i);
+    this.timeseries().removeAt(i);
   }
 
   getTimeSeriesListFromTimerSeriesFormObject() {
-    return this.siteVariablesToQuery().value.map(x => ({
+    return this.timeseries().value.map(x => ({
       variable: x.variable.variable,
       site: x.variable.station,
-      interval: x.timeInterval,
-      weather_condition: x.weatherCondition,
-      aggregation_method: x.aggregationMethod
+      interval: x.interval,
+      weather_condition: x.weather_condition,
+      aggregation_method: x.aggregation_method
     }))
   }
 
@@ -293,7 +293,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
   //#endregion
 
-  public loadStationsFromURL() {
+  public populateFormFromURL() {
     this.route.queryParams.subscribe(params => {
       if (params == null || params == undefined || !params.hasOwnProperty("json")) {
         return;
@@ -307,13 +307,13 @@ export class TimeSeriesAnalysisComponent implements OnInit {
       }
 
       if (queriedParams["start_date"] != null) {
-        let startDate = new Date(queriedParams["start_date"]);
-        this.timeSeriesForm.patchValue({startDate : { year: startDate.getUTCFullYear(), month: startDate.getUTCMonth() + 1, day: startDate.getUTCDate() }});
+        let start_date = new Date(queriedParams["start_date"]);
+        this.timeSeriesForm.patchValue({start_date : { year: start_date.getUTCFullYear(), month: start_date.getUTCMonth() + 1, day: start_date.getUTCDate() }});
       }
 
       if (queriedParams["end_date"] != null) {
-        let endDate = new Date(queriedParams["end_date"]);
-        this.timeSeriesForm.patchValue({endDate : { year: endDate.getUTCFullYear(), month: endDate.getUTCMonth() + 1, day: endDate.getUTCDate() }});
+        let end_date = new Date(queriedParams["end_date"]);
+        this.timeSeriesForm.patchValue({end_date : { year: end_date.getUTCFullYear(), month: end_date.getUTCMonth() + 1, day: end_date.getUTCDate() }});
       }
 
       let failuresToDecrementBy = 0;
@@ -327,9 +327,9 @@ export class TimeSeriesAnalysisComponent implements OnInit {
           return;
         }
 
-        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", "aggregationMethod", index-failuresToDecrementBy, this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y["aggregation_method"]), errorMessagesToDisplay)        
-        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "interval", "timeInterval", index-failuresToDecrementBy, HydstraInterval.all(), ((x, y) => x.value == y["interval"]), errorMessagesToDisplay)        
-        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "weather_condition", "weatherCondition", index-failuresToDecrementBy, HydstraWeatherCondition.all(), ((x, y) => x.value == y["weather_condition"]), errorMessagesToDisplay)        
+        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", "aggregation_method", index-failuresToDecrementBy, this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y["aggregation_method"]), errorMessagesToDisplay)        
+        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "interval", "interval", index-failuresToDecrementBy, HydstraInterval.all(), ((x, y) => x.value == y["interval"]), errorMessagesToDisplay)        
+        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "weather_condition", "weather_condition", index-failuresToDecrementBy, HydstraWeatherCondition.all(), ((x, y) => x.value == y["weather_condition"]), errorMessagesToDisplay)        
      })
 
       this.lyraMessages = errorMessagesToDisplay
@@ -347,6 +347,6 @@ export class TimeSeriesAnalysisComponent implements OnInit {
       return;
     }
 
-    this.siteVariablesToQuery().controls[index].patchValue({[formKey] : jsonObject[key]});
+    this.timeseries().controls[index].patchValue({[formKey] : jsonObject[key]});
   }
 }

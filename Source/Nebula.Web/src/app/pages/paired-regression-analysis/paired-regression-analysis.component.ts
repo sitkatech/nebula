@@ -11,6 +11,8 @@ import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-w
 import { HydstraInterval } from 'src/app/shared/models/hydstra/hydstra-interval';
 import { HydstraRegressionMethod } from 'src/app/shared/models/hydstra/hydstra-regression-method';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
+import { ActivatedRoute } from '@angular/router';
+import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
 
 declare var vegaEmbed: any;
 
@@ -25,6 +27,8 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   @ViewChild("mapDiv") mapElement: ElementRef;
 
+  @ViewChild("stationSelect") stationSelect : StationSelectCardComponent;
+
   public mapID: string = 'PairedRegressionAnalysisStationSelectMap';
 
   public richTextTypeID = CustomRichTextType.PairedRegressionAnalysis;
@@ -38,12 +42,12 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    start_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    end_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
     interval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
-    weatherCondition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required]),
+    weather_condition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required]),
     regression_method: new FormControl(HydstraRegressionMethod.Linear.value, [Validators.required]),
-    siteVariablesToQuery: new FormArray([])
+    timeseries: new FormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
@@ -59,12 +63,14 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   public currentlyDisplayingRequestDto: any;
   public downloadingChartData: boolean = false;
   public lyraMessages: Alert[] = [];
+  currentlyDisplayingRequestLinkText: string;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private lyraService: LyraService,
     private formBuilder: FormBuilder,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private route: ActivatedRoute
   ) {
   }
 
@@ -95,10 +101,10 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
     let swnTimeSeriesRequestDto =
     {
-      start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
-      end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
+      start_date: this.getDateFromTimeSeriesFormDateObject('start_date'),
+      end_date: this.getDateFromTimeSeriesFormDateObject('end_date'),
       interval: this.timeSeriesForm.get('interval').value,
-      weather_condition: this.timeSeriesForm.get('weatherCondition').value,
+      weather_condition: this.timeSeriesForm.get('weather_condition').value,
       regression_method: this.timeSeriesForm.get('regression_method').value,
       timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
     };
@@ -116,6 +122,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
         this.vegaSpec = result.data.spec;
         vegaEmbed('#vis', this.vegaSpec);
         this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
+        this.currentlyDisplayingRequestLinkText = `${window.location.origin}${window.location.pathname}?json=${JSON.stringify(this.currentlyDisplayingRequestDto)}`;
       }
       else {
         this.errorOccurred = true;
@@ -189,7 +196,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   }
 
   public clearAllVariables(): void {
-    this.siteVariablesToQuery().clear();
+    this.timeseries().clear();
     this.clearResults();
   }
 
@@ -209,8 +216,8 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   // public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
   //   this.scroll(el);
-  //   this.timeSeriesForm.controls.startDate.setValue(this.formatDateForNgbDatepicker(variable.startDate));
-  //   this.timeSeriesForm.controls.endDate.setValue(this.formatDateForNgbDatepicker(variable.endDate));
+  //   this.timeSeriesForm.controls.start_date.setValue(this.formatDateForNgbDatepicker(variable.start_date));
+  //   this.timeSeriesForm.controls.end_date.setValue(this.formatDateForNgbDatepicker(variable.end_date));
   //   this.getTimeSeriesData();
   // }
 
@@ -240,30 +247,30 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     return this.timeSeriesForm.controls;
   }
 
-  siteVariablesToQuery(): FormArray {
-    return this.timeSeriesForm.get("siteVariablesToQuery") as FormArray
+  timeseries(): FormArray {
+    return this.timeSeriesForm.get("timeseries") as FormArray
   }
 
   newSiteVariableToQuery(variable: SiteVariable): FormGroup {
     return this.formBuilder.group({
       variable: variable,
-      aggregationMethod: new FormControl(variable.allowedAggregations[0], [Validators.required])
+      aggregation_method: new FormControl(variable.allowedAggregations[0], [Validators.required])
     })
   }
 
   addSiteVariableToQuery(variable) {
-    this.siteVariablesToQuery().push(this.newSiteVariableToQuery(variable));
+    this.timeseries().push(this.newSiteVariableToQuery(variable));
   }
 
   removeSiteVariableToQuery(i: number) {
-    this.siteVariablesToQuery().removeAt(i);
+    this.timeseries().removeAt(i);
   }
 
   getTimeSeriesListFromTimerSeriesFormObject() {
-    return this.siteVariablesToQuery().value.map(x => ({
+    return this.timeseries().value.map(x => ({
       variable: x.variable.variable,
       site: x.variable.station,
-      aggregation_method: x.aggregationMethod
+      aggregation_method: x.aggregation_method
     }))
   }
 
@@ -279,5 +286,81 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   }
 
   //#endregion
+
+  public populateFormFromURL() {
+    this.route.queryParams.subscribe(params => {
+      if (params == null || params == undefined || !params.hasOwnProperty("json")) {
+        return;
+      }
+
+      let queriedParams = JSON.parse(params["json"]);
+
+      //Don't bother if we don't have any timeseries
+      if (!queriedParams.hasOwnProperty("timeseries")) {
+        return;
+      }
+
+      if (queriedParams["start_date"] != null) {
+        let start_date = new Date(queriedParams["start_date"]);
+        this.timeSeriesForm.patchValue({start_date : { year: start_date.getUTCFullYear(), month: start_date.getUTCMonth() + 1, day: start_date.getUTCDate() }});
+      }
+
+      if (queriedParams["end_date"] != null) {
+        let end_date = new Date(queriedParams["end_date"]);
+        this.timeSeriesForm.patchValue({end_date : { year: end_date.getUTCFullYear(), month: end_date.getUTCMonth() + 1, day: end_date.getUTCDate() }});
+      }
+
+      let errorMessagesToDisplay = [];
+
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "interval", HydstraInterval.all(), ((x, y) => x.value == y), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "weather_condition", HydstraWeatherCondition.all(), ((x, y) => x.value == y), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "regression_method", HydstraRegressionMethod.all(), ((x, y) => x.value == y), errorMessagesToDisplay)        
+
+      let failuresToDecrementBy = 0;
+
+      queriedParams["timeseries"].slice(0,2).forEach((x, index) => {
+        let message = this.stationSelect.externalAddSiteVariableReturnMessageIfFailed(x["site"], x["variable"]);
+        if (message != null && message != undefined) {
+          errorMessagesToDisplay.push(new Alert(message, AlertContext.Danger, true));
+          failuresToDecrementBy++;
+          return;
+        }
+
+        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", index-failuresToDecrementBy, this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y), errorMessagesToDisplay)        
+     })
+
+      this.lyraMessages = errorMessagesToDisplay
+    })
+  }
+
+  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, basisOfLambda : any, lambda : any, errors : any) {
+    let value = jsonObject[key];
+    if (value == null || value == undefined) {
+      errors.push(new Alert(`Request did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
+      return;
+    }
+    
+    if (!basisOfLambda.some(y => lambda(y, value))) {
+      errors.push(new Alert(`Request provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
+      return;
+    }
+
+    this.timeSeriesForm.patchValue({[key] : value});
+  }
+
+  public updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, index : number, basisOfLambda : any, lambda : any, errors : any) {
+    let value = jsonObject[key];
+    if (value == null || value == undefined) {
+      errors.push(new Alert(`Station with ID:${jsonObject["site"]} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
+      return;
+    }
+    
+    if (!basisOfLambda.some(y => lambda(y, value))) {
+      errors.push(new Alert(`Station with ID:${jsonObject["site"]} provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
+      return;
+    }
+
+    this.timeseries().controls[index].patchValue({[key] : value});
+  }
 
 }

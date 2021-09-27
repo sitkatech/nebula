@@ -103,8 +103,8 @@ export class DiversionScenarioComponent implements OnInit {
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    start_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    end_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
     site: new FormControl(null, [Validators.required]),
     diversionRate: new FormControl(0, [Validators.required]),
     storageMaxDepth: new FormControl(0, [Validators.required]),
@@ -121,6 +121,7 @@ export class DiversionScenarioComponent implements OnInit {
     hoursActive: new FormControl(this.hourData.map(x => x.id), [Validators.required]),
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
+  currentlyDisplayingRequestLinkText: string;
 
 
   constructor(
@@ -168,8 +169,8 @@ export class DiversionScenarioComponent implements OnInit {
     }
     let swnTimeSeriesRequestDto =
     {
-      start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
-      end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
+      start_date: this.getDateFromTimeSeriesFormDateObject('start_date'),
+      end_date: this.getDateFromTimeSeriesFormDateObject('end_date'),
       site: this.timeSeriesForm.get('site').value,
       diversion_rate_cfs: this.timeSeriesForm.get('diversionRate').value,
       storage_max_depth_ft: this.timeSeriesForm.get('storageMaxDepth').value,
@@ -199,6 +200,7 @@ export class DiversionScenarioComponent implements OnInit {
         this.vegaSpec = result.data.spec;
         vegaEmbed('#vis', this.vegaSpec);
         this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
+        this.currentlyDisplayingRequestLinkText = `${window.location.origin}${window.location.pathname}?json=${JSON.stringify(this.currentlyDisplayingRequestDto)}`;
       }
       else {
         this.errorOccurred = true;
@@ -274,8 +276,8 @@ export class DiversionScenarioComponent implements OnInit {
       let dischargeSiteVariable = Object.assign(new SiteVariable({
         name: dischargeInfo.name,
         variable: dischargeInfo.variable,
-        startDate: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        endDate: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
+        start_date: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
+        end_date: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
       }), baseSiteVariable);
       this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
     }
@@ -315,8 +317,8 @@ export class DiversionScenarioComponent implements OnInit {
 
   // public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
   //   this.scroll(el);
-  //   this.timeSeriesForm.controls.startDate.setValue(this.formatDateForNgbDatepicker(variable.startDate));
-  //   this.timeSeriesForm.controls.endDate.setValue(this.formatDateForNgbDatepicker(variable.endDate));
+  //   this.timeSeriesForm.controls.start_date.setValue(this.formatDateForNgbDatepicker(variable.start_date));
+  //   this.timeSeriesForm.controls.end_date.setValue(this.formatDateForNgbDatepicker(variable.end_date));
   //   this.getTimeSeriesData();
   // }
 
