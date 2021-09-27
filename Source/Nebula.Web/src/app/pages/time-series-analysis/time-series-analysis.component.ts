@@ -10,6 +10,7 @@ import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval"
 import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { UserDetailedDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Router } from '@angular/router';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -55,12 +56,14 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   public currentlyDisplayingRequestDto: any;
   public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
+  currentlyDisplayingRequestLinkText: string;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private lyraService: LyraService,
     private formBuilder: FormBuilder,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private router: Router
   ) {
   }
 
@@ -117,6 +120,8 @@ export class TimeSeriesAnalysisComponent implements OnInit {
         this.vegaSpec = result.data.spec;
         vegaEmbed('#vis', this.vegaSpec);
         this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
+        this.currentlyDisplayingRequestLinkText = `${window.location.origin}${window.location.pathname}?json=${JSON.stringify(this.currentlyDisplayingRequestDto)}`;
+        console.log(window);
       }
       else {
         this.errorOccurred = true;

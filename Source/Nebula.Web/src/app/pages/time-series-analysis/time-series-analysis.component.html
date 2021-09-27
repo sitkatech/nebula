@@ -200,7 +200,7 @@
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
                             <ng-container *ngIf="vegaSpec && currentlyDisplayingRequestDto">
-                                <link-to-analysis></link-to-analysis>
+                                <link-to-analysis [linkText]="currentlyDisplayingRequestLinkText"></link-to-analysis>
                                 <button  (click)="downloadChartData()"
                                 class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right"
                                 [disabled]="isActionBeingPerformed()">
