@@ -6,7 +6,7 @@
             class="float-right btn btn-sm btn-nebula">Clear All</button>
     </div>
     <div class="card-body table-responsive">
-        <ngContainer *ngIf="selectedVariables.length > 0">
+        <ng-container *ngIf="selectedVariables.length > 0">
             <div class="selected-variable" *ngFor="let variable of selectedVariables; let i = index">
                 <span>{{variable.stationShortName}} - {{variable.name}}</span>
                 <button (click)="removeVariableFromSelection(i)" [disabled]="disableActions"
@@ -14,7 +14,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-        </ngContainer>
+        </ng-container>
         <div *ngIf="selectedVariables.length == 0" class="row">
             <div class="col text-center">
                 Select a station on the map and an applicable variable to get started!

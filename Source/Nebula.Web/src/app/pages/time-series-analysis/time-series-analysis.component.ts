@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { LyraService } from 'src/app/services/lyra.service.js';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
@@ -10,6 +10,8 @@ import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval"
 import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { UserDetailedDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { ActivatedRoute } from '@angular/router';
+import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -23,7 +25,8 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   public watchUserChangeSubscription: any;
   public currentUser: UserDetailedDto;
 
-  @ViewChild("mapDiv") mapElement: ElementRef;
+  @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
+  @ViewChild("stationSelect") stationSelect: StationSelectCardComponent;
 
   public mapID: string = 'TimeSeriesAnalysisStationSelectMap';
 
@@ -37,9 +40,9 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
   public currentDate = new Date();
   public timeSeriesForm = new FormGroup({
-    startDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    endDate: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    siteVariablesToQuery: new FormArray([])
+    start_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    end_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    timeseries: new FormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
@@ -55,12 +58,14 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   public currentlyDisplayingRequestDto: any;
   public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
+  currentlyDisplayingRequestLinkText: string;
 
   constructor(
     private cdr: ChangeDetectorRef,
     private lyraService: LyraService,
     private formBuilder: FormBuilder,
-    private authenticationService: AuthenticationService
+    private authenticationService: AuthenticationService,
+    private route: ActivatedRoute
   ) {
   }
 
@@ -81,15 +86,15 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
   public getTimeSeriesData() {
 
-    if (!this.timeSeriesForm.valid || !this.siteVariablesToQuery().valid) {
+    if (!this.timeSeriesForm.valid || !this.timeseries().valid) {
       Object.keys(this.timeSeriesForm.controls).forEach(field => {
         const control = this.timeSeriesForm.get(field);
         control.markAsTouched({ onlySelf: true });
       });
-      for (let [index, formGroup] of this.siteVariablesToQuery().controls.entries()) {
+      for (let [index, formGroup] of this.timeseries().controls.entries()) {
         if (formGroup instanceof FormGroup) {
           Object.keys(formGroup.controls).forEach(field => {
-            const control = this.siteVariablesToQuery().controls[index].get(field);
+            const control = this.timeseries().controls[index].get(field);
             control.markAsTouched({ onlySelf: true });
           })
         }
@@ -99,8 +104,8 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
     let swnTimeSeriesRequestDto =
     {
-      start_date: this.getDateFromTimeSeriesFormDateObject('startDate'),
-      end_date: this.getDateFromTimeSeriesFormDateObject('endDate'),
+      start_date: this.getDateFromTimeSeriesFormDateObject('start_date'),
+      end_date: this.getDateFromTimeSeriesFormDateObject('end_date'),
       timeseries: this.getTimeSeriesListFromTimerSeriesFormObject()
     };
     this.gettingTimeSeriesData = true;
@@ -108,7 +113,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     this.vegaSpec = null;
     this.currentlyDisplayingRequestDto = null;
     this.lyraMessages = [];
-    this.timeSeriesForm.disable({emitEvent: false});
+    this.timeSeriesForm.disable({ emitEvent: false });
     this.lyraService.getTimeSeriesAnalysisPlot(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
         if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
@@ -117,6 +122,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
         this.vegaSpec = result.data.spec;
         vegaEmbed('#vis', this.vegaSpec);
         this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
+        this.currentlyDisplayingRequestLinkText = `${window.location.origin}${window.location.pathname}?json=${JSON.stringify(this.currentlyDisplayingRequestDto)}`;
       }
       else {
         this.errorOccurred = true;
@@ -125,7 +131,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
         }
       }
       this.gettingTimeSeriesData = false;
-      this.timeSeriesForm.enable({emitEvent: false});
+      this.timeSeriesForm.enable({ emitEvent: false });
       this.cdr.detectChanges();
     },
       error => {
@@ -138,7 +144,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
         }
         this.errorOccurred = true;
         this.gettingTimeSeriesData = false;
-        this.timeSeriesForm.enable({emitEvent: false});
+        this.timeSeriesForm.enable({ emitEvent: false });
       });
   }
 
@@ -148,7 +154,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     }
 
     this.downloadingChartData = true;
-    this.timeSeriesForm.disable({emitEvent: false});
+    this.timeSeriesForm.disable({ emitEvent: false });
     this.lyraService.downloadTimeSeriesAnalysisData(this.currentlyDisplayingRequestDto).subscribe(result => {
       const blob = new Blob([result], {
         type: 'text/csv'
@@ -166,7 +172,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
       a.click();
       window.URL.revokeObjectURL(url);
       this.downloadingChartData = false;
-      this.timeSeriesForm.enable({emitEvent: false});
+      this.timeSeriesForm.enable({ emitEvent: false });
     })
   }
 
@@ -186,7 +192,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   }
 
   public clearAllVariables(): void {
-    this.siteVariablesToQuery().clear();
+    this.timeseries().clear();
     this.clearResults();
   }
 
@@ -208,20 +214,13 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     }
   }
 
-  // public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
-  //   this.scroll(el);
-  //   this.timeSeriesForm.controls.startDate.setValue(this.formatDateForNgbDatepicker(variable.startDate));
-  //   this.timeSeriesForm.controls.endDate.setValue(this.formatDateForNgbDatepicker(variable.endDate));
-  //   this.getTimeSeriesData();
-  // }
+  public scrollIntoView(el: ElementRef) {
+    el.nativeElement.scrollIntoView(true)
+  }
 
   public formatDateForNgbDatepicker(date: Date): any {
     let dateToChange = new Date(date);
     return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
-  }
-
-  public scroll(el: HTMLElement) {
-    el.scrollIntoView();
   }
 
   public closeAlert(index: number) {
@@ -241,34 +240,34 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     return this.timeSeriesForm.controls;
   }
 
-  siteVariablesToQuery(): FormArray {
-    return this.timeSeriesForm.get("siteVariablesToQuery") as FormArray
+  timeseries(): FormArray {
+    return this.timeSeriesForm.get("timeseries") as FormArray
   }
 
   newSiteVariableToQuery(variable: SiteVariable): FormGroup {
     return this.formBuilder.group({
       variable: variable,
-      timeInterval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
-      aggregationMethod: new FormControl(variable.allowedAggregations[0], [Validators.required]),
-      weatherCondition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required])
+      interval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
+      aggregation_method: new FormControl(variable.allowedAggregations[0], [Validators.required]),
+      weather_condition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required])
     })
   }
 
   addSiteVariableToQuery(variable) {
-    this.siteVariablesToQuery().push(this.newSiteVariableToQuery(variable));
+    this.timeseries().push(this.newSiteVariableToQuery(variable));
   }
 
   removeSiteVariableToQuery(i: number) {
-    this.siteVariablesToQuery().removeAt(i);
+    this.timeseries().removeAt(i);
   }
 
   getTimeSeriesListFromTimerSeriesFormObject() {
-    return this.siteVariablesToQuery().value.map(x => ({
+    return this.timeseries().value.map(x => ({
       variable: x.variable.variable,
       site: x.variable.station,
-      interval: x.timeInterval,
-      weather_condition: x.weatherCondition,
-      aggregation_method: x.aggregationMethod
+      interval: x.interval,
+      weather_condition: x.weather_condition,
+      aggregation_method: x.aggregation_method
     }))
   }
 
@@ -284,4 +283,65 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   }
 
   //#endregion
+
+  public populateFormFromURL() {
+    this.route.queryParams.subscribe(params => {
+      if (params == null || params == undefined || !params.hasOwnProperty("json")) {
+        return;
+      }
+
+      let queriedParams = JSON.parse(params["json"]);
+
+      //Don't bother if we don't have any timeseries
+      if (!queriedParams.hasOwnProperty("timeseries")) {
+        return;
+      }
+
+      if (queriedParams["start_date"] != null) {
+        let start_date = new Date(queriedParams["start_date"]);
+        this.timeSeriesForm.patchValue({ start_date: { year: start_date.getUTCFullYear(), month: start_date.getUTCMonth() + 1, day: start_date.getUTCDate() } });
+      }
+
+      if (queriedParams["end_date"] != null) {
+        let end_date = new Date(queriedParams["end_date"]);
+        this.timeSeriesForm.patchValue({ end_date: { year: end_date.getUTCFullYear(), month: end_date.getUTCMonth() + 1, day: end_date.getUTCDate() } });
+      }
+
+      let failuresToDecrementBy = 0;
+      let errorMessagesToDisplay = [];
+
+      queriedParams["timeseries"].forEach((x, index) => {
+        let message = this.stationSelect.externalAddSiteVariableReturnMessageIfFailed(x["site"], x["variable"]);
+        if (message != null && message != undefined) {
+          errorMessagesToDisplay.push(new Alert(message, AlertContext.Danger, true));
+          failuresToDecrementBy++;
+          return;
+        }
+
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", (x => this.selectedVariables[index - failuresToDecrementBy].allowedAggregations.some(y => y == x)), this.timeseries().controls[index], errorMessagesToDisplay)
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "interval", (x => HydstraInterval.all().some(y => y.value == x)), this.timeseries().controls[index], errorMessagesToDisplay)
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "weather_condition", (x => HydstraWeatherCondition.all().some(y => y.value == x)), this.timeseries().controls[index], errorMessagesToDisplay)
+      })
+
+      this.lyraMessages = errorMessagesToDisplay;
+      this.cdr.detectChanges();
+      this.scrollIntoView(this.selectedDataCardRef);
+    })
+  }
+
+  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject: any, key: string, validityFunction: any, toUpdate: any, errors: any) {
+    let value = jsonObject[key];
+    let startOfString = jsonObject.hasOwnProperty("site") ? `Station with ID:${jsonObject["site"]}` : "Request";
+    if (value == null || value == undefined) {
+      errors.push(new Alert(`${startOfString} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
+      return;
+    }
+
+    if (!validityFunction(value)) {
+      errors.push(new Alert(`${startOfString} provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
+      return;
+    }
+
+    toUpdate.patchValue({ [key]: value });
+  }
 }

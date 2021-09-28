@@ -25,23 +25,24 @@
 <div class="container">
     <div class="row mt-sm-4">
         <div class="col-sm-12">
-            <station-select-card [(selectedVariables)]="selectedVariables" [mapID]="mapID"
+            <station-select-card #stationSelect [(selectedVariables)]="selectedVariables" [mapID]="mapID"
                 [disableAddingVariables]="isActionBeingPerformed()"
                 [canAddDuplicateVariable]="true"
-                (addingVariableEvent)="addVariableToSelection($event)"></station-select-card>
+                (addingVariableEvent)="addVariableToSelection($event)"
+                (mapAndStationsLoadedEvent)="populateFormFromURL()"></station-select-card>
         </div>
     </div>
-    <div class="row mt-sm-4">
-        <div class="col-sm-12">
+    <div class="row mt-sm-4" >
+        <div class="col-sm-12" #selectedDataCardRef>
             <selected-data-card [(selectedVariables)]="selectedVariables" [disableActions]="isActionBeingPerformed()"
                 (singleVariableRemoved)="removeVariableFromSelection($event)"
-                (allVariablesCleared)="clearAllVariables()"></selected-data-card>
+                (allVariablesCleared)="clearAllVariables()" ></selected-data-card>
         </div>
     </div>
     <div class="row mt-sm-4">
         <div class="col-sm-12">
             <div class="card">
-                <div class="card-header text-center" #timeSeriesCard>
+                <div class="card-header text-center">
                     Time Series View and Download
                 </div>
                 <div class="card-body table-responsive">
@@ -65,11 +66,11 @@
                                     {{errorMessage}}
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="startDate"
+                                    <label for="start_date"
                                         class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">Start
                                         Date</label>
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="startDate" id="startDate" type="text" ngbDatepicker
+                                        <input formControlName="start_date" id="start_date" type="text" ngbDatepicker
                                             container="body" #start="ngbDatepicker" placeholder="yyyy-mm-dd"
                                             (click)="start.toggle()" class="form-control">
                                         <div class="input-group-append">
@@ -78,19 +79,19 @@
                                         </div>
                                     </div>
 
-                                    <div *ngIf="f.startDate.touched && f.startDate.invalid"
+                                    <div *ngIf="f.start_date.touched && f.start_date.invalid"
                                         class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.startDate.errors.required">Date is required.</div>
-                                        <div *ngIf="f.startDate.errors.ngbDate?.invalid">Date must be in the format
+                                        <div *ngIf="f.start_date.errors.required">Date is required.</div>
+                                        <div *ngIf="f.start_date.errors.ngbDate?.invalid">Date must be in the format
                                             'yyyy-mm-dd'</div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="endDate"
+                                    <label for="end_date"
                                         class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">End
                                         Date</label>
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="endDate" id="endDate" type="text" ngbDatepicker
+                                        <input formControlName="end_date" id="end_date" type="text" ngbDatepicker
                                             container="body" #end="ngbDatepicker" placeholder="yyyy-mm-dd"
                                             (click)="end.toggle()" class="form-control">
                                         <div class="input-group-append">
@@ -99,28 +100,28 @@
                                         </div>
                                     </div>
 
-                                    <div *ngIf="f.endDate.touched && f.endDate.invalid"
+                                    <div *ngIf="f.end_date.touched && f.end_date.invalid"
                                         class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.endDate.errors.required">Date is required.</div>
-                                        <div *ngIf="f.endDate.errors.ngbDate?.invalid">Date must be in the format
+                                        <div *ngIf="f.end_date.errors.required">Date is required.</div>
+                                        <div *ngIf="f.end_date.errors.ngbDate?.invalid">Date must be in the format
                                             'yyyy-mm-dd'</div>
                                     </div>
                                 </div>
-                                <ngContainer formArrayName="siteVariablesToQuery" class="form-group w-100 mb-1">
-                                    <ngContainer *ngFor="let control of siteVariablesToQuery().controls; let i=index"
+                                <ng-container formArrayName="timeseries" class="form-group w-100 mb-1">
+                                    <ng-container *ngFor="let control of timeseries().controls; let i=index"
                                         class="form-group w-100 mb-1" [formGroupName]="i">
                                         <div class="selected-variable mb-1">
                                             <span>{{control.value.variable.stationShortName}}</span> -
                                             <span>{{control.value.variable.name}}</span>
                                         </div>
                                         <div class="form-group w-100 mb-1">
-                                            <label for="timeInterval"
+                                            <label for="interval"
                                                 class="col-sm-6 col-form-label justify-content-start justify-content-sm-end d-flex">
                                                 <field-definition [fieldDefinitionType]="'TimeInterval'">
                                                 </field-definition>
                                             </label>
                                             <div class="col w-100">
-                                                <select formControlName="timeInterval" id="timeInterval"
+                                                <select formControlName="interval" id="interval"
                                                     class="form-control">
                                                     <option *ngFor="let interval of hydstraIntervals"
                                                         [value]="interval.value">
@@ -128,41 +129,41 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('timeInterval').touched && siteVariablesToQuery().controls[i].get('timeInterval').invalid"
+                                            <div *ngIf="timeseries().controls[i].get('interval').touched && timeseries().controls[i].get('interval').invalid"
                                                 class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                                 <div
-                                                    *ngIf="siteVariablesToQuery().controls[i].get('timeInterval').errors.required">
+                                                    *ngIf="timeseries().controls[i].get('interval').errors.required">
                                                     Time Interval is required.</div>
                                             </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">
-                                            <label for="weatherCondition"
+                                            <label for="weather_condition"
                                                 class="col-sm-6 col-form-label justify-content-start justify-content-sm-end d-flex">
                                                 <field-definition [fieldDefinitionType]="'WeatherCondition'"></field-definition>
                                             </label>
                                             <div class="col w-100">
-                                                <select formControlName="weatherCondition" id="weatherCondition" class="form-control">
-                                                    <option *ngFor="let weatherCondition of hydstraWeatherConditions"
-                                                        [value]="weatherCondition.value">
-                                                        {{weatherCondition.key}}
+                                                <select formControlName="weather_condition" id="weather_condition" class="form-control">
+                                                    <option *ngFor="let weather_condition of hydstraWeatherConditions"
+                                                        [value]="weather_condition.value">
+                                                        {{weather_condition.key}}
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('weatherCondition').touched && siteVariablesToQuery().controls[i].get('weatherCondition').invalid"
+                                            <div *ngIf="timeseries().controls[i].get('weather_condition').touched && timeseries().controls[i].get('weather_condition').invalid"
                                                 class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                                 <div
-                                                    *ngIf="siteVariablesToQuery().controls[i].get('weatherCondition').errors.required">
+                                                    *ngIf="timeseries().controls[i].get('weather_condition').errors.required">
                                                     Weather Condition is required.</div>
                                             </div>
                                         </div>
                                         <div class="form-group w-100 mb-1">
-                                            <label for="aggregationMethod"
+                                            <label for="aggregation_method"
                                                 class="col-sm-6 col-form-label justify-content-start justify-content-sm-end d-flex">
                                                 <field-definition [fieldDefinitionType]="'AggregationMethod'">
                                                 </field-definition>
                                             </label>
                                             <div class="col-sm-6 w-100">
-                                                <select formControlName="aggregationMethod" id="aggregationMethod"
+                                                <select formControlName="aggregation_method" id="aggregation_method"
                                                     class="form-control">
                                                     <option
                                                         *ngFor="let mode of getAvailableAggregationMethods(control.value.variable)"
@@ -171,15 +172,15 @@
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="siteVariablesToQuery().controls[i].get('aggregationMethod').touched && siteVariablesToQuery().controls[i].get('aggregationMethod').invalid"
+                                            <div *ngIf="timeseries().controls[i].get('aggregation_method').touched && timeseries().controls[i].get('aggregation_method').invalid"
                                                 class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
                                                 <div
-                                                    *ngIf="siteVariablesToQuery().controls[i].get('aggregationMethod').errors.required">
+                                                    *ngIf="timeseries().controls[i].get('aggregation_method').errors.required">
                                                     Aggregation Mode is required.</div>
                                             </div>
                                         </div>
-                                    </ngContainer>
-                                </ngContainer>
+                                    </ng-container>
+                                </ng-container>
                                 <div class="ml-auto">
                                     
                                     <button type="submit" class="btn btn-nebula btn-sm mt-4 float-right"
@@ -191,19 +192,22 @@
                             </form>
                         </div>
                         <div *ngIf="selectedVariables != null  && selectedVariables.length > 0" class="col-lg-6">
-                            <ngContainer *ngIf="!vegaSpec && !errorOccurred">
+                            <ng-container *ngIf="!vegaSpec && !errorOccurred">
                                 <span *ngIf="gettingTimeSeriesData">Loading chart values <span
                                         class="fa fa-spinner loading-spinner"></span></span>
                                 <span *ngIf="!isActionBeingPerformed() && !gettingAvailableVariables">Complete and
                                     submit the form to get started</span>
-                            </ngContainer>
+                            </ng-container>
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
-                            <button *ngIf="vegaSpec && currentlyDisplayingRequestDto" (click)="downloadChartData()"
-                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right "
+                            <ng-container *ngIf="vegaSpec && currentlyDisplayingRequestDto">
+                                <button  (click)="downloadChartData()"
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right"
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
                                     class="fa fa-spinner loading-spinner"></span>Download Data (.csv)</button>
+                                <link-to-analysis [linkText]="currentlyDisplayingRequestLinkText" class="float-right mr-1"></link-to-analysis>
+                            </ng-container>
                             <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>

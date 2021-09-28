@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { SiteFilterEnum } from '../../models/enums/site-filter.enum';
 import { SiteVariable } from '../../models/site-variable';
 import * as L from 'leaflet';
@@ -55,6 +55,8 @@ export class StationSelectCardComponent implements OnInit {
   public selectedStationPropertiesUpdateEvent = new EventEmitter();
   @Output()
   public displayingTributaryAreaLayerUpdateEvent = new EventEmitter<boolean>();
+  @Output()
+  public mapAndStationsLoadedEvent = new EventEmitter();
 
   public selectedSiteProperties: any;
   public selectedSiteAvailableVariables: SiteVariable[] = [];
@@ -157,15 +159,37 @@ export class StationSelectCardComponent implements OnInit {
     this.compileService.configure(this.appRef);
   }
 
+  public externalAddSiteVariableReturnMessageIfFailed(station:string, variableName:string) : string {
+    let selectedStation = this.allStations.filter(x => x.properties.station == station)[0];
+    if (selectedStation == null || selectedStation == undefined) {
+      return `Could not find station with ID:${station}`;
+    }
+
+    let stationAvailableVariables = this.getAvailableVariables(selectedStation.properties);
+    if (stationAvailableVariables == null || stationAvailableVariables == undefined || stationAvailableVariables.length == 0) {
+      return `Station with ID:${station} has no available variables`
+    }
+
+    let selectedVariable = stationAvailableVariables.filter(x => x.variable == variableName)[0];
+    if (selectedVariable == null || selectedVariable == undefined) {
+      return  `Station with ID:${station} does not have an available variable that is associated with the key:${variableName}`;
+    }
+    
+    this.addVariableToSelection(stationAvailableVariables.filter(x => x.variable == variableName)[0]);
+  }
+
   public updateSelectedStation(selectedStationProperties: any) {
-    this.getAvailableVariables(selectedStationProperties);
+    this.selectedSiteAvailableVariables = this.getAvailableVariables(selectedStationProperties);
+    this.canViewTributaryArea = selectedStationProperties.upstream;
     this.selectedSiteDescription = selectedStationProperties.stname;
     this.selectedSiteShortName = selectedStationProperties.shortname;
     this.selectedSiteStation = selectedStationProperties.station;
+    this.cdr.detectChanges();
+    this.map.invalidateSize();
   }
 
-  public getAvailableVariables(featureProperties: any) {
-    this.selectedSiteAvailableVariables = [];
+  public getAvailableVariables(featureProperties: any) : SiteVariable[] {
+    let availableVariables = [];
     let baseSiteVariable = new SiteVariable(
       {
         stationShortName: featureProperties.shortname,
@@ -177,7 +201,7 @@ export class StationSelectCardComponent implements OnInit {
       });
 
     if (featureProperties[this.lyraStationAvailableVariablesKey] == null || featureProperties[this.lyraStationAvailableVariablesKey].length == 0) {
-      return;
+      return availableVariables;
     }
 
     for (let variableName of featureProperties[this.lyraStationAvailableVariablesKey]) {
@@ -190,7 +214,7 @@ export class StationSelectCardComponent implements OnInit {
         endDate: new Date(`${variableInfo.period_end.slice(0, 4)}-${variableInfo.period_end.slice(4, 6)}-${variableInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
         allowedAggregations: variableInfo.allowed_aggregations
       }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(siteVariable);
+      availableVariables.push(siteVariable);
     }
 
     if (!featureProperties.has_rainfall && featureProperties.nearest_rainfall_station != null) {
@@ -207,10 +231,10 @@ export class StationSelectCardComponent implements OnInit {
         stationShortName: rainfallStationProperties.shortname,
         station: rainfallStationProperties.station
       });
-      this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
+      availableVariables.push(rainfallSiteVariable);
     }
 
-    this.canViewTributaryArea = featureProperties.upstream;
+    return availableVariables;
   }
 
   public siteSelectedAndVariablesFound(): boolean {
@@ -323,10 +347,16 @@ export class StationSelectCardComponent implements OnInit {
         this.setControl();
 
         this.allStations = sites.features;
+        this.allStations.forEach(x => {
+          if (x.properties.nearest_rainfall_station != null) {
+            x.properties.nearest_rainfall_station_info = this.allStations.filter(y => y.properties.station === x.properties.nearest_rainfall_station)[0].properties;
+          }
+        });
         this.setupStationFilterAndLayers();
 
         this.selectedStationFilter = this.stationFilterTypes.filter(x => x.SiteFilterEnum == this.defaultSelectedMapFilter)[0];
         this.updateMarkerDisplay();
+        this.mapAndStationsLoadedEvent.emit();
       });
   }
 
@@ -347,9 +377,6 @@ export class StationSelectCardComponent implements OnInit {
     this.markers.addLayer(this.currentlySelectedLayer);
     this.map.setView(this.currentlySelectedLayer.getBounds().getCenter());
     this.selectedStationProperties = feature.properties;
-    if (this.selectedStationProperties.nearest_rainfall_station != null) {
-      this.selectedStationProperties.nearest_rainfall_station_info = this.allStations.filter(x => x.properties.station === this.selectedStationProperties.nearest_rainfall_station)[0].properties;
-    }
     this.updateSelectedStation(this.selectedStationProperties);
   }
 
