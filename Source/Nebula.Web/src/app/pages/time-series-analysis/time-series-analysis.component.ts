@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { LyraService } from 'src/app/services/lyra.service.js';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
@@ -26,8 +26,9 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   public currentUser: UserDetailedDto;
 
   @ViewChild("mapDiv") mapElement: ElementRef;
+  @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
 
-  @ViewChild("stationSelect") stationSelect : StationSelectCardComponent;
+  @ViewChild("stationSelect") stationSelect: StationSelectCardComponent;
 
   public mapID: string = 'TimeSeriesAnalysisStationSelectMap';
 
@@ -114,7 +115,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     this.vegaSpec = null;
     this.currentlyDisplayingRequestDto = null;
     this.lyraMessages = [];
-    this.timeSeriesForm.disable({emitEvent: false});
+    this.timeSeriesForm.disable({ emitEvent: false });
     this.lyraService.getTimeSeriesAnalysisPlot(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
         if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
@@ -133,7 +134,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
         }
       }
       this.gettingTimeSeriesData = false;
-      this.timeSeriesForm.enable({emitEvent: false});
+      this.timeSeriesForm.enable({ emitEvent: false });
       this.cdr.detectChanges();
     },
       error => {
@@ -146,7 +147,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
         }
         this.errorOccurred = true;
         this.gettingTimeSeriesData = false;
-        this.timeSeriesForm.enable({emitEvent: false});
+        this.timeSeriesForm.enable({ emitEvent: false });
       });
   }
 
@@ -156,7 +157,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     }
 
     this.downloadingChartData = true;
-    this.timeSeriesForm.disable({emitEvent: false});
+    this.timeSeriesForm.disable({ emitEvent: false });
     this.lyraService.downloadTimeSeriesAnalysisData(this.currentlyDisplayingRequestDto).subscribe(result => {
       const blob = new Blob([result], {
         type: 'text/csv'
@@ -174,7 +175,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
       a.click();
       window.URL.revokeObjectURL(url);
       this.downloadingChartData = false;
-      this.timeSeriesForm.enable({emitEvent: false});
+      this.timeSeriesForm.enable({ emitEvent: false });
     })
   }
 
@@ -216,20 +217,13 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     }
   }
 
-  // public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
-  //   this.scroll(el);
-  //   this.timeSeriesForm.controls.start_date.setValue(this.formatDateForNgbDatepicker(variable.start_date));
-  //   this.timeSeriesForm.controls.end_date.setValue(this.formatDateForNgbDatepicker(variable.end_date));
-  //   this.getTimeSeriesData();
-  // }
+  public scrollIntoView(el: ElementRef) {
+    el.nativeElement.scrollIntoView(true)
+  }
 
   public formatDateForNgbDatepicker(date: Date): any {
     let dateToChange = new Date(date);
     return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
-  }
-
-  public scroll(el: HTMLElement) {
-    el.scrollIntoView();
   }
 
   public closeAlert(index: number) {
@@ -308,12 +302,12 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
       if (queriedParams["start_date"] != null) {
         let start_date = new Date(queriedParams["start_date"]);
-        this.timeSeriesForm.patchValue({start_date : { year: start_date.getUTCFullYear(), month: start_date.getUTCMonth() + 1, day: start_date.getUTCDate() }});
+        this.timeSeriesForm.patchValue({ start_date: { year: start_date.getUTCFullYear(), month: start_date.getUTCMonth() + 1, day: start_date.getUTCDate() } });
       }
 
       if (queriedParams["end_date"] != null) {
         let end_date = new Date(queriedParams["end_date"]);
-        this.timeSeriesForm.patchValue({end_date : { year: end_date.getUTCFullYear(), month: end_date.getUTCMonth() + 1, day: end_date.getUTCDate() }});
+        this.timeSeriesForm.patchValue({ end_date: { year: end_date.getUTCFullYear(), month: end_date.getUTCMonth() + 1, day: end_date.getUTCDate() } });
       }
 
       let failuresToDecrementBy = 0;
@@ -327,28 +321,30 @@ export class TimeSeriesAnalysisComponent implements OnInit {
           return;
         }
 
-        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y["aggregation_method"]), this.timeseries().controls[index], errorMessagesToDisplay)        
-        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "interval", HydstraInterval.all(), ((x, y) => x.value == y["interval"]), this.timeseries().controls[index], errorMessagesToDisplay)        
-        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "weather_condition", HydstraWeatherCondition.all(), ((x, y) => x.value == y["weather_condition"]), this.timeseries().controls[index], errorMessagesToDisplay)        
-     })
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", (x => this.selectedVariables[index - failuresToDecrementBy].allowedAggregations.some(y => y == x)), this.timeseries().controls[index], errorMessagesToDisplay)
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "interval", (x => HydstraInterval.all().some(y => y.value == x)), this.timeseries().controls[index], errorMessagesToDisplay)
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "weather_condition", (x => HydstraWeatherCondition.all().some(y => y.value == x)), this.timeseries().controls[index], errorMessagesToDisplay)
+      })
 
-      this.lyraMessages = errorMessagesToDisplay
+      this.lyraMessages = errorMessagesToDisplay;
+      this.cdr.detectChanges();
+      this.scrollIntoView(this.selectedDataCardRef);
     })
   }
 
-  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, listToCompareAgainstValue : any, comparisonFunction : any, toUpdate : any, errors : any) {
+  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject: any, key: string, validityFunction: any, toUpdate: any, errors: any) {
     let value = jsonObject[key];
     let startOfString = jsonObject.hasOwnProperty("site") ? `Station with ID:${jsonObject["site"]}` : "Request";
     if (value == null || value == undefined) {
       errors.push(new Alert(`${startOfString} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
       return;
     }
-    
-    if (!listToCompareAgainstValue.some(y => comparisonFunction(y, value))) {
+
+    if (!validityFunction(value)) {
       errors.push(new Alert(`${startOfString} provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
       return;
     }
 
-    toUpdate.patchValue({[key] : value});
+    toUpdate.patchValue({ [key]: value });
   }
 }

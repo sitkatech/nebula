@@ -26,7 +26,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   private currentUser: UserDetailedDto;
 
   @ViewChild("mapDiv") mapElement: ElementRef;
-
+  @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
   @ViewChild("stationSelect") stationSelect : StationSelectCardComponent;
 
   public mapID: string = 'PairedRegressionAnalysisStationSelectMap';
@@ -214,20 +214,13 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     }
   }
 
-  // public triggerTimeSeriesWithVariableValuesAndScrollIntoView(el: HTMLElement, variable: SiteVariable) {
-  //   this.scroll(el);
-  //   this.timeSeriesForm.controls.start_date.setValue(this.formatDateForNgbDatepicker(variable.start_date));
-  //   this.timeSeriesForm.controls.end_date.setValue(this.formatDateForNgbDatepicker(variable.end_date));
-  //   this.getTimeSeriesData();
-  // }
-
   public formatDateForNgbDatepicker(date: Date): any {
     let dateToChange = new Date(date);
     return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
   }
 
-  public scroll(el: HTMLElement) {
-    el.scrollIntoView();
+  public scrollIntoView(el: ElementRef) {
+    el.nativeElement.scrollIntoView(true);
   }
 
   public closeAlert(index: number) {
@@ -312,9 +305,9 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
       let errorMessagesToDisplay = [];
 
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "interval", HydstraInterval.all(), ((x, y) => x.value == y), this.timeSeriesForm, errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "weather_condition", HydstraWeatherCondition.all(), ((x, y) => x.value == y), this.timeSeriesForm, errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "regression_method", HydstraRegressionMethod.all(), ((x, y) => x.value == y), this.timeSeriesForm, errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "interval", (x => HydstraInterval.all().some(y => y.value == x)), this.timeSeriesForm, errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "weather_condition", (x => HydstraWeatherCondition.all().some(y => y.value == x)), this.timeSeriesForm, errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "regression_method", (x => HydstraRegressionMethod.all().some(y => y.value == x)), this.timeSeriesForm, errorMessagesToDisplay)        
 
       let failuresToDecrementBy = 0;
 
@@ -326,14 +319,16 @@ export class PairedRegressionAnalysisComponent implements OnInit {
           return;
         }
 
-        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y), this.timeseries().controls[index], errorMessagesToDisplay)        
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", (x => this.selectedVariables[index-failuresToDecrementBy].allowedAggregations.some(y => x == y)), this.timeseries().controls[index], errorMessagesToDisplay)        
      })
 
-      this.lyraMessages = errorMessagesToDisplay
+      this.lyraMessages = errorMessagesToDisplay;
+      this.cdr.detectChanges();
+      this.scrollIntoView(this.selectedDataCardRef)
     })
   }
 
-  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, listToCompareAgainstValue : any, comparisonFunction : any, toUpdate : any, errors : any) {
+  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, validityFunction : any, toUpdate : any, errors : any) {
     let value = jsonObject[key];
     let startOfString = jsonObject.hasOwnProperty("site") ? `Station with ID:${jsonObject["site"]}` : "Request";
     if (value == null || value == undefined) {
@@ -341,7 +336,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
       return;
     }
     
-    if (!listToCompareAgainstValue.some(y => comparisonFunction(y, value))) {
+    if (!validityFunction(value)) {
       errors.push(new Alert(`${startOfString} provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
       return;
     }

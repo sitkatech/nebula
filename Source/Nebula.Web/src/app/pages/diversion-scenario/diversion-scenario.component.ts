@@ -26,6 +26,7 @@ export class DiversionScenarioComponent implements OnInit {
   public currentUser: UserDetailedDto;
 
   @ViewChild("mapDiv") mapElement: ElementRef;
+  @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
   @ViewChild("stationSelect") stationSelect: StationSelectCardComponent;
 
   public mapID: string = 'DiversionScenarioStationSelectMap';
@@ -326,17 +327,13 @@ export class DiversionScenarioComponent implements OnInit {
     }
   }
 
-  public scrollIntoView(el: HTMLElement) {
-    this.scroll(el);
-  }
-
   public formatDateForNgbDatepicker(date: Date): any {
     let dateToChange = new Date(date);
     return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
   }
 
-  public scroll(el: HTMLElement) {
-    el.scrollIntoView();
+  public scrollIntoView(el: ElementRef) {
+    el.nativeElement.scrollIntoView(true);
   }
 
   public closeAlert(index: number) {
@@ -430,7 +427,9 @@ export class DiversionScenarioComponent implements OnInit {
       this.updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(queriedParams, "diversion_days_active", this.weekdayData, ((x, y) => x.some(z => z.id == y)), errorMessagesToDisplay);
       this.updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(queriedParams, "diversion_hours_active", this.hourData, ((x, y) => x.some(z => z.id == y)), errorMessagesToDisplay);
 
-      this.lyraMessages = errorMessagesToDisplay
+      this.lyraMessages = errorMessagesToDisplay;
+      this.cdr.detectChanges();
+      this.scrollIntoView(this.selectedDataCardRef);
     })
   }
 

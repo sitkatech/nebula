@@ -36,7 +36,7 @@
         </div>
     </div>
     <div class="row mt-sm-4">
-        <div class="col-sm-12">
+        <div class="col-sm-12" #selectedDataCardRef>
             <selected-data-card [(selectedVariables)]="selectedVariables" [disableActions]="isActionBeingPerformed()"
                 (singleVariableRemoved)="removeVariableFromSelection()"
                 (allVariablesCleared)="removeVariableFromSelection()"></selected-data-card>
@@ -55,14 +55,14 @@
                         </div>
                     </div>
                     <div *ngIf="selectedVariables.length > 0" class="row">
-                        <ngContainer *ngIf="lyraMessages.length > 0">
+                        <ng-container *ngIf="lyraMessages.length > 0">
                             <div class="col-12" *ngFor="let alert of lyraMessages; let i = index">
                                 <ngb-alert [type]="alert.context" [dismissible]="alert.dismissable"
                                     (close)="closeAlert(i)">
                                     <span [innerHTML]="alert.message"></span>
                                 </ngb-alert>
                             </div>
-                        </ngContainer>
+                        </ng-container>
                         <div class="col-12">
                             <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
                                 <div *ngIf="errorMessage" class="alert alert-danger">
@@ -372,15 +372,15 @@
                         </div>
                         <div *ngIf="selectedVariables != null && selectedVariables.length == 1"
                             class="col-12 text-center">
-                            <ngContainer *ngIf="!vegaSpec && !errorOccurred">
+                            <ng-container *ngIf="!vegaSpec && !errorOccurred">
                                 <span *ngIf="gettingTimeSeriesData">Loading chart values <span
                                         class="fa fa-spinner loading-spinner"></span></span>
                                 <span *ngIf="!isActionBeingPerformed() && !gettingAvailableVariables">Complete and
                                     submit the form to get started</span>
-                            </ngContainer>
+                            </ng-container>
                             <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
                                 try again.</span>
-                            <ngContainer *ngIf="vegaSpec && currentlyDisplayingRequestDto">
+                            <ng-container *ngIf="vegaSpec && currentlyDisplayingRequestDto">
                                 <div class="row">
                                     <div class="col-12 mt-1">
                                         <link-to-analysis [linkText]="currentlyDisplayingRequestLinkText"
@@ -395,7 +395,7 @@
                                             (.csv)</button>
                                     </div>
                                 </div>
-                            </ngContainer>
+                            </ng-container>
                             <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>
