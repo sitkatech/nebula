@@ -451,7 +451,6 @@ export class DiversionScenarioComponent implements OnInit {
   }
 
   public updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(jsonObject : any, key : string, listToCompare: any, comparisonFunction: any, errors : any) {
-    debugger;
     let value = jsonObject[key];
     let startOfString = jsonObject.hasOwnProperty("site") ? `Station with ID:${jsonObject["site"]}` : "Request";
     if (value == null || value == undefined) {
