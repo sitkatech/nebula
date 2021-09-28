@@ -25,7 +25,6 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   private watchUserChangeSubscription: any;
   private currentUser: UserDetailedDto;
 
-  @ViewChild("mapDiv") mapElement: ElementRef;
   @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
   @ViewChild("stationSelect") stationSelect : StationSelectCardComponent;
 

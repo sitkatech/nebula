@@ -25,7 +25,6 @@ export class DiversionScenarioComponent implements OnInit {
   public watchUserChangeSubscription: any;
   public currentUser: UserDetailedDto;
 
-  @ViewChild("mapDiv") mapElement: ElementRef;
   @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
   @ViewChild("stationSelect") stationSelect: StationSelectCardComponent;
 

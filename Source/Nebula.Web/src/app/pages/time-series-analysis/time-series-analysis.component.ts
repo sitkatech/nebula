@@ -10,7 +10,7 @@ import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval"
 import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { UserDetailedDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
 
 declare var $: any;
@@ -25,9 +25,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   public watchUserChangeSubscription: any;
   public currentUser: UserDetailedDto;
 
-  @ViewChild("mapDiv") mapElement: ElementRef;
   @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
-
   @ViewChild("stationSelect") stationSelect: StationSelectCardComponent;
 
   public mapID: string = 'TimeSeriesAnalysisStationSelectMap';
@@ -125,7 +123,6 @@ export class TimeSeriesAnalysisComponent implements OnInit {
         vegaEmbed('#vis', this.vegaSpec);
         this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
         this.currentlyDisplayingRequestLinkText = `${window.location.origin}${window.location.pathname}?json=${JSON.stringify(this.currentlyDisplayingRequestDto)}`;
-        console.log(window);
       }
       else {
         this.errorOccurred = true;
