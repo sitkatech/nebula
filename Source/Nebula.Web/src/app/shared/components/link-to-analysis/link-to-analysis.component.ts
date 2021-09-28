@@ -33,7 +33,6 @@ export class LinkToAnalysisComponent implements OnInit {
   }
 
   selectPopoverText() {
-    debugger;
     if (!this.popover.isOpen()) {
       return;
     }

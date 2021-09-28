@@ -82,7 +82,6 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         this.authenticationService.logout();
 
         setTimeout(() => {
-            this.cookieStorageService.removeAll();
             this.cdr.detectChanges();
         });
     }
