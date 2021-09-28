@@ -327,26 +327,28 @@ export class TimeSeriesAnalysisComponent implements OnInit {
           return;
         }
 
-        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", "aggregation_method", index-failuresToDecrementBy, this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y["aggregation_method"]), errorMessagesToDisplay)        
-        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "interval", "interval", index-failuresToDecrementBy, HydstraInterval.all(), ((x, y) => x.value == y["interval"]), errorMessagesToDisplay)        
-        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "weather_condition", "weather_condition", index-failuresToDecrementBy, HydstraWeatherCondition.all(), ((x, y) => x.value == y["weather_condition"]), errorMessagesToDisplay)        
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y["aggregation_method"]), this.timeseries().controls[index], errorMessagesToDisplay)        
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "interval", HydstraInterval.all(), ((x, y) => x.value == y["interval"]), this.timeseries().controls[index], errorMessagesToDisplay)        
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "weather_condition", HydstraWeatherCondition.all(), ((x, y) => x.value == y["weather_condition"]), this.timeseries().controls[index], errorMessagesToDisplay)        
      })
 
       this.lyraMessages = errorMessagesToDisplay
     })
   }
 
-  public updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, formKey : string, index : number, basisOfLambda : any, lambda : any, errors : any) {
-    if (jsonObject[key] == null || jsonObject[key] == undefined) {
-      errors.push(new Alert(`Station with ID:${jsonObject["site"]} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
+  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, listToCompareAgainstValue : any, comparisonFunction : any, toUpdate : any, errors : any) {
+    let value = jsonObject[key];
+    let startOfString = jsonObject.hasOwnProperty("site") ? `Station with ID:${jsonObject["site"]}` : "Request";
+    if (value == null || value == undefined) {
+      errors.push(new Alert(`${startOfString} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
       return;
     }
     
-    if (!basisOfLambda.some(y => lambda(y, jsonObject))) {
-      errors.push(new Alert(`Station with ID:${jsonObject["site"]} provided an invalid value for key:${key}. Will use default. Invalid value was:${jsonObject[key]}`, AlertContext.Warning, true));
+    if (!listToCompareAgainstValue.some(y => comparisonFunction(y, value))) {
+      errors.push(new Alert(`${startOfString} provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
       return;
     }
 
-    this.timeseries().controls[index].patchValue({[formKey] : jsonObject[key]});
+    toUpdate.patchValue({[key] : value});
   }
 }

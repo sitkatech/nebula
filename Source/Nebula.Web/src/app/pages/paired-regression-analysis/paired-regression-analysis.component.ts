@@ -312,9 +312,9 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
       let errorMessagesToDisplay = [];
 
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "interval", HydstraInterval.all(), ((x, y) => x.value == y), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "weather_condition", HydstraWeatherCondition.all(), ((x, y) => x.value == y), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "regression_method", HydstraRegressionMethod.all(), ((x, y) => x.value == y), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "interval", HydstraInterval.all(), ((x, y) => x.value == y), this.timeSeriesForm, errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "weather_condition", HydstraWeatherCondition.all(), ((x, y) => x.value == y), this.timeSeriesForm, errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "regression_method", HydstraRegressionMethod.all(), ((x, y) => x.value == y), this.timeSeriesForm, errorMessagesToDisplay)        
 
       let failuresToDecrementBy = 0;
 
@@ -326,41 +326,27 @@ export class PairedRegressionAnalysisComponent implements OnInit {
           return;
         }
 
-        this.updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", index-failuresToDecrementBy, this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y), errorMessagesToDisplay)        
+        this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(x, "aggregation_method", this.selectedVariables[index-failuresToDecrementBy].allowedAggregations, ((x, y) => x == y), this.timeseries().controls[index], errorMessagesToDisplay)        
      })
 
       this.lyraMessages = errorMessagesToDisplay
     })
   }
 
-  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, basisOfLambda : any, lambda : any, errors : any) {
+  public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, listToCompareAgainstValue : any, comparisonFunction : any, toUpdate : any, errors : any) {
     let value = jsonObject[key];
+    let startOfString = jsonObject.hasOwnProperty("site") ? `Station with ID:${jsonObject["site"]}` : "Request";
     if (value == null || value == undefined) {
-      errors.push(new Alert(`Request did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
+      errors.push(new Alert(`${startOfString} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
       return;
     }
     
-    if (!basisOfLambda.some(y => lambda(y, value))) {
-      errors.push(new Alert(`Request provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
+    if (!listToCompareAgainstValue.some(y => comparisonFunction(y, value))) {
+      errors.push(new Alert(`${startOfString} provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
       return;
     }
 
-    this.timeSeriesForm.patchValue({[key] : value});
-  }
-
-  public updateVariableControlWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, index : number, basisOfLambda : any, lambda : any, errors : any) {
-    let value = jsonObject[key];
-    if (value == null || value == undefined) {
-      errors.push(new Alert(`Station with ID:${jsonObject["site"]} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
-      return;
-    }
-    
-    if (!basisOfLambda.some(y => lambda(y, value))) {
-      errors.push(new Alert(`Station with ID:${jsonObject["site"]} provided an invalid value for key:${key}. Will use default. Invalid value was:${value}`, AlertContext.Warning, true));
-      return;
-    }
-
-    this.timeseries().controls[index].patchValue({[key] : value});
+    toUpdate.patchValue({[key] : value});
   }
 
 }
