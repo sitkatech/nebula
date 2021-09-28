@@ -184,6 +184,8 @@ export class StationSelectCardComponent implements OnInit {
     this.selectedSiteDescription = selectedStationProperties.stname;
     this.selectedSiteShortName = selectedStationProperties.shortname;
     this.selectedSiteStation = selectedStationProperties.station;
+    this.cdr.detectChanges();
+    this.map.invalidateSize();
   }
 
   public getAvailableVariables(featureProperties: any) : SiteVariable[] {
