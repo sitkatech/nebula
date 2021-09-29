@@ -375,7 +375,6 @@ export class StationSelectCardComponent implements OnInit {
     });
 
     this.markers.addLayer(this.currentlySelectedLayer);
-    this.map.setView(this.currentlySelectedLayer.getBounds().getCenter());
     this.selectedStationProperties = feature.properties;
     this.updateSelectedStation(this.selectedStationProperties);
   }
@@ -589,6 +588,7 @@ export class StationSelectCardComponent implements OnInit {
     this.searchText = event.StationPropertyValue;
     let selectedFeature = this.availableSitesToSearchFrom.find(x => x.properties.station === event.StationID);
     this.selectFeature(selectedFeature);
+    this.map.setView(this.currentlySelectedLayer.getBounds().getCenter());
   }
 
   public search(event) {
