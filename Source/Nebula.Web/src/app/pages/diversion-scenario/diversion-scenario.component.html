@@ -396,6 +396,23 @@
                                     </div>
                                 </div>
                             </ng-container>
+                            <div class="table-responsive text-left" *ngIf="summaryTableColumns.length > 0 && summaryTableRows.length > 0">
+                                <h4 class="text-center">Scenario Summary Table</h4>
+                                <table class="table table-bordered table-sm">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th *ngFor="let column of summaryTableColumns">{{column | titlecase}}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let row of summaryTableRows">
+                                            <td *ngFor="let column of summaryTableColumns;">
+                                                {{getSummaryRowDataForColumn(row, column)}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                             <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>
                         </div>

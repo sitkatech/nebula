@@ -127,6 +127,8 @@ export class DiversionScenarioComponent implements OnInit {
   public timeSeriesFormDefault = this.timeSeriesForm.value;
   currentlyDisplayingRequestLinkText: string;
   mapReady: boolean;
+  summaryTableColumns: string[] = [];
+  summaryTableRows: any[] = [];
 
 
   constructor(
@@ -212,6 +214,11 @@ export class DiversionScenarioComponent implements OnInit {
         vegaEmbed('#vis', this.vegaSpec);
         this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
         this.currentlyDisplayingRequestLinkText = `${window.location.origin}${window.location.pathname}?json=${JSON.stringify(this.currentlyDisplayingRequestDto)}`;
+        if (result.data.hasOwnProperty("table")) {
+          let tableSpec = result.data.table;
+          this.summaryTableColumns = Object.keys(tableSpec.records[0]);
+          this.summaryTableRows = tableSpec.records;
+        }
       }
       else {
         this.errorOccurred = true;
@@ -245,7 +252,23 @@ export class DiversionScenarioComponent implements OnInit {
     this.downloadingChartData = true;
     this.timeSeriesForm.disable({emitEvent: false});
     this.lyraService.downloadDiversionScenarioData(this.currentlyDisplayingRequestDto).subscribe(result => {
-      const blob = new Blob([result], {
+      let toAppendToResults = ""
+      if (this.summaryTableColumns.length > 0 && this.summaryTableRows.length > 0) {
+        toAppendToResults = "Summary Table,\n";
+        toAppendToResults += this.summaryTableColumns.join(",") + "\n";
+        this.summaryTableRows.forEach(x => {
+            this.summaryTableColumns.forEach(y => {
+              let toAppend = x[y];
+              if (toAppend.includes(",")) {
+                toAppend = "\"" + toAppend + "\"";
+              }
+              toAppendToResults += toAppend + ",";
+            })
+            toAppendToResults += "\n";
+        });
+        toAppendToResults += "\nChart Data,\n";
+      }
+      const blob = new Blob([toAppendToResults, result], {
         type: 'text/csv'
       });
 
@@ -263,35 +286,6 @@ export class DiversionScenarioComponent implements OnInit {
       this.downloadingChartData = false;
       this.timeSeriesForm.enable({emitEvent: false});
     })
-  }
-
-  public updateSelectedStation(selectedStationProperties: any) {
-    this.selectedSiteName = selectedStationProperties.stname;
-    this.getDischargeVariableIfPresent(selectedStationProperties);
-    this.selectedSiteStation = selectedStationProperties.station;
-  }
-
-  public getDischargeVariableIfPresent(featureProperties: any) {
-    this.selectedSiteAvailableVariables = [];
-    let baseSiteVariable = new SiteVariable(
-      { 
-        stationShortName: featureProperties.shortname, 
-        station: featureProperties.station, 
-        nearestRainfallStationInfo: {
-          stationLongName: featureProperties.nearest_rainfall_station_info.stname,
-          station: featureProperties.nearest_rainfall_station_info.station
-        }});
-
-    if (featureProperties.has_discharge) {
-      let dischargeInfo = featureProperties.discharge_info;
-      let dischargeSiteVariable = Object.assign(new SiteVariable({
-        name: dischargeInfo.name,
-        variable: dischargeInfo.variable,
-        start_date: new Date(`${dischargeInfo.period_start.slice(0, 4)}-${dischargeInfo.period_start.slice(4, 6)}-${dischargeInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
-        end_date: new Date(`${dischargeInfo.period_end.slice(0, 4)}-${dischargeInfo.period_end.slice(4, 6)}-${dischargeInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
-      }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(dischargeSiteVariable);
-    }
   }
 
   public siteSelectedAndVariablesFound(): boolean {
@@ -317,6 +311,8 @@ export class DiversionScenarioComponent implements OnInit {
       event.preventDefault();
     }
   }
+
+//#region Supporting functions
 
   public catchPastedSymbols(event: any): void {
     let val = event.clipboardData.getData('text/plain');
@@ -346,7 +342,9 @@ export class DiversionScenarioComponent implements OnInit {
     this.errorOccurred = false;
   }
 
-  //#region Form Functionality
+//#endregion
+
+//#region Form Functionality
 
   get f() {
     return this.timeSeriesForm.controls;
@@ -364,6 +362,8 @@ export class DiversionScenarioComponent implements OnInit {
   }
 
   //#endregion
+
+//#region PopulateFromURL functionality
 
   public setMapReadyToTrueAndCheckIfWeCanPopulateFormFromURL() {
     this.mapReady = true;
@@ -467,5 +467,15 @@ export class DiversionScenarioComponent implements OnInit {
     }
 
     this.timeSeriesForm.patchValue({[key] : presentValues});
+  }
+
+  //#endregion
+
+  public getSummaryRowDataForColumn(row:any, column:string ): string {
+    if (!row.hasOwnProperty(column)) {
+      return "";
+    }
+
+    return row[column];
   }
 }
