@@ -21,7 +21,7 @@ namespace Nebula.API.Controllers
         }
 
         [HttpGet("/watersheds")]
-        [AdminFeature]
+        [DataExplorerFeature]
         public ActionResult<List<WatershedDto>> ListAllWatersheds()
         {
             var watershedDtos = Watershed.List(_dbContext).OrderBy(x => x.WatershedName).ToList();
@@ -29,7 +29,7 @@ namespace Nebula.API.Controllers
         }
 
         [HttpGet("/watersheds/{watershedID}")]
-        [AdminFeature]
+        [DataExplorerFeature]
         public ActionResult<WatershedDto> GetWatershedByID([FromRoute] int watershedID)
         {
             var watershedDto = Watershed.GetByWatershedID(_dbContext, watershedID);
@@ -37,7 +37,7 @@ namespace Nebula.API.Controllers
         }
 
         [HttpPost("watersheds/getBoundingBox")]
-        [AdminFeature]
+        [DataExplorerFeature]
         public ActionResult<BoundingBoxDto> GetBoundingBoxByWatershedIDs([FromBody] WatershedIDListDto watershedIDListDto)
         {
             if (!ModelState.IsValid)

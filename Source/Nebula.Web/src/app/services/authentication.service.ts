@@ -164,4 +164,17 @@ export class AuthenticationService {
   public hasCurrentUserAcknowledgedDisclaimer(): boolean {
     return this.currentUser != null && this.currentUser.DisclaimerAcknowledgedDate != null;
   }
+
+  public isUserInRole(user: UserDetailedDto, roles: RoleEnum[]): boolean {
+    const role = user && user.Role ? user.Role.RoleID : null;
+    if (role == null) {
+      return false;
+    }
+
+    return roles.includes(role);
+  }
+
+  public isCurrentUserInRole(roles: RoleEnum[]): boolean {
+    return this.isUserInRole(this.currentUser, roles);
+  }
 }

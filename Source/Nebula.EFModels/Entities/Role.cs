@@ -29,7 +29,7 @@ namespace Nebula.EFModels.Entities
     public enum RoleEnum
     {
         Admin = 1,
-        LandOwner = 2,
+        DataExplorer = 2,
         Unassigned = 3,
         Disabled = 4
     }
