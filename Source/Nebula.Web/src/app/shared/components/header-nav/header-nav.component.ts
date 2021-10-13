@@ -7,6 +7,7 @@ import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
 import { environment } from 'src/environments/environment';
 import { AlertContext } from '../../models/enums/alert-context.enum';
+import { RoleEnum } from '../../models/enums/role.enum';
 
 @Component({
     selector: 'header-nav',
@@ -55,6 +56,10 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
 
     public isAuthenticated(): boolean {
         return this.authenticationService.isAuthenticated();
+    }
+
+    public canSeeViewMenu(): boolean {
+        return this.authenticationService.isUserInRole(this.currentUser, [RoleEnum.Admin, RoleEnum.DataExplorer]);
     }
 
     public isAdministrator(): boolean {
