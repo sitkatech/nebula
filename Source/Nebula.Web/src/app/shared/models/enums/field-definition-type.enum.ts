@@ -15,5 +15,9 @@ export enum FieldDefinitionTypeEnum {
     NearestRainfallStation = 14,
     StationID = 15,
     StationShortName = 16,
-    StationDescription = 17
+    StationDescription = 17,
+    RainfallEventShutdown = 18,
+    RainfallEventDepthThreshold = 19,
+    EventSeperationTime = 20,
+    AfterRainDelay = 21
 }

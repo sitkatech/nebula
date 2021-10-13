@@ -24,7 +24,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select-custom.component';
 import { SelectedDataCardComponent } from './components/selected-data-card/selected-data-card.component';
 import { StationSelectCardComponent } from './components/station-select-card/station-select-card.component';
-import { AutoCompleteModule } from "primeng/autocomplete"
+import { AutoCompleteModule } from "primeng/autocomplete";
+import { LinkToAnalysisComponent } from './components/link-to-analysis/link-to-analysis.component'
 
 @NgModule({
     declarations: [
@@ -43,7 +44,8 @@ import { AutoCompleteModule } from "primeng/autocomplete"
         FieldDefinitionGridHeaderComponent,
         NgSelectCustomComponent,
         SelectedDataCardComponent,
-        StationSelectCardComponent
+        StationSelectCardComponent,
+        LinkToAnalysisComponent
     ],
     imports: [
         CommonModule,
@@ -70,7 +72,8 @@ import { AutoCompleteModule } from "primeng/autocomplete"
         FieldDefinitionGridHeaderComponent,
         NgSelectCustomComponent,
         SelectedDataCardComponent,
-        StationSelectCardComponent
+        StationSelectCardComponent,
+        LinkToAnalysisComponent
     ],
     entryComponents:[
         WatershedDetailPopupComponent,

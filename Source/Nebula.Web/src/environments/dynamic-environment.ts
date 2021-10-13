@@ -76,4 +76,8 @@ export class DynamicEnvironment {
     public get appInsightsInstrumentationKey() {
         return window.config.appInsightsInstrumentationKey;
     }
+
+    public get lyraBaseURL() {
+        return window.config.lyraBaseURL;
+    }
 }

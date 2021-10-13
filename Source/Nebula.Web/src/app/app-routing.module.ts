@@ -35,16 +35,16 @@ const routes: Routes = [
   { path: "time-series-analysis", component: TimeSeriesAnalysisComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard]},
   { path: "paired-regression-analysis", component: PairedRegressionAnalysisComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard]},
   { path: "diversion-scenario", component: DiversionScenarioComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard]},
-  { path: "", component: HomeIndexComponent},
   { path: "disclaimer", component: DisclaimerComponent },
   { path: "disclaimer/:forced", component: DisclaimerComponent },
   { path: "help", component: HelpComponent },
   { path: "platform-overview", component: AboutComponent},
-  { path: "signin-oidc", component: LoginCallbackComponent },
   { path: "create-user-callback", component: CreateUserCallbackComponent },
   { path: "not-found", component: NotFoundComponent },
   { path: 'subscription-insufficient', component: SubscriptionInsufficientComponent },
   { path: 'unauthenticated', component: UnauthenticatedComponent },
+  { path: "signin-oidc", component: LoginCallbackComponent },
+  { path: "", component: HomeIndexComponent},
   { path: '**', component: NotFoundComponent }
 ];
 

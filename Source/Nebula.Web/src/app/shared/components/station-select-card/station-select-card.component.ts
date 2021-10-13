@@ -1,4 +1,4 @@
-import { ApplicationRef, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { ApplicationRef, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { SiteFilterEnum } from '../../models/enums/site-filter.enum';
 import { SiteVariable } from '../../models/site-variable';
 import * as L from 'leaflet';
@@ -55,6 +55,8 @@ export class StationSelectCardComponent implements OnInit {
   public selectedStationPropertiesUpdateEvent = new EventEmitter();
   @Output()
   public displayingTributaryAreaLayerUpdateEvent = new EventEmitter<boolean>();
+  @Output()
+  public mapAndStationsLoadedEvent = new EventEmitter();
 
   public selectedSiteProperties: any;
   public selectedSiteAvailableVariables: SiteVariable[] = [];
@@ -157,35 +159,62 @@ export class StationSelectCardComponent implements OnInit {
     this.compileService.configure(this.appRef);
   }
 
+  public externalAddSiteVariableReturnMessageIfFailed(station:string, variableName:string) : string {
+    let selectedStation = this.allStations.filter(x => x.properties.station == station)[0];
+    if (selectedStation == null || selectedStation == undefined) {
+      return `Could not find station with ID:${station}`;
+    }
+
+    let stationAvailableVariables = this.getAvailableVariables(selectedStation.properties);
+    if (stationAvailableVariables == null || stationAvailableVariables == undefined || stationAvailableVariables.length == 0) {
+      return `Station with ID:${station} has no available variables`
+    }
+
+    let selectedVariable = stationAvailableVariables.filter(x => x.variable == variableName)[0];
+    if (selectedVariable == null || selectedVariable == undefined) {
+      return  `Station with ID:${station} does not have an available variable that is associated with the key:${variableName}`;
+    }
+    
+    this.addVariableToSelection(stationAvailableVariables.filter(x => x.variable == variableName)[0]);
+  }
+
   public updateSelectedStation(selectedStationProperties: any) {
-    this.getAvailableVariables(selectedStationProperties);
+    this.selectedSiteAvailableVariables = this.getAvailableVariables(selectedStationProperties);
+    this.canViewTributaryArea = selectedStationProperties.upstream;
     this.selectedSiteDescription = selectedStationProperties.stname;
     this.selectedSiteShortName = selectedStationProperties.shortname;
     this.selectedSiteStation = selectedStationProperties.station;
+    this.cdr.detectChanges();
+    this.map.invalidateSize();
   }
 
-  public getAvailableVariables(featureProperties: any) {
-    this.selectedSiteAvailableVariables = [];
+  public getAvailableVariables(featureProperties: any) : SiteVariable[] {
+    let availableVariables = [];
     let baseSiteVariable = new SiteVariable(
       {
         stationShortName: featureProperties.shortname,
-        station: featureProperties.station
+        station: featureProperties.station,
+        nearestRainfallStationInfo: {
+          stationLongName: featureProperties.nearest_rainfall_station_info.stname,
+          station: featureProperties.nearest_rainfall_station_info.station
+        }
       });
 
     if (featureProperties[this.lyraStationAvailableVariablesKey] == null || featureProperties[this.lyraStationAvailableVariablesKey].length == 0) {
-      return;
+      return availableVariables;
     }
 
     for (let variableName of featureProperties[this.lyraStationAvailableVariablesKey]) {
       let variableInfo = featureProperties[variableName];
       let siteVariable = Object.assign(new SiteVariable({
         name: variableInfo.name,
+        description: variableInfo.description,
         variable: variableInfo.variable,
         startDate: new Date(`${variableInfo.period_start.slice(0, 4)}-${variableInfo.period_start.slice(4, 6)}-${variableInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
         endDate: new Date(`${variableInfo.period_end.slice(0, 4)}-${variableInfo.period_end.slice(4, 6)}-${variableInfo.period_end.slice(6, 8)}`).toLocaleDateString(),
         allowedAggregations: variableInfo.allowed_aggregations
       }), baseSiteVariable);
-      this.selectedSiteAvailableVariables.push(siteVariable);
+      availableVariables.push(siteVariable);
     }
 
     if (!featureProperties.has_rainfall && featureProperties.nearest_rainfall_station != null) {
@@ -193,6 +222,7 @@ export class StationSelectCardComponent implements OnInit {
       let rainfallInfo = rainfallStationProperties.rainfall_info;
       let rainfallSiteVariable = new SiteVariable({
         name: rainfallInfo.name,
+        description: rainfallInfo.description,
         variable: rainfallInfo.variable,
         gage: rainfallStationProperties.stname,
         startDate: new Date(`${rainfallInfo.period_start.slice(0, 4)}-${rainfallInfo.period_start.slice(4, 6)}-${rainfallInfo.period_start.slice(6, 8)}`).toLocaleDateString(),
@@ -201,10 +231,10 @@ export class StationSelectCardComponent implements OnInit {
         stationShortName: rainfallStationProperties.shortname,
         station: rainfallStationProperties.station
       });
-      this.selectedSiteAvailableVariables.push(rainfallSiteVariable);
+      availableVariables.push(rainfallSiteVariable);
     }
 
-    this.canViewTributaryArea = featureProperties.upstream;
+    return availableVariables;
   }
 
   public siteSelectedAndVariablesFound(): boolean {
@@ -317,10 +347,16 @@ export class StationSelectCardComponent implements OnInit {
         this.setControl();
 
         this.allStations = sites.features;
+        this.allStations.forEach(x => {
+          if (x.properties.nearest_rainfall_station != null) {
+            x.properties.nearest_rainfall_station_info = this.allStations.filter(y => y.properties.station === x.properties.nearest_rainfall_station)[0].properties;
+          }
+        });
         this.setupStationFilterAndLayers();
 
         this.selectedStationFilter = this.stationFilterTypes.filter(x => x.SiteFilterEnum == this.defaultSelectedMapFilter)[0];
         this.updateMarkerDisplay();
+        this.mapAndStationsLoadedEvent.emit();
       });
   }
 
@@ -339,11 +375,7 @@ export class StationSelectCardComponent implements OnInit {
     });
 
     this.markers.addLayer(this.currentlySelectedLayer);
-    this.map.setView(this.currentlySelectedLayer.getBounds().getCenter());
     this.selectedStationProperties = feature.properties;
-    if (this.selectedStationProperties.nearest_rainfall_station != null) {
-      this.selectedStationProperties.nearest_rainfall_station_info = this.allStations.filter(x => x.properties.station === this.selectedStationProperties.nearest_rainfall_station)[0].properties;
-    }
     this.updateSelectedStation(this.selectedStationProperties);
   }
 
@@ -556,6 +588,7 @@ export class StationSelectCardComponent implements OnInit {
     this.searchText = event.StationPropertyValue;
     let selectedFeature = this.availableSitesToSearchFrom.find(x => x.properties.station === event.StationID);
     this.selectFeature(selectedFeature);
+    this.map.setView(this.currentlySelectedLayer.getBounds().getCenter());
   }
 
   public search(event) {
@@ -568,8 +601,10 @@ export class StationSelectCardComponent implements OnInit {
       return;
     }
 
+    searchText = searchText.toLowerCase();
+
     this.availableSitesToSearchFrom.forEach(x => {
-      if (x.properties.station != null && x.properties.station != undefined && x.properties.station.includes(searchText)) {
+      if (x.properties.station != null && x.properties.station != undefined && x.properties.station.toLowerCase().includes(searchText)) {
         let obj = {
           StationProperty: 'StationID',
           StationPropertyValue: x.properties.station,
@@ -578,7 +613,7 @@ export class StationSelectCardComponent implements OnInit {
         this.searchSuggestions.push(obj);
       }
 
-      if (x.properties.shortname != null && x.properties.shortname != undefined && x.properties.shortname.includes(searchText)) {
+      if (x.properties.shortname != null && x.properties.shortname != undefined && x.properties.shortname.toLowerCase().includes(searchText)) {
         let obj = {
           StationProperty: 'Short Name',
           StationPropertyValue: x.properties.shortname,
@@ -587,7 +622,7 @@ export class StationSelectCardComponent implements OnInit {
         this.searchSuggestions.push(obj);
       }
 
-      if (x.properties.stname != null && x.properties.stname != undefined && x.properties.stname.includes(searchText)) {
+      if (x.properties.stname != null && x.properties.stname != undefined && x.properties.stname.toLowerCase().includes(searchText)) {
         let obj = {
           StationProperty: 'Description',
           StationPropertyValue: x.properties.stname,

@@ -34,33 +34,7 @@ export class AuthenticationService {
       .pipe(filter(e => e instanceof NavigationEnd))
       .subscribe((e: NavigationEnd) => {
         if (this.isAuthenticated()) {
-          var claims = this.oauthService.getIdentityClaims();
-          var globalID = claims["sub"];
-
-          this.getUserObservable = this.userService.getUserFromGlobalID(globalID).subscribe(result => {
-            this.getUserCallback(result);
-          }, error => {
-            if (error.status !== 404) {
-              this.alertService.pushAlert(new Alert("There was an error logging into the application.", AlertContext.Danger));
-              this.router.navigate(['/']);
-            } else {
-              this.alertService.clearAlerts();
-              const newUser = new UserCreateDto({
-                FirstName: claims["given_name"],
-                LastName: claims["family_name"],
-                Email: claims["email"],
-                RoleID: RoleEnum.Unassigned,
-                LoginName: claims["login_name"],
-                UserGuid: claims["sub"],
-              });
-
-              this.userService.createNewUser(newUser).subscribe(user => {
-                this.getUserCallback(user);
-              })
-
-            }
-          });
-
+          this.getGlobalIDFromClaimsAndAttemptToSetUserObservableAndCreateUserIfNecessary();
         } else {
           this.currentUser = null;
           this._currentUserSetSubject.next(null);
@@ -77,14 +51,38 @@ export class AuthenticationService {
 
   public checkAuthentication() {
     if (this.isAuthenticated() && !this.currentUser) {
-      var claims = this.oauthService.getIdentityClaims();
-      var globalID = claims["sub"];
       console.log("Authenticated but no user found...");
-      this.getUserObservable = this.userService.getUserFromGlobalID(globalID).subscribe(user => {
-        this.currentUser = user;
-        this._currentUserSetSubject.next(this.currentUser);
-      });
+      this.getGlobalIDFromClaimsAndAttemptToSetUserObservableAndCreateUserIfNecessary();
     }
+  }
+
+  public getGlobalIDFromClaimsAndAttemptToSetUserObservableAndCreateUserIfNecessary() {
+    var claims = this.oauthService.getIdentityClaims();
+    var globalID = claims["sub"];
+
+    this.getUserObservable = this.userService.getUserFromGlobalID(globalID).subscribe(result => {
+      this.getUserCallback(result);
+    }, error => {
+      if (error.status !== 404) {
+        this.alertService.pushAlert(new Alert("There was an error logging into the application.", AlertContext.Danger));
+        this.router.navigate(['/']);
+      } else {
+        this.alertService.clearAlerts();
+        const newUser = new UserCreateDto({
+          FirstName: claims["given_name"],
+          LastName: claims["family_name"],
+          Email: claims["email"],
+          RoleID: RoleEnum.Unassigned,
+          LoginName: claims["login_name"],
+          UserGuid: claims["sub"],
+        });
+
+        this.userService.createNewUser(newUser).subscribe(user => {
+          this.getUserCallback(user);
+        })
+
+      }
+    });
   }
 
   private getUserCallback(user: UserDetailedDto) {
@@ -105,7 +103,7 @@ export class AuthenticationService {
   }
 
   public handleUnauthorized(): void {
-    this.logout();
+    this.forcedLogout();
   }
 
   public login() {
@@ -119,6 +117,11 @@ export class AuthenticationService {
 
   public getClientIDAndRedirectUrlForKeystone() {
     return `ClientID=${environment.keystoneAuthConfiguration.clientId}&RedirectUrl=${encodeURIComponent(environment.createAccountRedirectUrl)}`;
+  }
+
+  public forcedLogout() {
+    sessionStorage["authRedirectUrl"] = window.location.href;
+    this.logout();
   }
 
   public logout() {
