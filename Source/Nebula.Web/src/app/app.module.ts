@@ -17,7 +17,6 @@ import { UserDetailComponent } from './pages/user-detail/user-detail.component';
 import { UserEditComponent } from './pages/user-edit/user-edit.component';
 import { WatershedDetailComponent } from './pages/watershed-detail/watershed-detail.component';
 import { AgGridModule } from 'ag-grid-angular';
-import { WatershedListComponent } from './pages/watershed-list/watershed-list.component';
 import { DecimalPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer/link-renderer.component';
 
@@ -64,7 +63,6 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     UserDetailComponent,
     UserEditComponent,
     WatershedDetailComponent,
-    WatershedListComponent,
     ComboSeriesVerticalComponent,
     LoginCallbackComponent,
     HelpComponent,
