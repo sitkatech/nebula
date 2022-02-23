@@ -8,6 +8,7 @@ import { Alert } from '../../models/alert';
 import { environment } from 'src/environments/environment';
 import { AlertContext } from '../../models/enums/alert-context.enum';
 import { RoleEnum } from '../../models/enums/role.enum';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'header-nav',
@@ -31,7 +32,8 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         private cookieStorageService: CookieStorageService,
         private userService: UserService,
         private alertService: AlertService,
-        private cdr: ChangeDetectorRef) {
+        private cdr: ChangeDetectorRef,
+        private router: Router) {
     }
 
     ngOnInit() {
@@ -58,8 +60,12 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         return this.authenticationService.isAuthenticated();
     }
 
-    public canSeeViewMenu(): boolean {
-        return this.authenticationService.isUserInRole(this.currentUser, [RoleEnum.Admin, RoleEnum.DataExplorer]);
+    public isHomepageCurrentPage(){
+        return this.router.url === '/';
+    }
+
+    public canSeeScenarioOptions(): boolean {
+        return this.isAuthenticated() && this.authenticationService.isUserInRole(this.currentUser, [RoleEnum.Admin, RoleEnum.DataExplorer]);
     }
 
     public isAdministrator(): boolean {

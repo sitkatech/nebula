@@ -11,24 +11,19 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-            <li class="nav-item dropdown" routerLinkActive="active" *ngIf="canSeeViewMenu()">
-                <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
-                    aria-expanded="false">
-                    View
+            <!-- <a routerLink="/" class="nav-link" *ngIf="!isHomepageCurrentPage()">Home</a> -->
+            <ng-container *ngIf="canSeeScenarioOptions()">
+                <a routerLink="/time-series-analysis" class="nav-link">
+                    Time Series Analysis
                 </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a routerLink="/diversion-scenario" class="dropdown-item">
-                        Diversion Scenario
-                    </a>
-                    <a routerLink="/time-series-analysis" class="dropdown-item">
-                        Time Series Analysis
-                    </a>
-                    <a routerLink="/paired-regression-analysis" class="dropdown-item">
-                        Paired Regression Analysis
-                    </a>
-                </div>
-            </li>
-            <li class="nav-item dropdown" routerLinkActive="active" *ngIf="isAdministrator()">
+                <a routerLink="/diversion-scenario" class="nav-link">
+                    Diversion Scenario
+                </a>
+                <a routerLink="/paired-regression-analysis" class="nav-link">
+                    Paired Regression Analysis
+                </a>
+            </ng-container>
+            <li class="nav-item dropdown my-auto" routerLinkActive="active" *ngIf="isAdministrator()">
                 <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     Manage
@@ -42,7 +37,7 @@
                     </a>
                 </div>
             </li>
-            <li class="nav-item dropdown" routerLinkActive="active">
+            <li class="nav-item dropdown my-auto" routerLinkActive="active">
                 <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Learn More
                 </a>
