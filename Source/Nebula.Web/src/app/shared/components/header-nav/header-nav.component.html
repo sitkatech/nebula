@@ -2,8 +2,8 @@
     <a href="{{leadOrganizationHomeUrl()}}" class="navbar-brand" target="_blank">
         <img src="{{leadOrganizationLogoSrc()}}" class="navbarLogo">
     </a>
-    <a routerLink="/" routerLinkActive="active" class="navbar-brand nav-link">
-        {{platformShortName()}}
+    <a routerLink="/" routerLinkActive="active" class="nav-link" *ngIf="!isHomepageCurrentPage()">
+        Home
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,6 +37,8 @@
                     </a>
                 </div>
             </li>
+        </ul>
+        <ul class="navbar-nav mt-2 mt-lg-0 mr-sm-2">
             <li class="nav-item dropdown my-auto" routerLinkActive="active">
                 <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Learn More
@@ -50,8 +52,6 @@
                     </a>
                 </div>
             </li>
-        </ul>
-        <ul class="navbar-nav flex-column mt-2 mt-lg-0 mr-sm-2">
             <li class="nav-item" routerLinkActive="active" *ngIf="!isAuthenticated()">
                 <a href="javascript:void(0);" (click)="login()" routerLinkActive="active" class="nav-link">Sign In</a>
             </li>
