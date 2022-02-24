@@ -13,11 +13,11 @@
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <!-- <a routerLink="/" class="nav-link" *ngIf="!isHomepageCurrentPage()">Home</a> -->
             <ng-container *ngIf="canSeeScenarioOptions()">
-                <a routerLink="/time-series-analysis" class="nav-link">
-                    Time Series Analysis
-                </a>
                 <a routerLink="/diversion-scenario" class="nav-link">
                     Diversion Scenario
+                </a>
+                <a routerLink="/time-series-analysis" class="nav-link">
+                    Time Series Analysis
                 </a>
                 <a routerLink="/paired-regression-analysis" class="nav-link">
                     Paired Regression Analysis
