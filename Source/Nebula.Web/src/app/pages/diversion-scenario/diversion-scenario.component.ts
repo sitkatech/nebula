@@ -12,6 +12,7 @@ import { SiteFilterEnum } from 'src/app/shared/models/enums/site-filter.enum';
 import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { DateTime } from 'luxon';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -105,10 +106,11 @@ export class DiversionScenarioComponent implements OnInit {
     { id: 23, display: '11 PM' },
   ]
 
-  public currentDate = new Date();
+  public currentDate = DateTime.utc();
+  public startDate = this.currentDate.minus({months:3});
   public timeSeriesForm = new FormGroup({
-    start_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    end_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    start_date: new FormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
+    end_date: new FormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
     site: new FormControl(null, [Validators.required]),
     diversion_rate_cfs: new FormControl(0, [Validators.required]),
     storage_max_depth_ft: new FormControl(0, [Validators.required]),

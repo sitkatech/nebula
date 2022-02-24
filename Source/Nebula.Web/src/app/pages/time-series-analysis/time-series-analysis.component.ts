@@ -12,6 +12,7 @@ import { UserDetailedDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
 import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
+import { DateTime } from 'luxon';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -38,10 +39,11 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   public hydstraIntervals: HydstraInterval[] = Object.values(HydstraInterval);
   public hydstraWeatherConditions: HydstraWeatherCondition[] = Object.values(HydstraWeatherCondition)
 
-  public currentDate = new Date();
+  public currentDate = DateTime.utc();
+  public startDate = this.currentDate.minus({months:3});
   public timeSeriesForm = new FormGroup({
-    start_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    end_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    start_date: new FormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
+    end_date: new FormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
     timeseries: new FormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
