@@ -27,8 +27,16 @@ export class StationSelectCardComponent implements OnInit {
   public mapID: string;
   @Input()
   public defaultSelectedMapFilter: number = SiteFilterEnum.AllSites
+
+  private _selectedVariables: SiteVariable[];
   @Input()
-  public selectedVariables: SiteVariable[];
+  set selectedVariables(variables: SiteVariable[]) {
+    this._selectedVariables = variables;
+    this.updateSelectedDataStationsLayer();
+  }
+  get selectedVariables(): SiteVariable[] {
+    return this._selectedVariables;
+  }
   @Input()
   public lyraStationAvailableVariablesKey: string = "variables";
   @Input()
@@ -83,9 +91,11 @@ export class StationSelectCardComponent implements OnInit {
   public hasRainfallLayer: any;
   public hasDischargeLayer: any;
   public hasConductivityLayer: any;
+  public selectedDataStationsLayer: any;
   public rainfallIconDefault: any;
   public dischargeIconDefault: any;
   public conductivityIconDefault: any;
+  public selectedDataStationsIconDefault: any;
   public currentlySelectedLayer: any;
   public currentlySelectedUnderlyingLayer: any;
   public markers: L.FeatureGroup;
@@ -252,6 +262,7 @@ export class StationSelectCardComponent implements OnInit {
   public addVariableToSelection(variable: SiteVariable): void {
     this.selectedVariables.push(variable);
     this.addingVariableEvent.emit(variable);
+    this.updateSelectedDataStationsLayer();
     this.cdr.detectChanges();
   }
 
@@ -483,6 +494,7 @@ export class StationSelectCardComponent implements OnInit {
     this.rainfallIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-orange.png', '/assets/main/map-icons/marker-icon-2x-orange.png');
     this.dischargeIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-red.png', '/assets/main/map-icons/marker-icon-2x-red.png');
     this.conductivityIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-violet.png', '/assets/main/map-icons/marker-icon-2x-violet.png');
+    this.selectedDataStationsIconDefault = this.buildMarker('/assets/main/map-icons/marker-icon-green.png', '/assets/main/map-icons/marker-icon-2x-green.png');
 
     //this will be for the selected icon
     this.markers = new L.FeatureGroup().addTo(this.map);
@@ -569,7 +581,10 @@ export class StationSelectCardComponent implements OnInit {
     })
 
     this.siteLocationLayer.addTo(this.map);
-
+    if (this.selectedDataStationsLayer) {
+      this.map.removeLayer(this.selectedDataStationsLayer);
+      this.selectedDataStationsLayer.addTo(this.map);
+    }
     this.availableSitesToSearchFrom = this.selectedStationFilter.Stations;
   }
 
@@ -581,6 +596,30 @@ export class StationSelectCardComponent implements OnInit {
     this.selectedStationTributaryAreaLayer = null;
     this.canZoomTributaryArea = false;
     this.canViewTributaryArea = false;
+  }
+
+  public updateSelectedDataStationsLayer() {
+    if (this.selectedDataStationsLayer) {
+      this.map.removeLayer(this.selectedDataStationsLayer);
+      this.selectedDataStationsLayer = null;
+    }
+
+    if (this.selectedVariables == null || this.selectedVariables.length == 0) {
+      return;
+    }
+
+    let selectedOptions = this.allStations.filter(x => this.selectedVariables.some(y => y.station == x.properties.station));
+    this.selectedDataStationsLayer = L.geoJSON(selectedOptions, {
+      pointToLayer: (feature, latlng) => {
+        return L.marker(latlng, { icon: this.selectedDataStationsIconDefault });
+      }
+    });
+
+    this.selectedDataStationsLayer.on("click", (event: L.LeafletEvent) => {
+      this.selectFeature(event.propagatedFrom.feature);
+    })
+
+    this.selectedDataStationsLayer.addTo(this.map);
   }
   //#endregion
 
