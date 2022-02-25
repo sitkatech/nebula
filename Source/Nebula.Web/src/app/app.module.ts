@@ -26,7 +26,6 @@ import { FontAwesomeIconLinkRendererComponent } from './shared/components/ag-gri
 import { LoginCallbackComponent } from './pages/login-callback/login-callback.component';
 import { HelpComponent } from './pages/help/help.component';
 import { SelectDropDownModule } from 'ngx-select-dropdown'
-import { MyDatePickerModule } from 'mydatepicker';
 import { MultiLinkRendererComponent } from './shared/components/ag-grid/multi-link-renderer/multi-link-renderer.component';
 import { CreateUserCallbackComponent } from './pages/create-user-callback/create-user-callback.component';
 import { AboutComponent } from './pages/about/about.component';
@@ -85,7 +84,6 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     BrowserAnimationsModule,
     AgGridModule.withComponents([]),
     SelectDropDownModule,
-    MyDatePickerModule,
     CKEditorModule,
     NgSelectModule
   ],  
