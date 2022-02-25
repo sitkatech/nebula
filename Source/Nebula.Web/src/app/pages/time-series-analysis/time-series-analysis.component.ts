@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef, ViewChildren } from '@angular/core';
-import { LyraService } from 'src/app/services/lyra.service.js';
+import { LyraService } from 'src/app/services/lyra.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
