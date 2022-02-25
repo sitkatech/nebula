@@ -1,17 +1,18 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
 import { UserService } from './user/user.service';
-import { UserDetailedDto } from '../shared/models';
-import { Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { Observable, race, Subject } from 'rxjs';
+import { filter, finalize, first } from 'rxjs/operators';
 import { CookieStorageService } from '../shared/services/cookies/cookie-storage.service';
-import { Router, NavigationEnd, NavigationStart } from '@angular/router';
+import { Router } from '@angular/router';
 import { RoleEnum } from '../shared/models/enums/role.enum';
 import { AlertService } from '../shared/services/alert.service';
 import { Alert } from '../shared/models/alert';
 import { AlertContext } from '../shared/models/enums/alert-context.enum';
-import { UserCreateDto } from '../shared/models/user/user-create-dto';
 import { environment } from 'src/environments/environment';
+import { UserDto } from '../shared/models/generated/user-dto';
+import { UserCreateDto } from '../shared/models/user/user-create-dto';
+import { UserDetailedDto } from '../shared/models';
 
 @Injectable({
   providedIn: 'root'
@@ -19,10 +20,9 @@ import { environment } from 'src/environments/environment';
 export class AuthenticationService {
   private currentUser: UserDetailedDto;
 
-  private getUserObservable: any;
-
   private _currentUserSetSubject = new Subject<UserDetailedDto>();
-  public currentUserSetObservable = this._currentUserSetSubject.asObservable();
+  private currentUserSetObservable = this._currentUserSetSubject.asObservable();
+  attemptingToCreateUser: any;
 
 
   constructor(private router: Router,
@@ -30,80 +30,123 @@ export class AuthenticationService {
     private cookieStorageService: CookieStorageService,
     private userService: UserService,
     private alertService: AlertService) {
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationEnd))
-      .subscribe((e: NavigationEnd) => {
-        if (this.isAuthenticated()) {
-          this.getGlobalIDFromClaimsAndAttemptToSetUserObservableAndCreateUserIfNecessary();
-        } else {
-          this.currentUser = null;
-          this._currentUserSetSubject.next(null);
+    this.oauthService.events.subscribe(_ => {
+      this.checkAuthentication();
+    });
+
+    this.oauthService.events
+      .pipe(filter(e => ['token_received'].includes(e.type)))
+      .subscribe(e => this.oauthService.loadUserProfile());
+
+    this.oauthService.events
+      .pipe(filter(e => ['invalid_nonce_in_state'].includes(e.type)))
+      .subscribe(e => {
+        //During user creation our nonce can get into an invalid state, but just signing in again mitigates the issue
+        if (this.router.url.includes("signin-oidc")) {
+          this.oauthService.initCodeFlow();
         }
       });
 
-    // check for a currentUser at NavigationStart so that authorization-based guards can work with promises.
-    this.router.events
-      .pipe(filter(e => e instanceof NavigationStart))
-      .subscribe((e: NavigationStart) => {
-        this.checkAuthentication();
-      })
+    this.oauthService.events
+      .pipe(filter(e => ['token_refresh_error'].includes(e.type)))
+      .subscribe(e => {
+        //If we're still authenticated, don't worry about the error
+        if (this.isAuthenticated()) {
+          return;
+        }
+
+        //If we haven't cleared our cookies and done the logout, do so
+        var token = this.oauthService.getAccessToken();
+        if (token != null && token != undefined && token != "") {
+          this.logout();
+          return;
+        }
+
+        this.router
+          .navigateByUrl("/")
+          .then(() => this.alertService.pushAlert(new Alert("Your session has been terminated. Please login again.")));
+      });
+
+    this.oauthService.setupAutomaticSilentRefresh();
+  }
+
+  public initialLoginSequence(): Promise<void> {
+    return this.oauthService.loadDiscoveryDocument()
+      .then(() => this.oauthService.tryLogin())
+      .then(() => {
+        if (this.oauthService.hasValidAccessToken()) {
+          return Promise.resolve();
+        }
+        return this.oauthService.silentRefresh().then(() => Promise.resolve());
+      }).catch(() => { });
   }
 
   public checkAuthentication() {
     if (this.isAuthenticated() && !this.currentUser) {
       console.log("Authenticated but no user found...");
-      this.getGlobalIDFromClaimsAndAttemptToSetUserObservableAndCreateUserIfNecessary();
+      var claims = this.oauthService.getIdentityClaims();
+      this.getUser(claims);
     }
   }
 
-  public getGlobalIDFromClaimsAndAttemptToSetUserObservableAndCreateUserIfNecessary() {
-    var claims = this.oauthService.getIdentityClaims();
+  public getUser(claims: any) {
     var globalID = claims["sub"];
 
-    this.getUserObservable = this.userService.getUserFromGlobalID(globalID).subscribe(result => {
-      this.getUserCallback(result);
-    }, error => {
-      if (error.status !== 404) {
-        this.alertService.pushAlert(new Alert("There was an error logging into the application.", AlertContext.Danger));
-        this.router.navigate(['/']);
-      } else {
-        this.alertService.clearAlerts();
-        const newUser = new UserCreateDto({
-          FirstName: claims["given_name"],
-          LastName: claims["family_name"],
-          Email: claims["email"],
-          RoleID: RoleEnum.Unassigned,
-          LoginName: claims["login_name"],
-          UserGuid: claims["sub"],
-        });
-
-        this.userService.createNewUser(newUser).subscribe(user => {
-          this.getUserCallback(user);
-        })
-
-      }
-    });
+    this.userService.getUserFromGlobalID(globalID).subscribe(
+      result => { this.updateUser(result); },
+      error => { this.onGetUserError(error, claims) }
+    );
   }
 
-  private getUserCallback(user: UserDetailedDto) {
+  private onGetUserError(error: any, claims: any) {
+    if (error.status !== 404) {
+      this.alertService.pushAlert(new Alert("There was an error logging into the application.", AlertContext.Danger));
+      this.router.navigate(['/']);
+    }
+
+    if (!this.attemptingToCreateUser) {
+      this.attemptingToCreateUser = true;
+      this.alertService.clearAlerts();
+      const newUser = new UserCreateDto({
+        FirstName: claims["given_name"],
+        LastName: claims["family_name"],
+        Email: claims["email"],
+        RoleID: RoleEnum.Unassigned,
+        LoginName: claims["login_name"],
+        UserGuid: claims["sub"],
+      });
+
+      this.userService.createNewUser(newUser).pipe(
+        finalize(() => this.attemptingToCreateUser = false)
+      ).subscribe(user => {
+        this.updateUser(user);
+      });
+    }
+  }
+
+  private updateUser(user: UserDetailedDto) {
     this.currentUser = user;
     this._currentUserSetSubject.next(this.currentUser);
   }
 
   public refreshUserInfo(user: UserDetailedDto) {
-    this.getUserCallback(user);
+    this.updateUser(user);
   }
 
-  dispose() {
-    this.getUserObservable.unsubscribe();
+  public getCurrentUser(): Observable<UserDetailedDto> {
+    return race(
+      new Observable(subscriber => {
+        if (this.currentUser) {
+          subscriber.next(this.currentUser);
+          subscriber.complete();
+        }
+      }),
+      this.currentUserSetObservable.pipe(first())
+    );
   }
 
   public isAuthenticated(): boolean {
     return this.oauthService.hasValidAccessToken();
-  }
-
-  public handleUnauthorized(): void {
-    this.forcedLogout();
   }
 
   public login() {
@@ -132,7 +175,7 @@ export class AuthenticationService {
     });
   }
 
-  public isUserAnAdministrator(user: UserDetailedDto): boolean {
+  public isUserAnAdministrator(user: UserDto): boolean {
     const role = user && user.Role
       ? user.Role.RoleID
       : null;
@@ -143,14 +186,14 @@ export class AuthenticationService {
     return this.isUserAnAdministrator(this.currentUser);
   }
 
-  public isUserUnassigned(user: UserDetailedDto): boolean {
+  public isUserUnassigned(user: UserDto): boolean {
     const role = user && user.Role
       ? user.Role.RoleID
       : null;
     return role === RoleEnum.Unassigned;
   }
 
-  public isUserRoleDisabled(user: UserDetailedDto): boolean {
+  public isUserRoleDisabled(user: UserDto): boolean {
     const role = user && user.Role
       ? user.Role.RoleID
       : null;
@@ -165,7 +208,7 @@ export class AuthenticationService {
     return this.currentUser != null && this.currentUser.DisclaimerAcknowledgedDate != null;
   }
 
-  public isUserInRole(user: UserDetailedDto, roles: RoleEnum[]): boolean {
+  public isUserInRole(user: UserDto, roles: RoleEnum[]): boolean {
     const role = user && user.Role ? user.Role.RoleID : null;
     if (role == null) {
       return false;
@@ -176,5 +219,9 @@ export class AuthenticationService {
 
   public isCurrentUserInRole(roles: RoleEnum[]): boolean {
     return this.isUserInRole(this.currentUser, roles);
+  }
+
+  public isCurrentUserDisabled(): boolean {
+    return this.isUserRoleDisabled(this.currentUser);
   }
 }

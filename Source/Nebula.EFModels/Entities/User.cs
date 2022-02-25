@@ -9,6 +9,9 @@ namespace Nebula.EFModels.Entities
 {
     public partial class User
     {
+        public string FullName => $"{FirstName} {LastName}";
+        public string FullNameLastFirst => $"{LastName}, {FirstName}";
+
         public static UserDto CreateNewUser(NebulaDbContext dbContext, UserUpsertDto userToCreate, string loginName, Guid userGuid)
         {
             if (!userToCreate.RoleID.HasValue)

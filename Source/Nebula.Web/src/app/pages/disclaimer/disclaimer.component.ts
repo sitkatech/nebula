@@ -4,6 +4,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service'
 import { UserDetailedDto } from 'src/app/shared/models';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
+import { UserDto } from 'src/app/shared/models/generated/user-dto';
 
 @Component({
   selector: 'nebula-disclaimer',
@@ -13,7 +14,7 @@ import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text
 export class DisclaimerComponent implements OnInit {
 
   private watchUserChangeSubscription : any;
-  private currentUser : UserDetailedDto;
+  private currentUser : UserDto;
   private forced : boolean = true;
   private returnRoute : string = '';
   public richTextTypeID : number = CustomRichTextType.Disclaimer;
@@ -27,7 +28,7 @@ export class DisclaimerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
     });
     this.route.queryParams.subscribe(params => {

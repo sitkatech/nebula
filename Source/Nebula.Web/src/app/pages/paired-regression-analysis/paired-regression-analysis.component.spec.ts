@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PairedRegressionAnalysisComponent } from './paired-regression-analysis.component';
 
@@ -6,7 +6,7 @@ describe('PairedRegressionAnalysisComponent', () => {
   let component: PairedRegressionAnalysisComponent;
   let fixture: ComponentFixture<PairedRegressionAnalysisComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ PairedRegressionAnalysisComponent ]
     })

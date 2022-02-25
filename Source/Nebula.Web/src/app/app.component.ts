@@ -20,9 +20,17 @@ declare var require: any
 export class AppComponent {
 
     userClaimsUpsertStarted = false;
-    ignoreSessionTerminated = false;
 
-    constructor(private router: Router, private oauthService: OAuthService, private cookieStorageService: CookieStorageService, private busyService: BusyService, private authenticationService: AuthenticationService, private titleService: Title, @Inject(DOCUMENT) private _document: HTMLDocument) {
+    constructor(
+        private router: Router,
+        private oauthService: OAuthService,
+        private busyService: BusyService,
+        private authenticationService: AuthenticationService,
+        private titleService: Title,
+        @Inject(DOCUMENT) private _document: HTMLDocument
+    ) {
+        this.configureOAuthService();
+        this.authenticationService.initialLoginSequence();
     }
 
     ngOnInit() {
@@ -35,65 +43,14 @@ export class AppComponent {
                 window.scrollTo(0, 0);
             }
         });
-        
-        this.configureAuthService().subscribe(() => {
-            this.oauthService.tryLogin();
-        });
 
-        this.titleService.setTitle(`${environment.leadOrganizationShortName} ${environment.platformShortName}`)
+        this.titleService.setTitle(`${environment.platformShortName}`)
         this.setAppFavicon();
     }
 
-    private configureAuthService(): Observable<void> {
-        const subject = new Subject<void>();
+    private configureOAuthService() {
         this.oauthService.configure(environment.keystoneAuthConfiguration);
-        this.oauthService.setupAutomaticSilentRefresh();
-        this.oauthService.setStorage(this.cookieStorageService);
         this.oauthService.tokenValidationHandler = new JwksValidationHandler();
-        this.oauthService.loadDiscoveryDocument();
-        this.oauthService.events
-            .subscribe((e) => {
-                console.log(e.type);
-                switch (e.type) {
-                    case 'discovery_document_loaded':
-                        if ((e as OAuthSuccessEvent).info) {
-                            subject.next();
-                            subject.complete();
-                        }
-                        break;
-                    case 'token_received':
-                        subject.next();
-                        subject.complete();
-                        break;
-                    case 'token_refreshed':
-                        subject.next();
-                        subject.complete();
-                        this.authenticationService.checkAuthentication();
-                        break;
-                    case 'token_refresh_error':
-                        this.authenticationService.forcedLogout();
-                        break;
-                    // case 'session_changed':
-                    //     console.log("session_changed");
-                    //     // when the user logins from no-tenant URL and then jumps to the tenant URL,
-                    //     // the oAuthService triggers a session-changed followed by a session_terminated...
-                    //     // however the token still works as expected.
-                    //     // ATTENTION: Need to verify that on session expiration (and hence session_terminated) this session_changed doesn't get called...
-                    //     this.ignoreSessionTerminated = true;
-                    //     break;
-                    // case 'session_terminated':
-                    //     if (!this.ignoreSessionTerminated) {
-                    //         console.warn('Your session has been terminated!');
-                    //         this.cookieStorageService.removeAll();
-                    //     }
-                    //     debugger;
-                    //     this.ignoreSessionTerminated = false;
-                    //     break;
-                }
-
-            });
-
-        return subject.asObservable();
     }
 
     setAppFavicon(){

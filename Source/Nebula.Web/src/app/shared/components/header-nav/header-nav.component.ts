@@ -8,6 +8,8 @@ import { Alert } from '../../models/alert';
 import { environment } from 'src/environments/environment';
 import { AlertContext } from '../../models/enums/alert-context.enum';
 import { RoleEnum } from '../../models/enums/role.enum';
+import { Router } from '@angular/router';
+import { UserDto } from '../../models/generated/user-dto';
 
 @Component({
     selector: 'header-nav',
@@ -16,7 +18,7 @@ import { RoleEnum } from '../../models/enums/role.enum';
 })
 
 export class HeaderNavComponent implements OnInit, OnDestroy {
-    private watchUserChangeSubscription: any;
+    
     private currentUser: UserDetailedDto;
 
     windowWidth: number;
@@ -31,11 +33,12 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         private cookieStorageService: CookieStorageService,
         private userService: UserService,
         private alertService: AlertService,
-        private cdr: ChangeDetectorRef) {
+        private cdr: ChangeDetectorRef,
+        private router: Router) {
     }
 
     ngOnInit() {
-        this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+        this.authenticationService.getCurrentUser().subscribe(currentUser => {
             this.currentUser = currentUser;
 
             if (currentUser && this.isAdministrator()){
@@ -49,8 +52,8 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.watchUserChangeSubscription.unsubscribe();
-        this.authenticationService.dispose();
+        
+        
         this.cdr.detach();
     }
 
@@ -58,8 +61,12 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         return this.authenticationService.isAuthenticated();
     }
 
-    public canSeeViewMenu(): boolean {
-        return this.authenticationService.isUserInRole(this.currentUser, [RoleEnum.Admin, RoleEnum.DataExplorer]);
+    public isHomepageCurrentPage(){
+        return this.router.url === '/';
+    }
+
+    public canSeeScenarioOptions(): boolean {
+        return this.isAuthenticated() && this.authenticationService.isUserInRole(this.currentUser, [RoleEnum.Admin, RoleEnum.DataExplorer]);
     }
 
     public isAdministrator(): boolean {
