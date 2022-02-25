@@ -16,7 +16,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^11.2.14",
-    "@angular/cdk": "^9.2.1",
+    "@angular/cdk": "^10.2.7",
     "@angular/common": "^11.2.14",
     "@angular/compiler": "^11.2.14",
     "@angular/core": "^11.2.14",
@@ -30,7 +30,7 @@
     "@ckeditor/ckeditor5-build-classic": "^18.0.0",
     "@ckeditor/ckeditor5-upload": "^18.0.0",
     "@microsoft/applicationinsights-web": "^2.6.5",
-    "@ng-bootstrap/ng-bootstrap": "^8.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^9.0.0",
     "@ng-select/ng-select": "^4.0.4",
     "@nguniversal/express-engine": "^9.1.0",
     "@ngx-progressbar/core": "^5.3.2",
