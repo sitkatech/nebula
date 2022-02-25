@@ -23,7 +23,7 @@ declare var vegaEmbed: any;
   styleUrls: ['./paired-regression-analysis.component.scss']
 })
 export class PairedRegressionAnalysisComponent implements OnInit {
-  private watchUserChangeSubscription: any;
+  
   private currentUser: UserDetailedDto;
 
   @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
@@ -76,7 +76,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
       this.setupFormChangeListener();
     });
@@ -281,6 +281,10 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   //#endregion
 
+  public showOnMapForStation(station : string) {
+    this.stationSelect.selectStationByStation(station);
+  }
+  
   public populateFormFromURL() {
     this.route.queryParams.subscribe(params => {
       if (params == null || params == undefined || !params.hasOwnProperty("json")) {

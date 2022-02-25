@@ -13,6 +13,7 @@ import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-w
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { DateTime } from 'luxon';
+import { UserDto } from 'src/app/shared/models/generated/user-dto';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -143,7 +144,7 @@ export class DiversionScenarioComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
       this.lyraService.getSiteLocationGeoJson().subscribe(result => {
         this.rainfallStations = result.features.filter(x => x.properties.has_rainfall).sort((x, y) => {
@@ -474,6 +475,10 @@ export class DiversionScenarioComponent implements OnInit {
   }
 
   //#endregion
+
+  public showOnMapForStation(station : string) {
+    this.stationSelect.selectStationByStation(station);
+  }
 
   public getSummaryRowDataForColumn(row:any, column:string ): string {
     if (!row.hasOwnProperty(column)) {

@@ -20,10 +20,16 @@ export class SelectedDataCardComponent implements OnInit {
   public singleVariableRemoved = new EventEmitter<number>();
   @Output()
   public allVariablesCleared = new EventEmitter();
+  @Output()
+  public selectStationOnMap = new EventEmitter<string>();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  public emitSelectStationOnMap(variable : SiteVariable) {
+    this.selectStationOnMap.emit(variable.station);
   }
 
   public removeVariableFromSelection(index: number): void {

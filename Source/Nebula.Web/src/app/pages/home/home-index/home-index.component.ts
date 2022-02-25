@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginCallbackComponent } from '../../login-callback/login-callback.component';
+import { UserDto } from 'src/app/shared/models/generated/user-dto';
 
 @Component({
     selector: 'app-home-index',
@@ -45,7 +46,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
                     });
             }
     
-            this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+            this.authenticationService.getCurrentUser().subscribe(currentUser => {
                 this.currentUser = currentUser;
             });
 

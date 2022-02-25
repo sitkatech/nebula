@@ -60,7 +60,6 @@
     "rxjs": "^6.5.5",
     "style-loader": "^1.2.1",
     "topojson-client": "^3.1.0",
-    "tslib": "^2.0.0",
     "vega": "^5.13.0",
     "vega-embed": "^6.9.0",
     "vega-lite": "^4.13.1",
@@ -68,6 +67,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~12.2.16",
+    "@angular-eslint/eslint-plugin": "^12.6.1",
     "@angular/cli": "^12.2.16",
     "@angular/compiler-cli": "^12.2.16",
     "@angular/language-service": "^12.2.16",
@@ -77,8 +77,16 @@
     "@types/jasmine": "~3.6.0",
     "@types/jasminewd2": "^2.0.8",
     "@types/luxon": "^2.0.9",
-    "@types/node": "^12.11.1",
+    "@types/node": "^13.13.50",
+    "@typescript-eslint/eslint-plugin": "^5.3.1",
+    "@typescript-eslint/eslint-plugin-tslint": "^5.3.1",
+    "@typescript-eslint/parser": "^5.3.1",
     "codelyzer": "^6.0.0",
+    "eslint": "^8.2.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-jsdoc": "^37.0.3",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
     "jasmine-core": "~3.8.0",
     "jasmine-spec-reporter": "~5.0.0",
     "karma": "^6.3.16",
@@ -88,7 +96,7 @@
     "karma-jasmine-html-reporter": "^1.5.0",
     "protractor": "~7.0.0",
     "ts-node": "~8.9.1",
-    "tslint": "~6.1.2",
+    "tslib": "^2.3.1",
     "typescript": "4.3.5"
   }
 }

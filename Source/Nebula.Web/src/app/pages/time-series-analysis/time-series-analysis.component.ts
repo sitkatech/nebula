@@ -13,6 +13,7 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
 import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
 import { DateTime } from 'luxon';
+import { UserDto } from 'src/app/shared/models/generated/user-dto';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -72,7 +73,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
       this.setupFormChangeListener();
     });
@@ -285,6 +286,10 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   }
 
   //#endregion
+
+  public showOnMapForStation(station : string) {
+    this.stationSelect.selectStationByStation(station);
+  }
 
   public populateFormFromURL() {
     this.route.queryParams.subscribe(params => {

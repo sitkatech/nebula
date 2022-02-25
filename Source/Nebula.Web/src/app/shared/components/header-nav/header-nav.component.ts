@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 import { AlertContext } from '../../models/enums/alert-context.enum';
 import { RoleEnum } from '../../models/enums/role.enum';
 import { Router } from '@angular/router';
+import { UserDto } from '../../models/generated/user-dto';
 
 @Component({
     selector: 'header-nav',
@@ -17,7 +18,7 @@ import { Router } from '@angular/router';
 })
 
 export class HeaderNavComponent implements OnInit, OnDestroy {
-    private watchUserChangeSubscription: any;
+    
     private currentUser: UserDetailedDto;
 
     windowWidth: number;
@@ -37,7 +38,7 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
-        this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+        this.authenticationService.getCurrentUser().subscribe(currentUser => {
             this.currentUser = currentUser;
 
             if (currentUser && this.isAdministrator()){
@@ -51,8 +52,8 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy() {
-        this.watchUserChangeSubscription.unsubscribe();
-        this.authenticationService.dispose();
+        
+        
         this.cdr.detach();
     }
 

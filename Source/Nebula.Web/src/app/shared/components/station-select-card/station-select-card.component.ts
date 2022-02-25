@@ -625,7 +625,11 @@ export class StationSelectCardComponent implements OnInit {
 
   public select(event) {
     this.searchText = event.StationPropertyValue;
-    let selectedFeature = this.availableSitesToSearchFrom.find(x => x.properties.station === event.StationID);
+    this.selectStationByStation(event.StationID);
+  }
+
+  public selectStationByStation(station: string) {
+    let selectedFeature = this.availableSitesToSearchFrom.find(x => x.properties.station === station);
     this.selectFeature(selectedFeature);
     this.map.setView(this.currentlySelectedLayer.getBounds().getCenter());
   }

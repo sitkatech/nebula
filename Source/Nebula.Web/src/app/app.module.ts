@@ -4,7 +4,7 @@ import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
-import { OAuthModule } from 'angular-oauth2-oidc';
+import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { CookieService } from 'ngx-cookie-service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/interceptors/auth-interceptor';
@@ -42,6 +42,8 @@ import { GlobalErrorHandlerService } from './shared/services/global-error-handle
 import { PairedRegressionAnalysisComponent } from './pages/paired-regression-analysis/paired-regression-analysis.component';
 import { DiversionScenarioComponent } from './pages/diversion-scenario/diversion-scenario.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CookieStorageService } from './shared/services/cookies/cookie-storage.service';
+
 
 export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
   return () => appLoadService.init().then(() => {
@@ -96,7 +98,11 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
       provide: ErrorHandler,
       useClass: GlobalErrorHandlerService
     },
-    DecimalPipe, CurrencyPipe, DatePipe
+    DecimalPipe, CurrencyPipe, DatePipe,
+    {
+      provide: OAuthStorage,
+      useClass: CookieStorageService
+    }
   ],
   entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],
   bootstrap: [AppComponent]

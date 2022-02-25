@@ -38,7 +38,7 @@
         <div class="col-sm-12" #selectedDataCardRef>
             <selected-data-card [(selectedVariables)]="selectedVariables" [disableActions]="isActionBeingPerformed()"
                 [headerText]="'Selected Data (x,y)'" (singleVariableRemoved)="removeVariableFromSelection($event)"
-                (allVariablesCleared)="clearAllVariables()" ></selected-data-card>
+                (allVariablesCleared)="clearAllVariables()" (selectStationOnMap)="showOnMapForStation($event)"></selected-data-card>
         </div>
     </div>
     <div class="row mt-sm-4">
