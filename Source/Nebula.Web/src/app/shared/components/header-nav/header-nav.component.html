@@ -13,16 +13,32 @@
         <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
             <!-- <a routerLink="/" class="nav-link" *ngIf="!isHomepageCurrentPage()">Home</a> -->
             <ng-container *ngIf="canSeeScenarioOptions()">
-                <a routerLink="/diversion-scenario" class="nav-link">
-                    Diversion Scenario
-                </a>
                 <a routerLink="/time-series-analysis" class="nav-link">
                     Time Series Analysis
+                </a>
+                <a routerLink="/diversion-scenario" class="nav-link">
+                    Diversion Scenario
                 </a>
                 <a routerLink="/paired-regression-analysis" class="nav-link">
                     Paired Regression Analysis
                 </a>
+                <li class="nav-item dropdown my-auto" routerLinkActive="active">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Learn More
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a routerLink="/platform-overview" class="dropdown-item">
+                            Platform Overview
+                        </a>
+                        <a routerLink="/disclaimer/false" class="dropdown-item">
+                            Disclaimer
+                        </a>
+                    </div>
+                </li>
             </ng-container>
+            
+        </ul>
+        <ul class="navbar-nav mt-2 mt-lg-0 mr-sm-2">
             <li class="nav-item dropdown my-auto" routerLinkActive="active" *ngIf="isAdministrator()">
                 <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
@@ -34,21 +50,6 @@
                     </a>
                     <a routerLink="/labels-and-definitions" class="dropdown-item">
                         Labels and Definitions
-                    </a>
-                </div>
-            </li>
-        </ul>
-        <ul class="navbar-nav mt-2 mt-lg-0 mr-sm-2">
-            <li class="nav-item dropdown my-auto" routerLinkActive="active">
-                <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Learn More
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a routerLink="/platform-overview" class="dropdown-item">
-                        Platform Overview
-                    </a>
-                    <a routerLink="/disclaimer/false" class="dropdown-item">
-                        Disclaimer
                     </a>
                 </div>
             </li>

@@ -36,7 +36,7 @@ export class UserListComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
-      this.usersGrid.api.showLoadingOverlay();
+      this.usersGrid?.api.showLoadingOverlay();
       this.userService.getUsers().subscribe(users => {
         this.rowData = users;
         this.usersGrid.api.hideOverlay();

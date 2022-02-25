@@ -33,7 +33,7 @@ export class FieldDefinitionListComponent implements OnInit {
   ngOnInit() {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
-      this.fieldDefinitionsGrid.api.showLoadingOverlay();
+      this.fieldDefinitionsGrid?.api.showLoadingOverlay();
       this.fieldDefinitionService.listAllFieldDefinitions().subscribe(fieldDefinitions => {
         this.fieldDefinitions = fieldDefinitions;
         this.rowData = fieldDefinitions;
