@@ -28,7 +28,6 @@ import { HelpComponent } from './pages/help/help.component';
 import { SelectDropDownModule } from 'ngx-select-dropdown'
 import { MultiLinkRendererComponent } from './shared/components/ag-grid/multi-link-renderer/multi-link-renderer.component';
 import { CreateUserCallbackComponent } from './pages/create-user-callback/create-user-callback.component';
-import { AboutComponent } from './pages/about/about.component';
 import { DisclaimerComponent } from './pages/disclaimer/disclaimer.component';
 import { AppInitService } from './app.init';
 import { FieldDefinitionListComponent } from './pages/field-definition-list/field-definition-list.component';
@@ -43,6 +42,10 @@ import { PairedRegressionAnalysisComponent } from './pages/paired-regression-ana
 import { DiversionScenarioComponent } from './pages/diversion-scenario/diversion-scenario.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { CookieStorageService } from './shared/services/cookies/cookie-storage.service';
+import { CustomPageListComponent } from './pages/custom-page-list/custom-page-list.component';
+import { CustomPageDetailComponent } from './pages/custom-page-detail/custom-page-detail.component';
+import { CustomPageCreateComponent } from './pages/custom-page-create/custom-page-create.component';
+import { CustomPageEditPropertiesComponent } from './pages/custom-page-edit-properties/custom-page-edit-properties.component';
 
 
 export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
@@ -65,13 +68,16 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     LoginCallbackComponent,
     HelpComponent,
     CreateUserCallbackComponent,
-    AboutComponent,
     DisclaimerComponent,
     FieldDefinitionListComponent,
     FieldDefinitionEditComponent,
     TimeSeriesAnalysisComponent,
     PairedRegressionAnalysisComponent,
-    DiversionScenarioComponent
+    DiversionScenarioComponent,
+    CustomPageListComponent,
+    CustomPageDetailComponent,
+    CustomPageCreateComponent,
+    CustomPageEditPropertiesComponent
   ],
   imports: [
     AppRoutingModule,

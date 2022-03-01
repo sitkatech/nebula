@@ -7,5 +7,6 @@ export enum CustomRichTextType{
     WatershedList = 6,
     TimeSeriesAnalysis = 7,
     PairedRegressionAnalysis = 8,
-    DiversionScenario = 9
+    DiversionScenario = 9,
+    CustomPage = 10
 }

@@ -27,11 +27,12 @@
                         Learn More
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a routerLink="/platform-overview" class="dropdown-item">
-                            Platform Overview
-                        </a>
                         <a routerLink="/disclaimer/false" class="dropdown-item">
                             Disclaimer
+                        </a>
+                        <div *ngIf="learnMorePages.length > 0" class="dropdown-divider"></div>
+                        <a *ngFor="let learnMorePage of learnMorePages" routerLink="/custom-pages/{{ learnMorePage.CustomPageVanityUrl }}" class="dropdown-item">
+                            {{ learnMorePage.CustomPageDisplayName }}
                         </a>
                     </div>
                 </li>
@@ -50,6 +51,9 @@
                     </a>
                     <a routerLink="/labels-and-definitions" class="dropdown-item">
                         Labels and Definitions
+                    </a>
+                    <a routerLink="/custom-pages" class="dropdown-item">
+                        Custom Pages
                     </a>
                 </div>
             </li>

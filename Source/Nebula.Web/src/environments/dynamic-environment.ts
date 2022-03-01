@@ -25,6 +25,10 @@ export class DynamicEnvironment {
         return window.config.apiHostName;
     }
 
+    public get mainAppApiUrl() {
+        return window.config.mainAppApiUrl;
+    }
+
     public get createAccountUrl() {
         return window.config.createAccountUrl;
     }
