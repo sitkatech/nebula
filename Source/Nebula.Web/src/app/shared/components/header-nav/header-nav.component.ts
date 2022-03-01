@@ -64,7 +64,6 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {  
         this.watchUserChangeSubscription.unsubscribe();
-        this.authenticationService.dispose();
         this.cdr.detach();
     }
 

@@ -23,8 +23,6 @@ export class AuthenticationService {
   private _currentUserSetSubject = new Subject<UserDetailedDto>();
   public currentUserSetObservable = this._currentUserSetSubject.asObservable();
   attemptingToCreateUser: any;
-  getUserObservable: any;
-
 
   constructor(private router: Router,
     private oauthService: OAuthService,
@@ -179,10 +177,6 @@ export class AuthenticationService {
     setTimeout(() => {
       this.cookieStorageService.removeAll();
     });
-  }
-
-  dispose() {
-    this.getUserObservable.unsubscribe();
   }
 
   public isUserAnAdministrator(user: UserDto): boolean {
