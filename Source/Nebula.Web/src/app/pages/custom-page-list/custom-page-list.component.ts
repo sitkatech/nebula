@@ -179,7 +179,6 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
     }, error => {
       this.modalReference.close();
       this.isPerformingAction = false;
-      this.router.navigate(["/custom-pages"]);
       this.alertService.pushAlert(new Alert(`There was an error deleting the page. Please try again`, AlertContext.Danger, true));
     })
   }
