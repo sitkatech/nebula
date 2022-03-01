@@ -174,6 +174,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
     this.customPageService.deleteCustomPageByID(this.customPageIDToRemove).subscribe(() => {
       this.modalReference.close();
       this.isPerformingAction = false;
+      this.authenticationService.refreshUserInfo(this.currentUser);
       this.alertService.pushAlert(new Alert(`Custom page successfully deleted`, AlertContext.Success, true));
       this.updateGridData();
     }, error => {

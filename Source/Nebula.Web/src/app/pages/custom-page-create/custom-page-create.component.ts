@@ -10,6 +10,7 @@ import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
 import { MenuItemDto } from 'src/app/shared/models/generated/menu-item-dto';
 import { RoleDto } from 'src/app/shared/models/generated/role-dto';
+import { UserDetailedDto } from 'src/app/shared/models/user/user-detailed-dto';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
@@ -27,6 +28,7 @@ export class CustomPageCreateComponent implements OnInit, OnDestroy {
     public model: CustomPageUpsertDto;
     
     public isLoadingSubmit: boolean = false;
+    private currentUser: UserDetailedDto;
 
     constructor(
         private cdr: ChangeDetectorRef,
@@ -39,7 +41,8 @@ export class CustomPageCreateComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        this.watchUserChangeSubscription = this.authenticationService.getCurrentUser().subscribe(() => {
+        this.watchUserChangeSubscription = this.authenticationService.getCurrentUser().subscribe(currentUser => {
+            this.currentUser = currentUser;
             this.menuItemService.getMenuItems().subscribe(result => {
               // only exposing learn more menu option for now, but will be easy to add others as needed
               this.menuItems = result.filter(x => x.MenuItemName == 'LearnMore');
@@ -97,6 +100,7 @@ export class CustomPageCreateComponent implements OnInit, OnDestroy {
                 this.isLoadingSubmit = false;
                 createNewCustomPageForm.reset();
                 this.router.navigateByUrl(`/custom-pages/${response.CustomPageVanityUrl}`).then(() => {
+                    this.authenticationService.refreshUserInfo(this.currentUser);
                     this.alertService.pushAlert(new Alert("The custom page was successfully created.", AlertContext.Success));
                 });
             },

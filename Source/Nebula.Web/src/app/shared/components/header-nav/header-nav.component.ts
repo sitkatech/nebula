@@ -44,9 +44,9 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
     
 
     ngOnInit() {
-        this.watchUserChangeSubscription = this.authenticationService.getCurrentUser().subscribe(currentUser => {
+        // MP-AS 3-1-22 everywhere else fire and forget is fine, but if we need a refresh option, need to use currentUserSetObservable
+        this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
-
             if (currentUser && this.isAdministrator()){
                 this.userService.getUnassignedUserReport().subscribe(report =>{
                     if (report.Count > 0){
