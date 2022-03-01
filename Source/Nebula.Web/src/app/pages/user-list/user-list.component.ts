@@ -1,9 +1,8 @@
-import { Component, OnInit, ViewChildren, QueryList, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ColDef } from 'ag-grid-community';
 import { LinkRendererComponent } from 'src/app/shared/components/ag-grid/link-renderer/link-renderer.component';
-import { FontAwesomeIconLinkRendererComponent } from 'src/app/shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { DecimalPipe } from '@angular/common';
 import { AgGridAngular } from 'ag-grid-angular';
 import { UtilityFunctionsService } from 'src/app/services/utility-functions.service';

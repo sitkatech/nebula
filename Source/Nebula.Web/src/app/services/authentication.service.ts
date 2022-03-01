@@ -21,9 +21,8 @@ export class AuthenticationService {
   private currentUser: UserDetailedDto;
 
   private _currentUserSetSubject = new Subject<UserDetailedDto>();
-  private currentUserSetObservable = this._currentUserSetSubject.asObservable();
+  public currentUserSetObservable = this._currentUserSetSubject.asObservable();
   attemptingToCreateUser: any;
-
 
   constructor(private router: Router,
     private oauthService: OAuthService,
@@ -88,7 +87,7 @@ export class AuthenticationService {
       this.getUser(claims);
     }
   }
-
+  
   public getUser(claims: any) {
     var globalID = claims["sub"];
 
@@ -96,6 +95,11 @@ export class AuthenticationService {
       result => { this.updateUser(result); },
       error => { this.onGetUserError(error, claims) }
     );
+  }
+
+  private getUserCallback(user: UserDetailedDto) {
+    this.currentUser = user;
+    this._currentUserSetSubject.next(this.currentUser);
   }
 
   private onGetUserError(error: any, claims: any) {
@@ -223,5 +227,16 @@ export class AuthenticationService {
 
   public isCurrentUserDisabled(): boolean {
     return this.isUserRoleDisabled(this.currentUser);
+  }
+
+  public doesCurrentUserHaveOneOfTheseRoles(roleIDs: Array<number>): boolean {
+    if(roleIDs.length === 0)
+    {
+      return false;
+    }
+    const roleID = this.currentUser && this.currentUser.Role
+      ? this.currentUser.Role.RoleID
+      : null;
+    return roleIDs.includes(roleID);
   }
 }

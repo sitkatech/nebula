@@ -4,7 +4,7 @@ import { UserDetailedDto } from '../../models';
 import { FieldDefinitionService } from '../../services/field-definition-service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { AlertService } from '../../services/alert.service';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
 import { AlertContext } from '../../models/enums/alert-context.enum';
 import { FieldDefinitionDto } from '../../models/generated/field-definition-dto';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';

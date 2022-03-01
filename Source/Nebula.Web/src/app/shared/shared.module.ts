@@ -25,7 +25,10 @@ import { NgSelectCustomComponent } from './components/ng-select-custom/ng-select
 import { SelectedDataCardComponent } from './components/selected-data-card/selected-data-card.component';
 import { StationSelectCardComponent } from './components/station-select-card/station-select-card.component';
 import { AutoCompleteModule } from "primeng/autocomplete";
-import { LinkToAnalysisComponent } from './components/link-to-analysis/link-to-analysis.component'
+import { LinkToAnalysisComponent } from './components/link-to-analysis/link-to-analysis.component';
+import { CustomDropdownFilterComponent } from './components/custom-dropdown-filter/custom-dropdown-filter.component';
+import { CsvDownloadButtonComponent } from './components/csv-download-button/csv-download-button.component';
+import { ClearGridFiltersButtonComponent } from './components/clear-grid-filters-button/clear-grid-filters-button.component';
 
 @NgModule({
     declarations: [
@@ -45,7 +48,10 @@ import { LinkToAnalysisComponent } from './components/link-to-analysis/link-to-a
         NgSelectCustomComponent,
         SelectedDataCardComponent,
         StationSelectCardComponent,
-        LinkToAnalysisComponent
+        LinkToAnalysisComponent,
+        CustomDropdownFilterComponent,
+        CsvDownloadButtonComponent,
+        ClearGridFiltersButtonComponent
     ],
     imports: [
         CommonModule,
@@ -73,7 +79,9 @@ import { LinkToAnalysisComponent } from './components/link-to-analysis/link-to-a
         NgSelectCustomComponent,
         SelectedDataCardComponent,
         StationSelectCardComponent,
-        LinkToAnalysisComponent
+        LinkToAnalysisComponent,
+        CsvDownloadButtonComponent,
+        ClearGridFiltersButtonComponent
     ],
     entryComponents:[
         WatershedDetailPopupComponent,

@@ -19,6 +19,8 @@ namespace Nebula.EFModels.Entities
 
         public virtual DbSet<BackboneSegment> BackboneSegments { get; set; }
         public virtual DbSet<BackboneSegmentType> BackboneSegmentTypes { get; set; }
+        public virtual DbSet<CustomPage> CustomPages { get; set; }
+        public virtual DbSet<CustomPageRole> CustomPageRoles { get; set; }
         public virtual DbSet<CustomRichText> CustomRichTexts { get; set; }
         public virtual DbSet<CustomRichTextType> CustomRichTextTypes { get; set; }
         public virtual DbSet<DatabaseMigration> DatabaseMigrations { get; set; }
@@ -26,6 +28,7 @@ namespace Nebula.EFModels.Entities
         public virtual DbSet<FieldDefinitionType> FieldDefinitionTypes { get; set; }
         public virtual DbSet<FileResource> FileResources { get; set; }
         public virtual DbSet<FileResourceMimeType> FileResourceMimeTypes { get; set; }
+        public virtual DbSet<MenuItem> MenuItems { get; set; }
         public virtual DbSet<RegionalSubbasin> RegionalSubbasins { get; set; }
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }
@@ -69,6 +72,33 @@ namespace Nebula.EFModels.Entities
                 entity.Property(e => e.BackboneSegmentTypeDisplayName).IsUnicode(false);
 
                 entity.Property(e => e.BackboneSegmentTypeName).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<CustomPage>(entity =>
+            {
+                entity.Property(e => e.CustomPageContent).IsUnicode(false);
+
+                entity.Property(e => e.CustomPageDisplayName).IsUnicode(false);
+
+                entity.Property(e => e.CustomPageVanityUrl).IsUnicode(false);
+
+                entity.HasOne(d => d.MenuItem)
+                    .WithMany(p => p.CustomPages)
+                    .HasForeignKey(d => d.MenuItemID)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+            });
+
+            modelBuilder.Entity<CustomPageRole>(entity =>
+            {
+                entity.HasOne(d => d.CustomPage)
+                    .WithMany(p => p.CustomPageRoles)
+                    .HasForeignKey(d => d.CustomPageID)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.Role)
+                    .WithMany(p => p.CustomPageRoles)
+                    .HasForeignKey(d => d.RoleID)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
             modelBuilder.Entity<CustomRichText>(entity =>
@@ -148,6 +178,15 @@ namespace Nebula.EFModels.Entities
                 entity.Property(e => e.FileResourceMimeTypeIconSmallFilename).IsUnicode(false);
 
                 entity.Property(e => e.FileResourceMimeTypeName).IsUnicode(false);
+            });
+
+            modelBuilder.Entity<MenuItem>(entity =>
+            {
+                entity.Property(e => e.MenuItemID).ValueGeneratedNever();
+
+                entity.Property(e => e.MenuItemDisplayName).IsUnicode(false);
+
+                entity.Property(e => e.MenuItemName).IsUnicode(false);
             });
 
             modelBuilder.Entity<RegionalSubbasin>(entity =>

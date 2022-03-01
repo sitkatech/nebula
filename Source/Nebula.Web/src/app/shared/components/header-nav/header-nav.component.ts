@@ -9,7 +9,8 @@ import { environment } from 'src/environments/environment';
 import { AlertContext } from '../../models/enums/alert-context.enum';
 import { RoleEnum } from '../../models/enums/role.enum';
 import { Router } from '@angular/router';
-import { UserDto } from '../../models/generated/user-dto';
+import { CustomPageService } from 'src/app/services/custom-page.service';
+import { CustomPageWithRolesDto } from '../../models/custom-page-with-roles-dto';
 
 @Component({
     selector: 'header-nav',
@@ -23,6 +24,9 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
 
     windowWidth: number;
 
+    public learnMorePages: CustomPageWithRolesDto[] = [];
+    watchUserChangeSubscription: any;
+
     @HostListener('window:resize', ['$event'])
     resize() {
         this.windowWidth = window.innerWidth;
@@ -34,13 +38,15 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         private userService: UserService,
         private alertService: AlertService,
         private cdr: ChangeDetectorRef,
-        private router: Router) {
-    }
+        private customPageService: CustomPageService,
+        private router: Router
+        ) {}
+    
 
     ngOnInit() {
-        this.authenticationService.getCurrentUser().subscribe(currentUser => {
+        // MP-AS 3-1-22 everywhere else fire and forget is fine, but if we need a refresh option, need to use currentUserSetObservable
+        this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
-
             if (currentUser && this.isAdministrator()){
                 this.userService.getUnassignedUserReport().subscribe(report =>{
                     if (report.Count > 0){
@@ -48,12 +54,16 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
                     }
                 })
             }
+            this.customPageService.getAllCustomPagesWithRoles().subscribe(customPagesWithRoles => {
+                customPagesWithRoles = customPagesWithRoles
+                    .filter(x => x.ViewableRoles.map(role => role.RoleID).includes(this.currentUser?.Role?.RoleID));
+                this.learnMorePages = customPagesWithRoles.filter(x => x.MenuItem.MenuItemName == "LearnMore");
+            });
         });
     }
 
-    ngOnDestroy() {
-        
-        
+    ngOnDestroy() {  
+        this.watchUserChangeSubscription.unsubscribe();
         this.cdr.detach();
     }
 

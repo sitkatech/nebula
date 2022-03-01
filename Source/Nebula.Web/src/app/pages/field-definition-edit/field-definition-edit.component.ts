@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FieldDefinitionService } from 'src/app/shared/services/field-definition-service';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
 import { UserDetailedDto } from 'src/app/shared/models';
 import { FieldDefinitionDto } from 'src/app/shared/models/generated/field-definition-dto';
 import { AuthenticationService } from 'src/app/services/authentication.service';
