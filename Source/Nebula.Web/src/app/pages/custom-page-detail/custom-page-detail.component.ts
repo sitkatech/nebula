@@ -78,7 +78,7 @@ export class CustomPageDetailComponent implements OnInit {
 
     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
       editor.isReadOnly = true;
-      return new CkEditorUploadAdapter(loader, customPageService, environment.apiHostName, editor);
+      return new CkEditorUploadAdapter(loader, customPageService, environment.mainAppApiUrl, editor);
     };
   }
 

@@ -56,7 +56,7 @@ export class CustomRichTextComponent implements OnInit {
     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
       // disable the editor until the image comes back
       editor.isReadOnly = true;
-      return new CkEditorUploadAdapter(loader, customRichTextService, environment.apiHostName, editor);
+      return new CkEditorUploadAdapter(loader, customRichTextService, environment.mainAppApiUrl, editor);
     };
   }
 
