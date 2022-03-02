@@ -151,7 +151,7 @@ class CkEditorUploadAdapter {
 
     return this.loader.file.then(file => new Promise((resolve, reject) => {
       service.uploadFile(file).subscribe(x => {
-        const imageUrl = `https://${this.apiUrl}${x.imageUrl}`;
+        const imageUrl = `${this.apiUrl}${x.imageUrl}`;
         editor.isReadOnly = false;
 
         resolve({
