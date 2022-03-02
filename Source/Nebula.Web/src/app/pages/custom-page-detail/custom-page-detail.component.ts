@@ -45,7 +45,10 @@ export class CustomPageDetailComponent implements OnInit {
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer) {}
+    private sanitizer: DomSanitizer) {
+      // force route reload whenever params change
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    }
 
   ngOnInit() {
     this.watchUserChangeSubscription = this.authenticationService.getCurrentUser().subscribe(currentUser => {
