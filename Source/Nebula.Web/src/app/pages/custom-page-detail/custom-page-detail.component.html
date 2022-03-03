@@ -13,10 +13,10 @@
 
 <div class="container mt-sm-4 mb-5" *ngIf="!isLoading">
     <app-alert-display></app-alert-display>
+    <div>
+        <h2 class="d-inline-block">{{customPageDisplayName}}</h2>
+    </div>
     <ng-container *ngIf="!isEditing">
-        <div>
-            <h2 class="d-inline-block">{{customPageDisplayName}}</h2>
-        </div>
         <div *ngIf="showEditButton()" class="customPageContent" style="position: relative; min-height: 60px;">
             <div class="hoverEditButton">
                 <div style="margin-top: 10px">
@@ -37,7 +37,7 @@
             <span class="mt-1 fa fa-spinner loading-spinner" style="float:right;"></span>
         </div>
         <ckeditor [editor]="Editor" [(ngModel)]="editedContent" (ready)="ckEditorReady($event)" [config]="ckConfig"></ckeditor>
-        <div style="float:right; display:block;" *ngIf="!isUploadingImage()">
+        <div style="float:right;" *ngIf="!isUploadingImage()">
             <button type="button" class="btn btn-nebula mt-1 mr-1" (click)="saveEdit()">Save</button>
             <button type="button" class="btn btn-secondary mt-1" (click)="cancelEdit()">Cancel</button>
         </div>
