@@ -15,38 +15,31 @@ export class CustomPageAccessGuard implements CanActivate {
     private authenticationService: AuthenticationService, 
     private customPageService: CustomPageService) { }
 
-  canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
-    const vanityUrl = next.paramMap.get("vanity-url");
-    console.log(vanityUrl);
+  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    let vanityUrl = next.paramMap.get("vanity-url");
     let viewableRoleIDs = Array<number>();
     if (vanityUrl) {
+      viewableRoleIDs = await this.getCustomPageRolesByVanityUrl(vanityUrl);
       if (!this.authenticationService.isCurrentUserNullOrUndefined()) {
-        return this.customPageService.getCustomPageRolesByVanityUrl(vanityUrl)
+        if (this.authenticationService.doesCurrentUserHaveOneOfTheseRoles(viewableRoleIDs)) {
+          return true;
+        }
+        return this.returnUnauthorized();
+      }
+
+      this.authenticationService.getCurrentUser()
         .pipe(
-          map(roles => {
-            viewableRoleIDs = roles.map(x => x.RoleID);
-            console.log(viewableRoleIDs);
-            if (this.authenticationService.doesCurrentUserHaveOneOfTheseRoles(viewableRoleIDs)) {
+          map(x => {
+            if (viewableRoleIDs.includes(x.Role.RoleID)) {
               return true;
             } else {
               return this.returnUnauthorized();
             }
           })
         );
-      }
+    } else {
+      return this.returnUnauthorized();
     }
-
-    return this.authenticationService.getCurrentUser()
-    .pipe(
-      map(x => {
-        if (viewableRoleIDs.includes(x.Role.RoleID)) {
-          return true;
-        } else {
-          return this.returnUnauthorized();
-        }
-      })
-    );
-
   }
 
   private returnUnauthorized() {
@@ -55,4 +48,24 @@ export class CustomPageAccessGuard implements CanActivate {
     });
     return false;
   }
+
+  async getCustomPageRolesByVanityUrl(vanityUrl: string): Promise<Array<number>> {
+
+    return new Promise((resolve, reject) => {
+ 
+      this.customPageService.getCustomPageRolesByVanityUrl(vanityUrl).subscribe(roles => {
+        let viewableRoleIDs = roles.map(x => x.RoleID);
+        resolve(viewableRoleIDs)
+      }, 
+      error => {
+        let errorMessage = <any>error;
+        if(errorMessage != null) {
+          reject(errorMessage);
+        }
+      }
+      );
+
+   })
+  }
+
 }
