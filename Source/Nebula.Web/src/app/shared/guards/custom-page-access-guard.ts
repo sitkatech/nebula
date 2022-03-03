@@ -19,7 +19,7 @@ export class CustomPageAccessGuard implements CanActivate {
     let vanityUrl = next.paramMap.get("vanity-url");
     let viewableRoleIDs = Array<number>();
     if (vanityUrl) {
-      viewableRoleIDs = await this.getCustomPageRolesByVanityUrl(vanityUrl);
+      viewableRoleIDs = await this.getCustomPageRoleIDsByVanityUrl(vanityUrl);
       if (!this.authenticationService.isCurrentUserNullOrUndefined()) {
         if (this.authenticationService.doesCurrentUserHaveOneOfTheseRoles(viewableRoleIDs)) {
           return true;
@@ -46,7 +46,7 @@ export class CustomPageAccessGuard implements CanActivate {
     return false;
   }
 
-  async getCustomPageRolesByVanityUrl(vanityUrl: string): Promise<Array<number>> {
+  async getCustomPageRoleIDsByVanityUrl(vanityUrl: string): Promise<Array<number>> {
 
     return new Promise((resolve, reject) => {
  
