@@ -45,7 +45,10 @@ export class CustomPageDetailComponent implements OnInit {
     private alertService: AlertService,
     private authenticationService: AuthenticationService,
     private cdr: ChangeDetectorRef,
-    private sanitizer: DomSanitizer) {}
+    private sanitizer: DomSanitizer) {
+      // force route reload whenever params change
+      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+    }
 
   ngOnInit() {
     this.watchUserChangeSubscription = this.authenticationService.getCurrentUser().subscribe(currentUser => {
@@ -151,7 +154,7 @@ class CkEditorUploadAdapter {
 
     return this.loader.file.then(file => new Promise((resolve, reject) => {
       service.uploadFile(file).subscribe(x => {
-        const imageUrl = `https://${this.apiUrl}${x.imageUrl}`;
+        const imageUrl = `${this.apiUrl}${x.imageUrl}`;
         editor.isReadOnly = false;
 
         resolve({
