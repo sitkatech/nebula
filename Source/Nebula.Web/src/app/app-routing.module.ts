@@ -32,7 +32,7 @@ const routes: Routes = [
   { path: "custom-pages", component: CustomPageListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
   { path: "custom-pages/create", component: CustomPageCreateComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
   { path: "custom-pages/edit-properties/:vanity-url", component: CustomPageEditPropertiesComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "custom-pages/:vanity-url", component: CustomPageDetailComponent, canActivate: [CustomPageAccessGuard] },
+  { path: "custom-pages/:vanity-url", component: CustomPageDetailComponent, canActivate: [UnauthenticatedAccessGuard, CustomPageAccessGuard, AcknowledgedDisclaimerGuard] },
   { path: "watersheds/:id", component: WatershedDetailComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard] },
   { path: "users", component: UserListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard]},
   { path: "users/:id", component: UserDetailComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
