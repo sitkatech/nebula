@@ -27,16 +27,13 @@ export class CustomPageAccessGuard implements CanActivate {
         return this.returnUnauthorized();
       }
 
-      this.authenticationService.getCurrentUser()
-        .pipe(
-          map(x => {
-            if (viewableRoleIDs.includes(x.Role.RoleID)) {
-              return true;
-            } else {
-              return this.returnUnauthorized();
-            }
-          })
-        );
+      return this.authenticationService.getCurrentUser().toPromise().then(x => {
+        if (viewableRoleIDs.includes(x.Role.RoleID)) {
+          return true;
+        } else {
+          return this.returnUnauthorized();
+        }
+      })
     } else {
       return this.returnUnauthorized();
     }
