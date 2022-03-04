@@ -62,7 +62,9 @@ export class CustomPageEditPropertiesComponent implements OnInit, OnDestroy {
       }
   
       this.menuItemService.getMenuItems().subscribe(result => {
-        this.menuItems = result;
+        // only exposing learn more menu option for now, but will be easy to add others as needed
+        this.menuItems = result.filter(x => x.MenuItemName == 'LearnMore');
+        this.cdr.detectChanges();
       });
       
       this.roleService.getRoles().subscribe(roles => {
