@@ -97,11 +97,6 @@ export class AuthenticationService {
     );
   }
 
-  private getUserCallback(user: UserDetailedDto) {
-    this.currentUser = user;
-    this._currentUserSetSubject.next(this.currentUser);
-  }
-
   private onGetUserError(error: any, claims: any) {
     if (error.status !== 404) {
       this.alertService.pushAlert(new Alert("There was an error logging into the application.", AlertContext.Danger));

@@ -1,6 +1,4 @@
-import { CanActivate, ActivatedRouteSnapshot, Router } from '@angular/router';
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
+import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { AlertService } from '../services/alert.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -8,30 +6,33 @@ import { CustomPageService } from 'src/app/services/custom-page.service';
 @Injectable({
   providedIn: 'root'
 })
-
 export class CustomPageAccessGuard implements CanActivate {
   constructor(
-    private router: Router,
-    private alertService: AlertService,
-    private authenticationService: AuthenticationService,
+    private router: Router, 
+    private alertService: AlertService, 
+    private authenticationService: AuthenticationService, 
     private customPageService: CustomPageService) { }
 
-  canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | Promise<boolean> | boolean 
-  {
-    const vanityUrl = route.paramMap.get("vanity-url");
+  async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+    let vanityUrl = next.paramMap.get("vanity-url");
+    let viewableRoleIDs = Array<number>();
     if (vanityUrl) {
-      return this.customPageService.getCustomPageRolesByVanityUrl(vanityUrl)
-        .pipe(
-          map(roles => {
-          if (this.authenticationService.doesCurrentUserHaveOneOfTheseRoles(roles.map(y => y.RoleID))) {
-            return true;
-          } else {
-            return this.returnUnauthorized();
-          }
-        })
-        )
-    }
-    else {
+      viewableRoleIDs = await this.getCustomPageRoleIDsByVanityUrl(vanityUrl);
+      if (!this.authenticationService.isCurrentUserNullOrUndefined()) {
+        if (this.authenticationService.doesCurrentUserHaveOneOfTheseRoles(viewableRoleIDs)) {
+          return true;
+        }
+        return this.returnUnauthorized();
+      }
+
+      return this.authenticationService.getCurrentUser().toPromise().then(x => {
+        if (viewableRoleIDs.includes(x.Role.RoleID)) {
+          return true;
+        } else {
+          return this.returnUnauthorized();
+        }
+      })
+    } else {
       return this.returnUnauthorized();
     }
   }
@@ -42,4 +43,24 @@ export class CustomPageAccessGuard implements CanActivate {
     });
     return false;
   }
+
+  async getCustomPageRoleIDsByVanityUrl(vanityUrl: string): Promise<Array<number>> {
+
+    return new Promise((resolve, reject) => {
+ 
+      this.customPageService.getCustomPageRolesByVanityUrl(vanityUrl).subscribe(roles => {
+        let viewableRoleIDs = roles.map(x => x.RoleID);
+        resolve(viewableRoleIDs)
+      }, 
+      error => {
+        let errorMessage = <any>error;
+        if(errorMessage != null) {
+          reject(errorMessage);
+        }
+      }
+      );
+
+   })
+  }
+
 }
