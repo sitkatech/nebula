@@ -39,10 +39,10 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
             }
     
             //We were forced to logout or were sent a link and just finished logging in
-            if (sessionStorage.getItem("authRedirectUrl")) {
-                this.router.navigateByUrl(sessionStorage.getItem("authRedirectUrl"))
+            if (this.authenticationService.getAuthRedirectUrl()) {
+                this.router.navigateByUrl(this.authenticationService.getAuthRedirectUrl())
                     .then(() => {
-                        sessionStorage.removeItem("authRedirectUrl");
+                        this.authenticationService.clearAuthRedirectUrl();
                     });
             }
     
