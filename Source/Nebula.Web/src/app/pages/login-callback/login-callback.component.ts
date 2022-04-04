@@ -13,8 +13,15 @@ export class LoginCallbackComponent implements OnInit, OnDestroy {
   constructor(private router: Router, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    this.authenticationService.getCurrentUser().subscribe(currentUser => {
-      this.router.navigate(['/']);
+    this.authenticationService.getCurrentUserID().subscribe(currentUser => {
+      let redirect = this.authenticationService.getAuthRedirectUrl();
+      if (redirect) {
+        this.authenticationService.clearAuthRedirectUrl();
+        this.router.navigate([redirect]);
+      }
+      else {
+        this.router.navigate(['/']);
+      }
     });
   }
 
