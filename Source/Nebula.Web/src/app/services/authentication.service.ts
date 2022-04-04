@@ -22,7 +22,6 @@ export class AuthenticationService {
 
   private _currentUserSetSubject = new Subject<UserDetailedDto>();
   public currentUserSetObservable = this._currentUserSetSubject.asObservable();
-  attemptingToCreateUser: any;
 
   constructor(private router: Router,
     private oauthService: OAuthService,
