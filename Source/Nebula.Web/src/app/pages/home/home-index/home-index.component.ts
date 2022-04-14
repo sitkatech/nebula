@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import { LoginCallbackComponent } from '../../login-callback/login-callback.component';
+import { UserDto } from 'src/app/shared/models/generated/user-dto';
 
 @Component({
     selector: 'app-home-index',
@@ -38,14 +39,14 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
             }
     
             //We were forced to logout or were sent a link and just finished logging in
-            if (sessionStorage.getItem("authRedirectUrl")) {
-                this.router.navigateByUrl(sessionStorage.getItem("authRedirectUrl"))
+            if (this.authenticationService.getAuthRedirectUrl()) {
+                this.router.navigateByUrl(this.authenticationService.getAuthRedirectUrl())
                     .then(() => {
-                        sessionStorage.removeItem("authRedirectUrl");
+                        this.authenticationService.clearAuthRedirectUrl();
                     });
             }
     
-            this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+            this.authenticationService.getCurrentUser().subscribe(currentUser => {
                 this.currentUser = currentUser;
             });
 

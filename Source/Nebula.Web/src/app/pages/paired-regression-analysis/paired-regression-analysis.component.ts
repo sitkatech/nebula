@@ -13,6 +13,7 @@ import { HydstraRegressionMethod } from 'src/app/shared/models/hydstra/hydstra-r
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { ActivatedRoute } from '@angular/router';
 import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
+import { DateTime } from 'luxon';
 
 declare var vegaEmbed: any;
 
@@ -22,7 +23,7 @@ declare var vegaEmbed: any;
   styleUrls: ['./paired-regression-analysis.component.scss']
 })
 export class PairedRegressionAnalysisComponent implements OnInit {
-  private watchUserChangeSubscription: any;
+  
   private currentUser: UserDetailedDto;
 
   @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
@@ -39,10 +40,11 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   public hydstraRegressionMethods: HydstraRegressionMethod[] = HydstraRegressionMethod.all();
   public hydstraAggregationMethods: HydstraAggregationMethod[] = HydstraAggregationMethod.all();
 
-  public currentDate = new Date();
+  public currentDate = DateTime.utc();
+  public startDate = this.currentDate.minus({months:3});
   public timeSeriesForm = new FormGroup({
-    start_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    end_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    start_date: new FormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
+    end_date: new FormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
     interval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
     weather_condition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required]),
     regression_method: new FormControl(HydstraRegressionMethod.Linear.value, [Validators.required]),
@@ -74,7 +76,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
       this.setupFormChangeListener();
     });
@@ -279,6 +281,10 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   //#endregion
 
+  public showOnMapForStation(station : string) {
+    this.stationSelect.selectStationByStation(station);
+  }
+  
   public populateFormFromURL() {
     this.route.queryParams.subscribe(params => {
       if (params == null || params == undefined || !params.hasOwnProperty("json")) {

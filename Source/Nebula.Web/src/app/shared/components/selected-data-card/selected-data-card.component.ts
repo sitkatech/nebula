@@ -20,21 +20,28 @@ export class SelectedDataCardComponent implements OnInit {
   public singleVariableRemoved = new EventEmitter<number>();
   @Output()
   public allVariablesCleared = new EventEmitter();
+  @Output()
+  public selectStationOnMap = new EventEmitter<string>();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  public emitSelectStationOnMap(variable : SiteVariable) {
+    this.selectStationOnMap.emit(variable.station);
+  }
+
   public removeVariableFromSelection(index: number): void {
     this.selectedVariables.splice(index, 1);
-    this.selectedVariablesChange.emit(this.selectedVariables);
+    //Need to spread here to adequately trigger change detection
+    this.selectedVariablesChange.emit([...this.selectedVariables]);
     this.singleVariableRemoved.emit(index);
   }
 
   public clearAllVariables(): void {
     this.selectedVariables = [];
-    this.selectedVariablesChange.emit([]);
+    this.selectedVariablesChange.emit(this.selectedVariables);
     this.allVariablesCleared.emit();
   }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef, ViewChildren } from '@angular/core';
-import { LyraService } from 'src/app/services/lyra.service.js';
+import { LyraService } from 'src/app/services/lyra.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
@@ -12,6 +12,8 @@ import { UserDetailedDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
 import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
+import { DateTime } from 'luxon';
+import { UserDto } from 'src/app/shared/models/generated/user-dto';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -38,10 +40,11 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   public hydstraIntervals: HydstraInterval[] = Object.values(HydstraInterval);
   public hydstraWeatherConditions: HydstraWeatherCondition[] = Object.values(HydstraWeatherCondition)
 
-  public currentDate = new Date();
+  public currentDate = DateTime.utc();
+  public startDate = this.currentDate.minus({months:3});
   public timeSeriesForm = new FormGroup({
-    start_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() - 2, day: this.currentDate.getUTCDate() }, [Validators.required]),
-    end_date: new FormControl({ year: this.currentDate.getUTCFullYear(), month: this.currentDate.getUTCMonth() + 1, day: this.currentDate.getUTCDate() }, [Validators.required]),
+    start_date: new FormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
+    end_date: new FormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
     timeseries: new FormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
@@ -70,7 +73,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
       this.setupFormChangeListener();
     });
@@ -283,6 +286,10 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   }
 
   //#endregion
+
+  public showOnMapForStation(station : string) {
+    this.stationSelect.selectStationByStation(station);
+  }
 
   public populateFormFromURL() {
     this.route.queryParams.subscribe(params => {

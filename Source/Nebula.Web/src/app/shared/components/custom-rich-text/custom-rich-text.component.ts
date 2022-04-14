@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
 import { CustomRichTextService } from '../../services/custom-rich-text.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { UserDetailedDto } from '../../models/user/user-detailed-dto';
@@ -6,7 +6,7 @@ import { CustomRichTextDetailedDto } from '../../models/custom-rich-text-detaile
 import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
 import { AlertContext } from '../../models/enums/alert-context.enum';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -35,7 +35,7 @@ export class CustomRichTextComponent implements OnInit {
     private alertService: AlertService) { }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
     });
     //window.Editor = this.Editor;
@@ -53,12 +53,10 @@ export class CustomRichTextComponent implements OnInit {
     const customRichTextService = this.customRichTextService
     this.editor = editor;
 
-    console.log(this.Editor.builtinPlugins.map( plugin => plugin.pluginName ));
-
     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
       // disable the editor until the image comes back
       editor.isReadOnly = true;
-      return new CkEditorUploadAdapter(loader, customRichTextService, environment.apiHostName, editor);
+      return new CkEditorUploadAdapter(loader, customRichTextService, environment.mainAppApiUrl, editor);
     };
   }
 
@@ -79,7 +77,6 @@ export class CustomRichTextComponent implements OnInit {
     this.isEditing = false;
     this.isLoading = true;
     const updateDto = new CustomRichTextDetailedDto({ CustomRichTextContent: this.editedContent });
-    console.log(updateDto);
     this.customRichTextService.updateCustomRichText(this.customRichTextTypeID, updateDto).subscribe(x => {
       this.customRichTextContent = x.CustomRichTextContent;
       this.isLoading = false;
@@ -117,7 +114,7 @@ class CkEditorUploadAdapter {
 
     return this.loader.file.then(file => new Promise((resolve, reject) => {
       service.uploadFile(file).subscribe(x => {
-        const imageUrl = `https://${this.apiUrl}${x.imageUrl}`;
+        const imageUrl = `${this.apiUrl}${x.imageUrl}`;
         editor.isReadOnly = false;
 
         resolve({

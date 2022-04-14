@@ -1,0 +1,1 @@
+Additional color icons can be found here: https://github.com/pointhi/leaflet-color-markers

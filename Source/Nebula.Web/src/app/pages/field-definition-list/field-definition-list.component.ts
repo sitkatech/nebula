@@ -16,7 +16,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 export class FieldDefinitionListComponent implements OnInit {
 
   @ViewChild("fieldDefinitionsGrid") fieldDefinitionsGrid: AgGridAngular;
-  private watchUserChangeSubscription: any;
+  
   private currentUser: UserDetailedDto;
 
   public fieldDefinitions: Array<FieldDefinitionDto>
@@ -31,9 +31,9 @@ export class FieldDefinitionListComponent implements OnInit {
     private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
-      this.fieldDefinitionsGrid.api.showLoadingOverlay();
+      this.fieldDefinitionsGrid?.api.showLoadingOverlay();
       this.fieldDefinitionService.listAllFieldDefinitions().subscribe(fieldDefinitions => {
         this.fieldDefinitions = fieldDefinitions;
         this.rowData = fieldDefinitions;
@@ -76,8 +76,8 @@ export class FieldDefinitionListComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.watchUserChangeSubscription.unsubscribe();
-    this.authenticationService.dispose();
+    
+    
     this.cdr.detach();
   }
 }

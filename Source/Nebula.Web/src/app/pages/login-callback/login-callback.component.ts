@@ -8,17 +8,24 @@ import { AuthenticationService } from 'src/app/services/authentication.service';
   styleUrls: ['./login-callback.component.scss']
 })
 export class LoginCallbackComponent implements OnInit, OnDestroy {
-  private watchUserChangeSubscription: any;
+  
 
   constructor(private router: Router, private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
-      this.router.navigate(['/']);
+    this.authenticationService.getCurrentUserID().subscribe(currentUser => {
+      let redirect = this.authenticationService.getAuthRedirectUrl();
+      if (redirect) {
+        this.authenticationService.clearAuthRedirectUrl();
+        this.router.navigate([redirect]);
+      }
+      else {
+        this.router.navigate(['/']);
+      }
     });
   }
 
   ngOnDestroy(): void {
-    this.watchUserChangeSubscription.unsubscribe();
+    
   }
 }

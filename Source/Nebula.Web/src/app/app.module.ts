@@ -4,7 +4,7 @@ import { NgModule, APP_INITIALIZER, ErrorHandler } from '@angular/core';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/shared.module';
-import { OAuthModule } from 'angular-oauth2-oidc';
+import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { CookieService } from 'ngx-cookie-service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/interceptors/auth-interceptor';
@@ -17,22 +17,17 @@ import { UserDetailComponent } from './pages/user-detail/user-detail.component';
 import { UserEditComponent } from './pages/user-edit/user-edit.component';
 import { WatershedDetailComponent } from './pages/watershed-detail/watershed-detail.component';
 import { AgGridModule } from 'ag-grid-angular';
-import { WatershedListComponent } from './pages/watershed-list/watershed-list.component';
 import { DecimalPipe, CurrencyPipe, DatePipe } from '@angular/common';
 import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer/link-renderer.component';
 
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { ComboSeriesVerticalComponent } from './shared/components/combo-chart/combo-series-vertical.component'
 import { FontAwesomeIconLinkRendererComponent } from './shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { LoginCallbackComponent } from './pages/login-callback/login-callback.component';
 import { HelpComponent } from './pages/help/help.component';
 import { SelectDropDownModule } from 'ngx-select-dropdown'
-import { MyDatePickerModule } from 'mydatepicker';
 import { MultiLinkRendererComponent } from './shared/components/ag-grid/multi-link-renderer/multi-link-renderer.component';
 import { CreateUserCallbackComponent } from './pages/create-user-callback/create-user-callback.component';
-import { AboutComponent } from './pages/about/about.component';
 import { DisclaimerComponent } from './pages/disclaimer/disclaimer.component';
 import { AppInitService } from './app.init';
 import { FieldDefinitionListComponent } from './pages/field-definition-list/field-definition-list.component';
@@ -46,6 +41,12 @@ import { GlobalErrorHandlerService } from './shared/services/global-error-handle
 import { PairedRegressionAnalysisComponent } from './pages/paired-regression-analysis/paired-regression-analysis.component';
 import { DiversionScenarioComponent } from './pages/diversion-scenario/diversion-scenario.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { CookieStorageService } from './shared/services/cookies/cookie-storage.service';
+import { CustomPageListComponent } from './pages/custom-page-list/custom-page-list.component';
+import { CustomPageDetailComponent } from './pages/custom-page-detail/custom-page-detail.component';
+import { CustomPageCreateComponent } from './pages/custom-page-create/custom-page-create.component';
+import { CustomPageEditPropertiesComponent } from './pages/custom-page-edit-properties/custom-page-edit-properties.component';
+
 
 export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
   return () => appLoadService.init().then(() => {
@@ -64,18 +65,19 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     UserDetailComponent,
     UserEditComponent,
     WatershedDetailComponent,
-    WatershedListComponent,
-    ComboSeriesVerticalComponent,
     LoginCallbackComponent,
     HelpComponent,
     CreateUserCallbackComponent,
-    AboutComponent,
     DisclaimerComponent,
     FieldDefinitionListComponent,
     FieldDefinitionEditComponent,
     TimeSeriesAnalysisComponent,
     PairedRegressionAnalysisComponent,
-    DiversionScenarioComponent
+    DiversionScenarioComponent,
+    CustomPageListComponent,
+    CustomPageDetailComponent,
+    CustomPageCreateComponent,
+    CustomPageEditPropertiesComponent
   ],
   imports: [
     AppRoutingModule,
@@ -87,11 +89,9 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     SharedModule.forRoot(),
     FormsModule,
     ReactiveFormsModule,
-    NgxChartsModule,
     BrowserAnimationsModule,
     AgGridModule.withComponents([]),
     SelectDropDownModule,
-    MyDatePickerModule,
     CKEditorModule,
     NgSelectModule
   ],  
@@ -104,7 +104,11 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
       provide: ErrorHandler,
       useClass: GlobalErrorHandlerService
     },
-    DecimalPipe, CurrencyPipe, DatePipe
+    DecimalPipe, CurrencyPipe, DatePipe,
+    {
+      provide: OAuthStorage,
+      useClass: CookieStorageService
+    }
   ],
   entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],
   bootstrap: [AppComponent]

@@ -41,7 +41,7 @@
                 <div id={{mapID}} class="location-card"
                                     style="height:100%" [style.min-height]="mapHeight"></div>
             </div>
-            <div class="col-md-5 col-xl-4">
+            <div class="col-md-5 col-xl-4" [style.max-height]="mapHeight" [style.overflow]="'auto'">
                 <ng-container *ngIf="!selectedSiteStation">
                     <p>Click a station on the map to get started!</p>
                 </ng-container>

@@ -15,6 +15,7 @@ namespace Nebula.EFModels.Entities
     {
         public Role()
         {
+            CustomPageRoles = new HashSet<CustomPageRole>();
             Users = new HashSet<User>();
         }
 
@@ -30,6 +31,8 @@ namespace Nebula.EFModels.Entities
         public string RoleDescription { get; set; }
         public int SortOrder { get; set; }
 
+        [InverseProperty(nameof(CustomPageRole.Role))]
+        public virtual ICollection<CustomPageRole> CustomPageRoles { get; set; }
         [InverseProperty(nameof(User.Role))]
         public virtual ICollection<User> Users { get; set; }
     }

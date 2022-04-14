@@ -53,6 +53,9 @@ export class FieldDefinitionGridHeaderComponent implements OnDestroy, IHeaderAng
         }
     };
 
+    refresh(params: IHeaderParams): boolean {
+        return true;
+    }
 
     private querySelector(selector: string) {
         return <HTMLElement>this.elementRef.nativeElement.querySelector(

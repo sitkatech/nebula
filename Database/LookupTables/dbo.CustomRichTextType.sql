@@ -8,8 +8,8 @@ USING (VALUES
 (6, 'WatershedList', 'Watershed List'),
 (7, 'TimeSeriesAnalysis', 'Time Series Analysis'),
 (8, 'PairedRegressionAnalysis', 'Paired Regression Analysis'),
-(9, 'DiversionScenario', 'Diversion Scenario')
-
+(9, 'DiversionScenario', 'Diversion Scenario'),
+(10, 'CustomPages', 'Custom Pages')
 )
 AS Source (CustomRichTextTypeID, CustomRichTextTypeName, CustomRichTextTypeDisplayName)
 ON Target.CustomRichTextTypeID = Source.CustomRichTextTypeID

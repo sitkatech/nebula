@@ -12,7 +12,7 @@ import { UserDetailedDto } from 'src/app/shared/models';
   styleUrls: ['./watershed-detail.component.scss']
 })
 export class WatershedDetailComponent implements OnInit, OnDestroy {
-  private watchUserChangeSubscription: any;
+  
   private currentUser: UserDetailedDto;
 
   public watershed: WatershedDto;
@@ -31,7 +31,7 @@ export class WatershedDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
 
       const id = parseInt(this.route.snapshot.paramMap.get("id"));
@@ -48,8 +48,8 @@ export class WatershedDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.watchUserChangeSubscription.unsubscribe();
-    this.authenticationService.dispose();
+    
+    
     this.cdr.detach();
   }
 

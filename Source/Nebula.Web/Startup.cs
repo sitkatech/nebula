@@ -75,7 +75,7 @@ namespace Nebula.Web
             Production = bool.Parse(configuration["Production"]);
             Staging = bool.Parse(configuration["Staging"]);
             Dev = bool.Parse(configuration["Dev"]);
-            ApiHostName = configuration["ApiHostName"];
+            MainAppApiUrl = configuration["MainAppApiUrl"];
             CreateAccountRedirectUrl = configuration["CreateAccountRedirectUrl"];
             GeoserverMapServiceUrl = configuration["GeoserverMapServiceUrl"];
             KeystoneAuthConfiguration = new KeystoneAuthConfigurationDto(configuration);
@@ -96,8 +96,8 @@ namespace Nebula.Web
         public bool Staging { get; set; }
         [JsonProperty("dev")]
         public bool Dev { get; set; }
-        [JsonProperty("apiHostName")]
-        public string ApiHostName { get; set; }
+        [JsonProperty("mainAppApiUrl")]
+        public string MainAppApiUrl { get; set; }
         [JsonProperty("createAccountRedirectUrl")]
         public string CreateAccountRedirectUrl { get; set; }
         [JsonProperty("geoserverMapServiceUrl")]

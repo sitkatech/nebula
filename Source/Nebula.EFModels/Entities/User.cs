@@ -9,6 +9,43 @@ namespace Nebula.EFModels.Entities
 {
     public partial class User
     {
+        public string FullName => $"{FirstName} {LastName}";
+        public string FullNameLastFirst => $"{LastName}, {FirstName}";
+
+        public static UserDto CreateUnassignedUser(NebulaDbContext dbContext, UserCreateDto userCreateDto)
+        {
+            var userUpsertDto = new UserUpsertDto()
+            {
+                FirstName = userCreateDto.FirstName,
+                LastName = userCreateDto.LastName,
+                OrganizationName = userCreateDto.OrganizationName,
+                Email = userCreateDto.Email,
+                PhoneNumber = userCreateDto.PhoneNumber,
+                RoleID = (int)RoleEnum.Unassigned,  // don't allow non-admin user to set their role to something other than Unassigned
+                ReceiveSupportEmails = false  // don't allow non-admin users to hijack support emails
+            };
+            return CreateNewUser(dbContext, userUpsertDto, userCreateDto.LoginName, userCreateDto.UserGuid);
+        }
+
+        public static List<ErrorMessage> ValidateCreateUnassignedUser(NebulaDbContext dbContext, UserCreateDto userCreateDto)
+        {
+            var result = new List<ErrorMessage>();
+
+            var userByGuidDto = GetByUserGuid(dbContext, userCreateDto.UserGuid);  // A duplicate Guid not only leads to 500s, it allows someone to hijack another user's account
+            if (userByGuidDto != null)
+            {
+                result.Add(new ErrorMessage() { Type = "User Creation", Message = "Invalid user information." });  // purposely vague; we don't want a naughty person realizing they figured out someone else's Guid
+            }
+
+            var userByEmailDto = GetByEmail(dbContext, userCreateDto.Email);  // A duplicate email leads to 500s, so need to prevent duplicates
+            if (userByEmailDto != null)
+            {
+                result.Add(new ErrorMessage() { Type = "User Creation", Message = "There is already a user account with this email address." });
+            }
+
+            return result;
+        }
+
         public static UserDto CreateNewUser(NebulaDbContext dbContext, UserUpsertDto userToCreate, string loginName, Guid userGuid)
         {
             if (!userToCreate.RoleID.HasValue)

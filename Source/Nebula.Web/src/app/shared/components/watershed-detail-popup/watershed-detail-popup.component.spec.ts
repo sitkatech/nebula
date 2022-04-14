@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WatershedDetailPopupComponent } from './watershed-detail-popup.component';
 
@@ -6,7 +6,7 @@ describe('WatershedDetailPopupComponent', () => {
   let component: WatershedDetailPopupComponent;
   let fixture: ComponentFixture<WatershedDetailPopupComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ WatershedDetailPopupComponent ]
     })

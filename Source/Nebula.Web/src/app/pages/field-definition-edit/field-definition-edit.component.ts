@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FieldDefinitionService } from 'src/app/shared/services/field-definition-service';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
 import { UserDetailedDto } from 'src/app/shared/models';
 import { FieldDefinitionDto } from 'src/app/shared/models/generated/field-definition-dto';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -15,7 +15,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
   styleUrls: ['./field-definition-edit.component.scss']
 })
 export class FieldDefinitionEditComponent implements OnInit {
-  private watchUserChangeSubscription: any;
+  
   private currentUser: UserDetailedDto;
 
   public fieldDefinition: FieldDefinitionDto;
@@ -36,7 +36,7 @@ export class FieldDefinitionEditComponent implements OnInit {
   }
 
   ngOnInit() {
-      this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
+      this.authenticationService.getCurrentUser().subscribe(currentUser => {
           this.currentUser = currentUser;
           const id = parseInt(this.route.snapshot.paramMap.get("id"));
           if (id) {
@@ -48,8 +48,8 @@ export class FieldDefinitionEditComponent implements OnInit {
   }
 
   ngOnDestroy() {
-      this.watchUserChangeSubscription.unsubscribe();
-      this.authenticationService.dispose();
+      
+      
       this.cdr.detach();
   }
 

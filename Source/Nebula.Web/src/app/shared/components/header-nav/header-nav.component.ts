@@ -8,6 +8,9 @@ import { Alert } from '../../models/alert';
 import { environment } from 'src/environments/environment';
 import { AlertContext } from '../../models/enums/alert-context.enum';
 import { RoleEnum } from '../../models/enums/role.enum';
+import { Router } from '@angular/router';
+import { CustomPageService } from 'src/app/services/custom-page.service';
+import { CustomPageWithRolesDto } from '../../models/custom-page-with-roles-dto';
 
 @Component({
     selector: 'header-nav',
@@ -16,10 +19,13 @@ import { RoleEnum } from '../../models/enums/role.enum';
 })
 
 export class HeaderNavComponent implements OnInit, OnDestroy {
-    private watchUserChangeSubscription: any;
+    
     private currentUser: UserDetailedDto;
 
     windowWidth: number;
+
+    public learnMorePages: CustomPageWithRolesDto[] = [];
+    watchUserChangeSubscription: any;
 
     @HostListener('window:resize', ['$event'])
     resize() {
@@ -31,13 +37,16 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         private cookieStorageService: CookieStorageService,
         private userService: UserService,
         private alertService: AlertService,
-        private cdr: ChangeDetectorRef) {
-    }
+        private cdr: ChangeDetectorRef,
+        private customPageService: CustomPageService,
+        private router: Router
+        ) {}
+    
 
     ngOnInit() {
+        // MP-AS 3-1-22 everywhere else fire and forget is fine, but if we need a refresh option, need to use currentUserSetObservable
         this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
-
             if (currentUser && this.isAdministrator()){
                 this.userService.getUnassignedUserReport().subscribe(report =>{
                     if (report.Count > 0){
@@ -45,12 +54,16 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
                     }
                 })
             }
+            this.customPageService.getAllCustomPagesWithRoles().subscribe(customPagesWithRoles => {
+                customPagesWithRoles = customPagesWithRoles
+                    .filter(x => x.ViewableRoles.map(role => role.RoleID).includes(this.currentUser?.Role?.RoleID));
+                this.learnMorePages = customPagesWithRoles.filter(x => x.MenuItem.MenuItemName == "LearnMore");
+            });
         });
     }
 
-    ngOnDestroy() {
+    ngOnDestroy() {  
         this.watchUserChangeSubscription.unsubscribe();
-        this.authenticationService.dispose();
         this.cdr.detach();
     }
 
@@ -58,8 +71,12 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         return this.authenticationService.isAuthenticated();
     }
 
-    public canSeeViewMenu(): boolean {
-        return this.authenticationService.isUserInRole(this.currentUser, [RoleEnum.Admin, RoleEnum.DataExplorer]);
+    public isHomepageCurrentPage(){
+        return this.router.url === '/';
+    }
+
+    public canSeeScenarioOptions(): boolean {
+        return this.isAuthenticated() && this.authenticationService.isUserInRole(this.currentUser, [RoleEnum.Admin, RoleEnum.DataExplorer]);
     }
 
     public isAdministrator(): boolean {

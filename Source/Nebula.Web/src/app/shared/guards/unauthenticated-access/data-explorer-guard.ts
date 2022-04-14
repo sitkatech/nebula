@@ -24,7 +24,7 @@ export class DataExplorerGuard implements CanActivate {
       }
     }
 
-    return this.authenticationService.currentUserSetObservable
+    return this.authenticationService.getCurrentUser()
       .pipe(
         map(x => {
           if (x.Role.RoleID == RoleEnum.Admin || x.Role.RoleID == RoleEnum.DataExplorer) {

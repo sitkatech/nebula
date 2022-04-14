@@ -14,7 +14,7 @@ export class UnauthenticatedAccessGuard implements CanActivate {
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
     if (this.authenticationService.isAuthenticated()) {
-      return true;
+      return !this.authenticationService.isCurrentUserDisabled();
     } else {
       sessionStorage["authRedirectUrl"] = state.url;
       this.authenticationService.login()
