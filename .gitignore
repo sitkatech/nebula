@@ -7,3 +7,4 @@ Source/Nebula.API/appsecrets.json
 /Source/Nebula.GeoServer/data_dir/.updatepassword.lock
 /Source/Nebula.GeoServer/data_dir/security/*
 /Source/Nebula.Web/.vscode
+/Source/Nebula.Web/package-lock.json
