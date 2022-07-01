@@ -6,7 +6,6 @@ import { NotFoundComponent } from './pages';
 import { HeaderNavComponent } from './components';
 import { UnauthenticatedComponent } from './pages/unauthenticated/unauthenticated.component';
 import { SubscriptionInsufficientComponent } from './pages/subscription-insufficient/subscription-insufficient.component';
-import { NgProgressModule } from '@ngx-progressbar/core';
 import { RouterModule } from '@angular/router';
 import { WatershedDetailPopupComponent } from './components/watershed-detail-popup/watershed-detail-popup.component';
 import { LinkRendererComponent } from './components/ag-grid/link-renderer/link-renderer.component';
@@ -58,7 +57,6 @@ import { ClearGridFiltersButtonComponent } from './components/clear-grid-filters
         FormsModule,
         ReactiveFormsModule,
         HttpClientModule,
-        NgProgressModule,
         RouterModule,
         SelectDropDownModule,
         CKEditorModule,

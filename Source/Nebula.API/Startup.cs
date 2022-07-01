@@ -15,14 +15,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Serilog;
 using Nebula.API.Services;
 using Nebula.API.Services.Telemetry;
 using Nebula.EFModels.Entities;
-using Serilog.Sinks.ApplicationInsights.Sinks.ApplicationInsights.TelemetryConverters;
+using Serilog.Sinks.ApplicationInsights.TelemetryConverters;
 using ILogger = Serilog.ILogger;
 
 namespace Nebula.API
