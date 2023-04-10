@@ -5,7 +5,7 @@ services:
     build:
       args:
         source: ${DOCKER_BUILD_SOURCE}
-    image: sitkacontainers.azurecr.io/nebula/web
+    image: nebula/web
     ports:
       - "8123:80"
       - "8124:443"
