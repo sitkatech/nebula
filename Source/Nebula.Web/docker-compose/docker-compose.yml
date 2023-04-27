@@ -2,7 +2,7 @@ version: '3.5'
 
 services:
   nebula.web:
-    image: sitkacontainers.azurecr.io/nebula/web
+    image: nebula/web
     build:
       args:
         env: ${ENVIRONMENT}

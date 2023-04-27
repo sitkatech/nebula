@@ -4,6 +4,6 @@ services:
   nebula.web:
     environment:
       - DOTNET_USE_POLLING_FILE_WATCHER=1    
-    image: sitkacontainers.azurecr.io/nebula/web
+    image: nebula/web
     labels:
       - "com.microsoft.visualstudio.targetoperatingsystem=linux"
