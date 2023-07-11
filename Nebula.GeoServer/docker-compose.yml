@@ -25,7 +25,7 @@ services:
     ports: 
       - 127.0.0.1:8125:8080
     volumes:
-      - c:/git/sitkatech/nebula/Source/Nebula.GeoServer/data_dir:/opt/geoserver/data_dir
+      - c:/git/sitkatech/nebula/Nebula.GeoServer/data_dir:/opt/geoserver/data_dir
 # Try just having part of it so we don't have to svn ignore a bunch of stuff
 #      - ./data_dir/styles:/opt/geoserver/data_dir/styles
 #      - ./data_dir/workspaces:/opt/geoserver/data_dir/workspaces

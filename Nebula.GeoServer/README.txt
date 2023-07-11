@@ -7,7 +7,7 @@ To install docker desktop
 
 To start local docker container:
 1. Make sure Docker Desktop is running	
-2. Navigate to "C:\git\sitkatech\nebula\Source\Nebula.GeoServer" via CMD
+2. Navigate to "C:\git\sitkatech\nebula\Nebula.GeoServer" via CMD
 3. Run "docker-compose -f docker-compose.yml up -d" (-d runs in detached mode)
 4. Navigate to geoserver: http://localhost:8125/geoserver/
 
