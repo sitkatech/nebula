@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29001.49
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32804.467
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nebula.EFModels", "Nebula.EFModels\Nebula.EFModels.csproj", "{BCA833B8-BDA4-410B-811D-381C420EAA57}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nebula.Models", "Nebula.Models\Nebula.Models.csproj", "{33EFE513-43CA-4375-A3BA-3D0CD3513571}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose\docker-compose.dcproj", "{4ADC0EA7-5D32-4AEC-B818-FCC266A4E6F6}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Nebula.Database", "Nebula.Database\Nebula.Database.sqlproj", "{8851EB6A-BCEA-42B4-83DD-125A1BCFAA52}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,12 @@ Global
 		{4ADC0EA7-5D32-4AEC-B818-FCC266A4E6F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4ADC0EA7-5D32-4AEC-B818-FCC266A4E6F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4ADC0EA7-5D32-4AEC-B818-FCC266A4E6F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8851EB6A-BCEA-42B4-83DD-125A1BCFAA52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8851EB6A-BCEA-42B4-83DD-125A1BCFAA52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8851EB6A-BCEA-42B4-83DD-125A1BCFAA52}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8851EB6A-BCEA-42B4-83DD-125A1BCFAA52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8851EB6A-BCEA-42B4-83DD-125A1BCFAA52}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8851EB6A-BCEA-42B4-83DD-125A1BCFAA52}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
