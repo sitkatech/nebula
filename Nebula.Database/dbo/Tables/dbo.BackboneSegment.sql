@@ -6,19 +6,7 @@ CREATE TABLE [dbo].[BackboneSegment](
 	[DownstreamBackboneSegmentID] [int] NULL,
 	[StreamName] [varchar](max) COLLATE SQL_Latin1_General_CP1_CI_AS NULL,
 	[BackboneSegmentGeometry4326] [geometry] NULL,
- CONSTRAINT [PK_BackboneSegment_BackboneSegmentID] PRIMARY KEY CLUSTERED 
-(
-	[BackboneSegmentID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-
-GO
-ALTER TABLE [dbo].[BackboneSegment]  WITH CHECK ADD  CONSTRAINT [FK_BackboneSegment_BackboneSegment_DownstreamBackboneSegmentID_BackboneSegmentID] FOREIGN KEY([DownstreamBackboneSegmentID])
-REFERENCES [dbo].[BackboneSegment] ([BackboneSegmentID])
-GO
-ALTER TABLE [dbo].[BackboneSegment] CHECK CONSTRAINT [FK_BackboneSegment_BackboneSegment_DownstreamBackboneSegmentID_BackboneSegmentID]
-GO
-ALTER TABLE [dbo].[BackboneSegment]  WITH CHECK ADD  CONSTRAINT [FK_BackboneSegment_BackboneSegmentType_BackboneSegmentTypeID] FOREIGN KEY([BackboneSegmentTypeID])
-REFERENCES [dbo].[BackboneSegmentType] ([BackboneSegmentTypeID])
-GO
-ALTER TABLE [dbo].[BackboneSegment] CHECK CONSTRAINT [FK_BackboneSegment_BackboneSegmentType_BackboneSegmentTypeID]
+	CONSTRAINT [PK_BackboneSegment_BackboneSegmentID] PRIMARY KEY CLUSTERED ([BackboneSegmentID] ASC),
+	CONSTRAINT [FK_BackboneSegment_BackboneSegment_DownstreamBackboneSegmentID_BackboneSegmentID] FOREIGN KEY ([DownstreamBackboneSegmentID]) REFERENCES [dbo].[BackboneSegment] ([BackboneSegmentID]),
+	CONSTRAINT [FK_BackboneSegment_BackboneSegmentType_BackboneSegmentTypeID] FOREIGN KEY ([BackboneSegmentTypeID]) REFERENCES [dbo].[BackboneSegmentType] ([BackboneSegmentTypeID])
+)

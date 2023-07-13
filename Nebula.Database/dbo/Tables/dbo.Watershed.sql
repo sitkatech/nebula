@@ -1,10 +1,7 @@
-CREATE TABLE [dbo].[Watershed](
+CREATE TABLE [dbo].[Watershed] (
 	[WatershedID] [int] IDENTITY(1,1) NOT NULL,
 	[WatershedName] [varchar](100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
 	[WatershedGeometry] [geometry] NOT NULL,
 	[WatershedGeometry4326] [geometry] NOT NULL,
- CONSTRAINT [PK_Watershed_WatershedID] PRIMARY KEY CLUSTERED 
-(
-	[WatershedID] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+	CONSTRAINT [PK_Watershed_WatershedID] PRIMARY KEY CLUSTERED ([WatershedID] ASC)
+)
