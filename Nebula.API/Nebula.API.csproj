@@ -22,6 +22,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Serilog.AspNetCore" Version="5.0.0" />
     <PackageReference Include="Serilog.Sinks.ApplicationInsights" Version="4.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Newtonsoft" Version="6.5.0" />
   </ItemGroup>
 
 
@@ -29,5 +31,20 @@
     <ProjectReference Include="..\Nebula.EFModels\Nebula.EFModels.csproj" />
     <ProjectReference Include="..\Nebula.Models\Nebula.Models.csproj" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug' ">
+    <!-- 
+      This PostBuild target is used to generate the static swagger.json file that is meant to be 
+      used by the web project to generate typescript models using `npm run gen-model`
+    -->
+    <Exec Command="dotnet new tool-manifest --force" />
+    <Exec Command="dotnet tool install --version 6.2.3 Swashbuckle.AspNetCore.Cli" />
+    <Exec Command="dotnet swagger tofile --output swagger.json $(OutputPath)\$(AssemblyName).dll v1 " />
+
+    <!--
+      It is also used to create dev certs after build in debug mode for local development (https://learn.microsoft.com/en-us/dotnet/core/tools/dotnet-dev-certs)
+    -->
+    <Exec Command="dotnet dev-certs https" />
+  </Target>
 
 </Project>

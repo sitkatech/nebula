@@ -128,6 +128,14 @@ namespace Nebula.API
             services.AddScoped(s => UserContext.GetUserFromHttpContext(s.GetService<NebulaDbContext>(),
                 s.GetService<IHttpContextAccessor>().HttpContext));
             services.AddControllers();
+
+            #region Swagger
+            // Base swagger services
+            services.AddSwaggerGen(options =>
+            {
+                // extra options here if you wanted
+            });
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

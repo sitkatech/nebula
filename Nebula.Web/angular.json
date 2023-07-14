@@ -11,7 +11,7 @@
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
-      "prefix": "nebula",
+      "prefix": "",
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
@@ -106,7 +106,9 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Nebula.Web:build"
+            "browserTarget": "Nebula.Web:build",
+            "host" : "splash.localhost.sitkatech.com",
+            "port" : 8123
           },
           "configurations": {
             "production": {
