@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace Nebula.EFModels.Entities
 {
     [Table("FieldDefinition")]
@@ -14,10 +12,7 @@ namespace Nebula.EFModels.Entities
         [Key]
         public int FieldDefinitionID { get; set; }
         public int FieldDefinitionTypeID { get; set; }
+        [Unicode(false)]
         public string FieldDefinitionValue { get; set; }
-
-        [ForeignKey(nameof(FieldDefinitionTypeID))]
-        [InverseProperty("FieldDefinitions")]
-        public virtual FieldDefinitionType FieldDefinitionType { get; set; }
     }
 }

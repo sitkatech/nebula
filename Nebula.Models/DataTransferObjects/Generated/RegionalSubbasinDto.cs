@@ -16,4 +16,15 @@ namespace Nebula.Models.DataTransferObjects
         public int? OCSurveyDownstreamCatchmentID { get; set; }
         public DateTime? LastUpdate { get; set; }
     }
+
+    public partial class RegionalSubbasinSimpleDto
+    {
+        public int RegionalSubbasinID { get; set; }
+        public string DrainID { get; set; }
+        public string Watershed { get; set; }
+        public int OCSurveyCatchmentID { get; set; }
+        public int? OCSurveyDownstreamCatchmentID { get; set; }
+        public DateTime? LastUpdate { get; set; }
+    }
+
 }

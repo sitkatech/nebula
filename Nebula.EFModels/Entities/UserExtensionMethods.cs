@@ -10,16 +10,5 @@ namespace Nebula.EFModels.Entities
             userDto.FullName = user.FullName;
             userDto.FullNameLastFirst = user.FullNameLastFirst;
         }
-
-        public static UserSimpleDto AsSimpleDto(this User user)
-        {
-            return new UserSimpleDto()
-            {
-                UserID = user.UserID,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email,
-            };
-        }
     }
 }

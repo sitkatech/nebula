@@ -6,7 +6,7 @@ namespace Nebula.EFModels.Entities
     {
         public static FileResourceMimeType GetFileResourceMimeTypeByContentTypeName(NebulaDbContext dbContext, string contentTypeName)
         {
-            return dbContext.FileResourceMimeTypes.Single(x => x.FileResourceMimeTypeContentTypeName == contentTypeName);
+            return All.SingleOrDefault(x => x.FileResourceMimeTypeContentTypeName == contentTypeName);
         }
     }
 }

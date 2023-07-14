@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace Nebula.EFModels.Entities
 {
     [Table("CustomPageRole")]
@@ -16,11 +14,8 @@ namespace Nebula.EFModels.Entities
         public int CustomPageID { get; set; }
         public int RoleID { get; set; }
 
-        [ForeignKey(nameof(CustomPageID))]
+        [ForeignKey("CustomPageID")]
         [InverseProperty("CustomPageRoles")]
         public virtual CustomPage CustomPage { get; set; }
-        [ForeignKey(nameof(RoleID))]
-        [InverseProperty("CustomPageRoles")]
-        public virtual Role Role { get; set; }
     }
 }

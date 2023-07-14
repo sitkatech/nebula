@@ -5,8 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 
-#nullable disable
-
 namespace Nebula.EFModels.Entities
 {
     [Keyless]
@@ -16,11 +14,13 @@ namespace Nebula.EFModels.Entities
         public int CatchIDN { get; set; }
         public int BackboneSegmentTypeID { get; set; }
         public int? DownstreamBackboneSegmentID { get; set; }
+        [Unicode(false)]
         public string StreamName { get; set; }
         [Column(TypeName = "geometry")]
         public Geometry BackboneSegmentGeometry { get; set; }
         [Required]
         [StringLength(20)]
+        [Unicode(false)]
         public string BackboneSegmentType { get; set; }
     }
 }

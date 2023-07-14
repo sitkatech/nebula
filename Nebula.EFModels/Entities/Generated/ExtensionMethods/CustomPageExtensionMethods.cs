@@ -26,5 +26,21 @@ namespace Nebula.EFModels.Entities
 
         static partial void DoCustomMappings(CustomPage customPage, CustomPageDto customPageDto);
 
+        public static CustomPageSimpleDto AsSimpleDto(this CustomPage customPage)
+        {
+            var customPageSimpleDto = new CustomPageSimpleDto()
+            {
+                CustomPageID = customPage.CustomPageID,
+                CustomPageDisplayName = customPage.CustomPageDisplayName,
+                CustomPageVanityUrl = customPage.CustomPageVanityUrl,
+                CustomPageContent = customPage.CustomPageContent,
+                MenuItemID = customPage.MenuItemID,
+                SortOrder = customPage.SortOrder
+            };
+            DoCustomSimpleDtoMappings(customPage, customPageSimpleDto);
+            return customPageSimpleDto;
+        }
+
+        static partial void DoCustomSimpleDtoMappings(CustomPage customPage, CustomPageSimpleDto customPageSimpleDto);
     }
 }

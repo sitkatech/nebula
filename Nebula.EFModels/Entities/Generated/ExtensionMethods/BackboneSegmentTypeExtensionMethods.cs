@@ -23,5 +23,18 @@ namespace Nebula.EFModels.Entities
 
         static partial void DoCustomMappings(BackboneSegmentType backboneSegmentType, BackboneSegmentTypeDto backboneSegmentTypeDto);
 
+        public static BackboneSegmentTypeSimpleDto AsSimpleDto(this BackboneSegmentType backboneSegmentType)
+        {
+            var backboneSegmentTypeSimpleDto = new BackboneSegmentTypeSimpleDto()
+            {
+                BackboneSegmentTypeID = backboneSegmentType.BackboneSegmentTypeID,
+                BackboneSegmentTypeName = backboneSegmentType.BackboneSegmentTypeName,
+                BackboneSegmentTypeDisplayName = backboneSegmentType.BackboneSegmentTypeDisplayName
+            };
+            DoCustomSimpleDtoMappings(backboneSegmentType, backboneSegmentTypeSimpleDto);
+            return backboneSegmentTypeSimpleDto;
+        }
+
+        static partial void DoCustomSimpleDtoMappings(BackboneSegmentType backboneSegmentType, BackboneSegmentTypeSimpleDto backboneSegmentTypeSimpleDto);
     }
 }

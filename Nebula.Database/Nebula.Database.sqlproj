@@ -105,7 +105,6 @@
   <ItemGroup>
     <None Include="Nebula.Database.publish.xml" />
     <None Include="Scripts\ReleaseScripts\README.md" />
-    <None Include="Scripts\LookupTables\Script1.sql" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Scripts\Script.PostDeployment.sql" />

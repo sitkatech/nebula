@@ -4,12 +4,10 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace Nebula.EFModels.Entities
 {
     [Table("User")]
-    [Index(nameof(Email), Name = "AK_User_Email", IsUnique = true)]
+    [Index("Email", Name = "AK_User_Email", IsUnique = true)]
     public partial class User
     {
         public User()
@@ -22,14 +20,18 @@ namespace Nebula.EFModels.Entities
         public Guid? UserGuid { get; set; }
         [Required]
         [StringLength(100)]
+        [Unicode(false)]
         public string FirstName { get; set; }
         [Required]
         [StringLength(100)]
+        [Unicode(false)]
         public string LastName { get; set; }
         [Required]
         [StringLength(255)]
+        [Unicode(false)]
         public string Email { get; set; }
         [StringLength(30)]
+        [Unicode(false)]
         public string Phone { get; set; }
         public int RoleID { get; set; }
         [Column(TypeName = "datetime")]
@@ -43,14 +45,13 @@ namespace Nebula.EFModels.Entities
         public bool IsActive { get; set; }
         public bool ReceiveSupportEmails { get; set; }
         [StringLength(128)]
+        [Unicode(false)]
         public string LoginName { get; set; }
         [StringLength(100)]
+        [Unicode(false)]
         public string Company { get; set; }
 
-        [ForeignKey(nameof(RoleID))]
-        [InverseProperty("Users")]
-        public virtual Role Role { get; set; }
-        [InverseProperty(nameof(FileResource.CreateUser))]
+        [InverseProperty("CreateUser")]
         public virtual ICollection<FileResource> FileResources { get; set; }
     }
 }

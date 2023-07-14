@@ -23,5 +23,18 @@ namespace Nebula.EFModels.Entities
 
         static partial void DoCustomMappings(CustomPageRole customPageRole, CustomPageRoleDto customPageRoleDto);
 
+        public static CustomPageRoleSimpleDto AsSimpleDto(this CustomPageRole customPageRole)
+        {
+            var customPageRoleSimpleDto = new CustomPageRoleSimpleDto()
+            {
+                CustomPageRoleID = customPageRole.CustomPageRoleID,
+                CustomPageID = customPageRole.CustomPageID,
+                RoleID = customPageRole.RoleID
+            };
+            DoCustomSimpleDtoMappings(customPageRole, customPageRoleSimpleDto);
+            return customPageRoleSimpleDto;
+        }
+
+        static partial void DoCustomSimpleDtoMappings(CustomPageRole customPageRole, CustomPageRoleSimpleDto customPageRoleSimpleDto);
     }
 }

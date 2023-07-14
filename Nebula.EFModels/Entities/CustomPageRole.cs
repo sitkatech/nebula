@@ -11,7 +11,6 @@ namespace Nebula.EFModels.Entities
         {
             return dbContext.CustomPageRoles
                 .Include(x => x.CustomPage)
-                .Include(x => x.Role)
                 .AsNoTracking()
                 .Select(x => x.AsSimpleDto()).ToList();
         }
@@ -19,7 +18,6 @@ namespace Nebula.EFModels.Entities
         {
             return dbContext.CustomPageRoles
                 .Include(x => x.CustomPage)
-                .Include(x => x.Role)
                 .AsNoTracking()
                 .Where(x => x.CustomPage.CustomPageVanityUrl == customPageVanityUrl)
                 .Select(x => x.AsSimpleDto()).ToList();
@@ -29,7 +27,6 @@ namespace Nebula.EFModels.Entities
         {
             return dbContext.CustomPageRoles
                 .Include(x => x.CustomPage)
-                .Include(x => x.Role)
                 .AsNoTracking()
                 .Where(x => x.CustomPage.CustomPageID == customPageID)
                 .Select(x => x.AsSimpleDto()).ToList();

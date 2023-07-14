@@ -13,4 +13,12 @@ namespace Nebula.Models.DataTransferObjects
         public FieldDefinitionTypeDto FieldDefinitionType { get; set; }
         public string FieldDefinitionValue { get; set; }
     }
+
+    public partial class FieldDefinitionSimpleDto
+    {
+        public int FieldDefinitionID { get; set; }
+        public System.Int32 FieldDefinitionTypeID { get; set; }
+        public string FieldDefinitionValue { get; set; }
+    }
+
 }

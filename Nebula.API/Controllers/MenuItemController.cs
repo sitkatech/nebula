@@ -13,7 +13,7 @@ namespace Nebula.API.Controllers
         [HttpGet("menuItems")]
         public ActionResult<IEnumerable<MenuItemDto>> GetMenuItems()
         {
-            var menuItemsDto = MenuItem.List(_dbContext);
+            var menuItemsDto = MenuItem.AllAsDto;
             return Ok(menuItemsDto);
         }
 

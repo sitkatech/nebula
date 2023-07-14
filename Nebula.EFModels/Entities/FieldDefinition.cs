@@ -9,13 +9,12 @@ namespace Nebula.EFModels.Entities
     {
         public static List<FieldDefinitionDto> List(NebulaDbContext dbContext)
         {
-            return dbContext.FieldDefinitions.Include(x => x.FieldDefinitionType).Select(x => x.AsDto()).ToList();
+            return dbContext.FieldDefinitions.Select(x => x.AsDto()).ToList();
         }
 
         public static FieldDefinitionDto GetByFieldDefinitionTypeID(NebulaDbContext dbContext, int FieldDefinitionTypeID)
         {
             var fieldDefinition = dbContext.FieldDefinitions
-                .Include(x => x.FieldDefinitionType)
                 .SingleOrDefault(x => x.FieldDefinitionTypeID == FieldDefinitionTypeID);
 
             return fieldDefinition?.AsDto();
@@ -25,7 +24,6 @@ namespace Nebula.EFModels.Entities
             FieldDefinitionDto FieldDefinitionUpdateDto)
         {
             var fieldDefinition = dbContext.FieldDefinitions
-                .Include(x => x.FieldDefinitionType)
                 .SingleOrDefault(x => x.FieldDefinitionTypeID == FieldDefinitionTypeID);
 
             // null check occurs in calling endpoint method.

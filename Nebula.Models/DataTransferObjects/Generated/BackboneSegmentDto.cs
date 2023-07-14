@@ -15,4 +15,14 @@ namespace Nebula.Models.DataTransferObjects
         public int? DownstreamBackboneSegmentID { get; set; }
         public string StreamName { get; set; }
     }
+
+    public partial class BackboneSegmentSimpleDto
+    {
+        public int BackboneSegmentID { get; set; }
+        public int CatchIDN { get; set; }
+        public System.Int32 BackboneSegmentTypeID { get; set; }
+        public int? DownstreamBackboneSegmentID { get; set; }
+        public string StreamName { get; set; }
+    }
+
 }

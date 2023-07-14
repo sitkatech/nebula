@@ -35,5 +35,30 @@ namespace Nebula.EFModels.Entities
 
         static partial void DoCustomMappings(User user, UserDto userDto);
 
+        public static UserSimpleDto AsSimpleDto(this User user)
+        {
+            var userSimpleDto = new UserSimpleDto()
+            {
+                UserID = user.UserID,
+                UserGuid = user.UserGuid,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Phone = user.Phone,
+                RoleID = user.RoleID,
+                CreateDate = user.CreateDate,
+                UpdateDate = user.UpdateDate,
+                LastActivityDate = user.LastActivityDate,
+                DisclaimerAcknowledgedDate = user.DisclaimerAcknowledgedDate,
+                IsActive = user.IsActive,
+                ReceiveSupportEmails = user.ReceiveSupportEmails,
+                LoginName = user.LoginName,
+                Company = user.Company
+            };
+            DoCustomSimpleDtoMappings(user, userSimpleDto);
+            return userSimpleDto;
+        }
+
+        static partial void DoCustomSimpleDtoMappings(User user, UserSimpleDto userSimpleDto);
     }
 }

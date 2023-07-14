@@ -16,4 +16,15 @@ namespace Nebula.Models.DataTransferObjects
         public MenuItemDto MenuItem { get; set; }
         public int? SortOrder { get; set; }
     }
+
+    public partial class CustomPageSimpleDto
+    {
+        public int CustomPageID { get; set; }
+        public string CustomPageDisplayName { get; set; }
+        public string CustomPageVanityUrl { get; set; }
+        public string CustomPageContent { get; set; }
+        public System.Int32 MenuItemID { get; set; }
+        public int? SortOrder { get; set; }
+    }
+
 }

@@ -18,7 +18,7 @@ namespace Nebula.API.Controllers
         [AdminFeature]
         public IActionResult Get()
         {
-            var roleDtos = Role.List(_dbContext);
+            var roleDtos = Role.AllAsDto;
             return Ok(roleDtos);
         }
     }

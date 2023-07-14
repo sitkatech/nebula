@@ -13,4 +13,12 @@ namespace Nebula.Models.DataTransferObjects
         public string MenuItemName { get; set; }
         public string MenuItemDisplayName { get; set; }
     }
+
+    public partial class MenuItemSimpleDto
+    {
+        public int MenuItemID { get; set; }
+        public string MenuItemName { get; set; }
+        public string MenuItemDisplayName { get; set; }
+    }
+
 }

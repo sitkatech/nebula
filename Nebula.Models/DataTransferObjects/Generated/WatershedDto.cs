@@ -12,4 +12,11 @@ namespace Nebula.Models.DataTransferObjects
         public int WatershedID { get; set; }
         public string WatershedName { get; set; }
     }
+
+    public partial class WatershedSimpleDto
+    {
+        public int WatershedID { get; set; }
+        public string WatershedName { get; set; }
+    }
+
 }

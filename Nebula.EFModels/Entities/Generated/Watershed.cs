@@ -5,8 +5,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 
-#nullable disable
-
 namespace Nebula.EFModels.Entities
 {
     [Table("Watershed")]
@@ -16,6 +14,7 @@ namespace Nebula.EFModels.Entities
         public int WatershedID { get; set; }
         [Required]
         [StringLength(100)]
+        [Unicode(false)]
         public string WatershedName { get; set; }
         [Required]
         [Column(TypeName = "geometry")]

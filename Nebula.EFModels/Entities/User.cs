@@ -75,7 +75,9 @@ namespace Nebula.EFModels.Entities
         public static IEnumerable<UserDto> List(NebulaDbContext dbContext)
         {
             // right now we are assuming a parcel can only be associated to one user
-            return dbContext.Users.Include(x => x.Role).AsNoTracking().OrderBy(x => x.LastName).ThenBy(x => x.FirstName).Select(x => x.AsDto()).AsEnumerable();
+            return dbContext.Users.AsNoTracking()
+                .OrderBy(x => x.LastName).ThenBy(x => x.FirstName)
+                .Select(x => x.AsDto()).AsEnumerable();
         }
 
         public static IEnumerable<UserDto> ListByRole(NebulaDbContext dbContext, RoleEnum roleEnum)
@@ -121,9 +123,7 @@ namespace Nebula.EFModels.Entities
 
         private static IQueryable<User> GetUserImpl(NebulaDbContext dbContext)
         {
-            return dbContext.Users
-                .Include(x => x.Role)
-                .AsNoTracking();
+            return dbContext.Users.AsNoTracking();
         }
 
         public static UserDto GetByEmail(NebulaDbContext dbContext, string email)
@@ -139,9 +139,7 @@ namespace Nebula.EFModels.Entities
                 return null;
             }
 
-            var user = dbContext.Users
-                .Include(x => x.Role)
-                .Single(x => x.UserID == userID);
+            var user = dbContext.Users.Single(x => x.UserID == userID);
 
             user.RoleID = userEditDto.RoleID.Value;
             user.ReceiveSupportEmails = userEditDto.RoleID.Value == 1 && userEditDto.ReceiveSupportEmails;

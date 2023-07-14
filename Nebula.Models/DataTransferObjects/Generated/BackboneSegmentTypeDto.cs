@@ -13,4 +13,12 @@ namespace Nebula.Models.DataTransferObjects
         public string BackboneSegmentTypeName { get; set; }
         public string BackboneSegmentTypeDisplayName { get; set; }
     }
+
+    public partial class BackboneSegmentTypeSimpleDto
+    {
+        public int BackboneSegmentTypeID { get; set; }
+        public string BackboneSegmentTypeName { get; set; }
+        public string BackboneSegmentTypeDisplayName { get; set; }
+    }
+
 }

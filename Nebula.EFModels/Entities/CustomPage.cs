@@ -19,7 +19,7 @@ namespace Nebula.EFModels.Entities
             var customPages = GetCustomPagesImpl(dbContext)
                 .Select(x => x.AsDto()).ToList();
 
-            var roles = dbContext.Roles;
+            var roles = Role.AllAsDto;
 
             var customPagesWithRoles = new List<CustomPageWithRolesDto>();
 
@@ -37,9 +37,7 @@ namespace Nebula.EFModels.Entities
                     CustomPageContent = customPage.CustomPageContent,
                     SortOrder = customPage.SortOrder,
                     MenuItem = customPage.MenuItem,
-                    ViewableRoles = roles
-                        .Where(x => customPageRoleIDs.Contains(x.RoleID))
-                        .Select(x => x.AsDto()).ToList()
+                    ViewableRoles = roles.Where(x => customPageRoleIDs.Contains(x.RoleID)).ToList()
                 };
 
                 customPagesWithRoles.Add(customPageWithRoles);
@@ -51,9 +49,7 @@ namespace Nebula.EFModels.Entities
         private static IQueryable<CustomPage> GetCustomPagesImpl(NebulaDbContext dbContext)
         {
             return dbContext.CustomPages
-                .Include(x => x.MenuItem)
                 .Include(x => x.CustomPageRoles)
-                .ThenInclude(x => x.Role)
                 .AsNoTracking();
         }
 

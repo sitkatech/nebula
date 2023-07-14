@@ -22,5 +22,17 @@ namespace Nebula.EFModels.Entities
 
         static partial void DoCustomMappings(Watershed watershed, WatershedDto watershedDto);
 
+        public static WatershedSimpleDto AsSimpleDto(this Watershed watershed)
+        {
+            var watershedSimpleDto = new WatershedSimpleDto()
+            {
+                WatershedID = watershed.WatershedID,
+                WatershedName = watershed.WatershedName
+            };
+            DoCustomSimpleDtoMappings(watershed, watershedSimpleDto);
+            return watershedSimpleDto;
+        }
+
+        static partial void DoCustomSimpleDtoMappings(Watershed watershed, WatershedSimpleDto watershedSimpleDto);
     }
 }

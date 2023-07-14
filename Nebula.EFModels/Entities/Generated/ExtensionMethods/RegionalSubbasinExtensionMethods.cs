@@ -26,5 +26,21 @@ namespace Nebula.EFModels.Entities
 
         static partial void DoCustomMappings(RegionalSubbasin regionalSubbasin, RegionalSubbasinDto regionalSubbasinDto);
 
+        public static RegionalSubbasinSimpleDto AsSimpleDto(this RegionalSubbasin regionalSubbasin)
+        {
+            var regionalSubbasinSimpleDto = new RegionalSubbasinSimpleDto()
+            {
+                RegionalSubbasinID = regionalSubbasin.RegionalSubbasinID,
+                DrainID = regionalSubbasin.DrainID,
+                Watershed = regionalSubbasin.Watershed,
+                OCSurveyCatchmentID = regionalSubbasin.OCSurveyCatchmentID,
+                OCSurveyDownstreamCatchmentID = regionalSubbasin.OCSurveyDownstreamCatchmentID,
+                LastUpdate = regionalSubbasin.LastUpdate
+            };
+            DoCustomSimpleDtoMappings(regionalSubbasin, regionalSubbasinSimpleDto);
+            return regionalSubbasinSimpleDto;
+        }
+
+        static partial void DoCustomSimpleDtoMappings(RegionalSubbasin regionalSubbasin, RegionalSubbasinSimpleDto regionalSubbasinSimpleDto);
     }
 }

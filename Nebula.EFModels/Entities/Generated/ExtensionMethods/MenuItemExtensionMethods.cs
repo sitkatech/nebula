@@ -23,5 +23,18 @@ namespace Nebula.EFModels.Entities
 
         static partial void DoCustomMappings(MenuItem menuItem, MenuItemDto menuItemDto);
 
+        public static MenuItemSimpleDto AsSimpleDto(this MenuItem menuItem)
+        {
+            var menuItemSimpleDto = new MenuItemSimpleDto()
+            {
+                MenuItemID = menuItem.MenuItemID,
+                MenuItemName = menuItem.MenuItemName,
+                MenuItemDisplayName = menuItem.MenuItemDisplayName
+            };
+            DoCustomSimpleDtoMappings(menuItem, menuItemSimpleDto);
+            return menuItemSimpleDto;
+        }
+
+        static partial void DoCustomSimpleDtoMappings(MenuItem menuItem, MenuItemSimpleDto menuItemSimpleDto);
     }
 }
