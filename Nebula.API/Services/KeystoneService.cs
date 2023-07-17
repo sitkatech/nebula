@@ -7,7 +7,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
 
 namespace Nebula.API.Services
 {
@@ -113,7 +112,7 @@ namespace Nebula.API.Services
                 return new KeystoneApiResponse<KeystoneNewUserModel> { StatusCode = HttpStatusCode.Forbidden };
             }
 
-            var content = new StringContent(JsonConvert.SerializeObject(inviteModel), Encoding.UTF8, "application/json");
+            var content = new StringContent(System.Text.Json.JsonSerializer.Serialize(inviteModel), Encoding.UTF8, "application/json");
             var response = await client.PostAsync($"{_baseUrl}/invite", content);
             return await ProcessResponse<KeystoneNewUserModel>(response);
         }
@@ -157,10 +156,7 @@ namespace Nebula.API.Services
 
         private static async Task<T> ProcessResponseImpl<T>(HttpResponseMessage response)
         {
-            using var sr = new StreamReader(await response.Content.ReadAsStreamAsync());
-            using var jsonTextReader = new JsonTextReader(sr);
-            var serializer = new JsonSerializer();
-            return serializer.Deserialize<T>(jsonTextReader);
+            return await System.Text.Json.JsonSerializer.DeserializeAsync<T>(await response.Content.ReadAsStreamAsync());
         }
     }
 }

@@ -15,14 +15,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using Serilog;
 using Nebula.API.Services;
 using Nebula.API.Services.Telemetry;
 using Nebula.EFModels.Entities;
 using Serilog.Sinks.ApplicationInsights.TelemetryConverters;
 using ILogger = Serilog.ILogger;
+using Microsoft.OpenApi.Models;
+using System.Text.Json.Serialization;
 
 namespace Nebula.API
 {
@@ -58,22 +58,12 @@ namespace Nebula.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry(_instrumentationKey);
-            services.AddControllers().AddNewtonsoftJson(opt =>
+            services.AddControllers().AddJsonOptions(opt =>
             {
-                if (!_environment.IsProduction())
-                {
-                    opt.SerializerSettings.Formatting = Formatting.Indented;
-                }
-
-                opt.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Utc;
-                var resolver = opt.SerializerSettings.ContractResolver;
-                if (resolver != null)
-                {
-                    if (resolver is DefaultContractResolver defaultResolver)
-                    {
-                        defaultResolver.NamingStrategy = null;
-                    }
-                }
+                opt.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
+                opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+                opt.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;
+                opt.JsonSerializerOptions.WriteIndented = true;
             });
 
             services.Configure<NebulaConfiguration>(Configuration);
@@ -133,7 +123,6 @@ namespace Nebula.API
             // Base swagger services
             services.AddSwaggerGen(options =>
             {
-                // extra options here if you wanted
             });
             #endregion
         }

@@ -48,11 +48,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomPageUpsertDto"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CustomPageUpsertDto"
@@ -364,11 +359,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomPageUpsertDto"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CustomPageUpsertDto"
@@ -487,11 +477,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/CustomRichTextDto"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CustomRichTextDto"
@@ -627,11 +612,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/FieldDefinitionDto"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/FieldDefinitionDto"
@@ -764,11 +744,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserInviteDto"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UserInviteDto"
@@ -800,11 +775,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserCreateDto"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UserCreateDto"
@@ -967,11 +937,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/UserUpsertDto"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/UserUpsertDto"
@@ -1059,12 +1024,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "type": "integer",
-                "format": "int32"
-              }
-            },
             "application/json": {
               "schema": {
                 "type": "integer",
@@ -1194,11 +1153,6 @@
         ],
         "requestBody": {
           "content": {
-            "application/json-patch+json": {
-              "schema": {
-                "$ref": "#/components/schemas/WatershedIDListDto"
-              }
-            },
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/WatershedIDListDto"
@@ -1289,30 +1243,30 @@
       "CustomPageDto": {
         "type": "object",
         "properties": {
-          "isEmptyContent": {
+          "IsEmptyContent": {
             "type": "boolean",
             "readOnly": true
           },
-          "customPageID": {
+          "CustomPageID": {
             "type": "integer",
             "format": "int32"
           },
-          "customPageDisplayName": {
+          "CustomPageDisplayName": {
             "type": "string",
             "nullable": true
           },
-          "customPageVanityUrl": {
+          "CustomPageVanityUrl": {
             "type": "string",
             "nullable": true
           },
-          "customPageContent": {
+          "CustomPageContent": {
             "type": "string",
             "nullable": true
           },
-          "menuItem": {
+          "MenuItem": {
             "$ref": "#/components/schemas/MenuItemDto"
           },
-          "sortOrder": {
+          "SortOrder": {
             "type": "integer",
             "format": "int32",
             "nullable": true
@@ -1323,15 +1277,15 @@
       "CustomPageRoleSimpleDto": {
         "type": "object",
         "properties": {
-          "customPageRoleID": {
+          "CustomPageRoleID": {
             "type": "integer",
             "format": "int32"
           },
-          "customPageID": {
+          "CustomPageID": {
             "type": "integer",
             "format": "int32"
           },
-          "roleID": {
+          "RoleID": {
             "type": "integer",
             "format": "int32"
           }
@@ -1340,37 +1294,37 @@
       },
       "CustomPageUpsertDto": {
         "required": [
-          "customPageDisplayName",
-          "customPageVanityUrl",
-          "menuItemID",
-          "viewableRoleIDs"
+          "CustomPageDisplayName",
+          "CustomPageVanityUrl",
+          "MenuItemID",
+          "ViewableRoleIDs"
         ],
         "type": "object",
         "properties": {
-          "customPageDisplayName": {
+          "CustomPageDisplayName": {
             "minLength": 1,
             "pattern": "^[_a-zA-Z0-9\\-\\s]{1,100}$",
             "type": "string"
           },
-          "customPageVanityUrl": {
+          "CustomPageVanityUrl": {
             "minLength": 1,
             "pattern": "^[_a-zA-Z0-9\\-]{1,100}$",
             "type": "string"
           },
-          "customPageContent": {
+          "CustomPageContent": {
             "type": "string",
             "nullable": true
           },
-          "menuItemID": {
+          "MenuItemID": {
             "type": "integer",
             "format": "int32"
           },
-          "sortOrder": {
+          "SortOrder": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "viewableRoleIDs": {
+          "ViewableRoleIDs": {
             "type": "array",
             "items": {
               "type": "integer",
@@ -1382,45 +1336,45 @@
       },
       "CustomPageWithRolesDto": {
         "required": [
-          "customPageDisplayName",
-          "customPageID",
-          "customPageVanityUrl",
-          "menuItem",
-          "viewableRoles"
+          "CustomPageDisplayName",
+          "CustomPageID",
+          "CustomPageVanityUrl",
+          "MenuItem",
+          "ViewableRoles"
         ],
         "type": "object",
         "properties": {
-          "customPageID": {
+          "CustomPageID": {
             "type": "integer",
             "format": "int32"
           },
-          "customPageDisplayName": {
+          "CustomPageDisplayName": {
             "minLength": 1,
             "type": "string"
           },
-          "customPageVanityUrl": {
+          "CustomPageVanityUrl": {
             "minLength": 1,
             "type": "string"
           },
-          "customPageContent": {
+          "CustomPageContent": {
             "type": "string",
             "nullable": true
           },
-          "menuItem": {
+          "MenuItem": {
             "$ref": "#/components/schemas/MenuItemDto"
           },
-          "sortOrder": {
+          "SortOrder": {
             "type": "integer",
             "format": "int32",
             "nullable": true
           },
-          "viewableRoles": {
+          "ViewableRoles": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/RoleDto"
             }
           },
-          "isEmptyContent": {
+          "IsEmptyContent": {
             "type": "boolean",
             "readOnly": true
           }
@@ -1430,17 +1384,17 @@
       "CustomRichTextDto": {
         "type": "object",
         "properties": {
-          "isEmptyContent": {
+          "IsEmptyContent": {
             "type": "boolean"
           },
-          "customRichTextID": {
+          "CustomRichTextID": {
             "type": "integer",
             "format": "int32"
           },
-          "customRichTextType": {
+          "CustomRichTextType": {
             "$ref": "#/components/schemas/CustomRichTextTypeDto"
           },
-          "customRichTextContent": {
+          "CustomRichTextContent": {
             "type": "string",
             "nullable": true
           }
@@ -1450,15 +1404,15 @@
       "CustomRichTextTypeDto": {
         "type": "object",
         "properties": {
-          "customRichTextTypeID": {
+          "CustomRichTextTypeID": {
             "type": "integer",
             "format": "int32"
           },
-          "customRichTextTypeName": {
+          "CustomRichTextTypeName": {
             "type": "string",
             "nullable": true
           },
-          "customRichTextTypeDisplayName": {
+          "CustomRichTextTypeDisplayName": {
             "type": "string",
             "nullable": true
           }
@@ -1468,14 +1422,14 @@
       "FieldDefinitionDto": {
         "type": "object",
         "properties": {
-          "fieldDefinitionID": {
+          "FieldDefinitionID": {
             "type": "integer",
             "format": "int32"
           },
-          "fieldDefinitionType": {
+          "FieldDefinitionType": {
             "$ref": "#/components/schemas/FieldDefinitionTypeDto"
           },
-          "fieldDefinitionValue": {
+          "FieldDefinitionValue": {
             "type": "string",
             "nullable": true
           }
@@ -1485,15 +1439,15 @@
       "FieldDefinitionTypeDto": {
         "type": "object",
         "properties": {
-          "fieldDefinitionTypeID": {
+          "FieldDefinitionTypeID": {
             "type": "integer",
             "format": "int32"
           },
-          "fieldDefinitionTypeName": {
+          "FieldDefinitionTypeName": {
             "type": "string",
             "nullable": true
           },
-          "fieldDefinitionTypeDisplayName": {
+          "FieldDefinitionTypeDisplayName": {
             "type": "string",
             "nullable": true
           }
@@ -1503,15 +1457,15 @@
       "MenuItemDto": {
         "type": "object",
         "properties": {
-          "menuItemID": {
+          "MenuItemID": {
             "type": "integer",
             "format": "int32"
           },
-          "menuItemName": {
+          "MenuItemName": {
             "type": "string",
             "nullable": true
           },
-          "menuItemDisplayName": {
+          "MenuItemDisplayName": {
             "type": "string",
             "nullable": true
           }
@@ -1521,23 +1475,23 @@
       "RoleDto": {
         "type": "object",
         "properties": {
-          "roleID": {
+          "RoleID": {
             "type": "integer",
             "format": "int32"
           },
-          "roleName": {
+          "RoleName": {
             "type": "string",
             "nullable": true
           },
-          "roleDisplayName": {
+          "RoleDisplayName": {
             "type": "string",
             "nullable": true
           },
-          "roleDescription": {
+          "RoleDescription": {
             "type": "string",
             "nullable": true
           },
-          "sortOrder": {
+          "SortOrder": {
             "type": "integer",
             "format": "int32"
           }
@@ -1547,7 +1501,7 @@
       "UnassignedUserReportDto": {
         "type": "object",
         "properties": {
-          "count": {
+          "Count": {
             "type": "integer",
             "format": "int32"
           }
@@ -1556,39 +1510,39 @@
       },
       "UserCreateDto": {
         "required": [
-          "email",
-          "firstName",
-          "lastName",
-          "loginName",
-          "userGuid"
+          "Email",
+          "FirstName",
+          "LastName",
+          "LoginName",
+          "UserGuid"
         ],
         "type": "object",
         "properties": {
-          "firstName": {
+          "FirstName": {
             "minLength": 1,
             "type": "string"
           },
-          "lastName": {
+          "LastName": {
             "minLength": 1,
             "type": "string"
           },
-          "email": {
+          "Email": {
             "minLength": 1,
             "type": "string"
           },
-          "loginName": {
+          "LoginName": {
             "minLength": 1,
             "type": "string"
           },
-          "userGuid": {
+          "UserGuid": {
             "type": "string",
             "format": "uuid"
           },
-          "organizationName": {
+          "OrganizationName": {
             "type": "string",
             "nullable": true
           },
-          "phoneNumber": {
+          "PhoneNumber": {
             "type": "string",
             "nullable": true
           }
@@ -1598,72 +1552,72 @@
       "UserDto": {
         "type": "object",
         "properties": {
-          "userID": {
+          "UserID": {
             "type": "integer",
             "format": "int32"
           },
-          "userGuid": {
+          "UserGuid": {
             "type": "string",
             "format": "uuid",
             "nullable": true
           },
-          "firstName": {
+          "FirstName": {
             "type": "string",
             "nullable": true
           },
-          "lastName": {
+          "LastName": {
             "type": "string",
             "nullable": true
           },
-          "email": {
+          "Email": {
             "type": "string",
             "nullable": true
           },
-          "phone": {
+          "Phone": {
             "type": "string",
             "nullable": true
           },
-          "role": {
+          "Role": {
             "$ref": "#/components/schemas/RoleDto"
           },
-          "createDate": {
+          "CreateDate": {
             "type": "string",
             "format": "date-time"
           },
-          "updateDate": {
+          "UpdateDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "lastActivityDate": {
+          "LastActivityDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "disclaimerAcknowledgedDate": {
+          "DisclaimerAcknowledgedDate": {
             "type": "string",
             "format": "date-time",
             "nullable": true
           },
-          "isActive": {
+          "IsActive": {
             "type": "boolean"
           },
-          "receiveSupportEmails": {
+          "ReceiveSupportEmails": {
             "type": "boolean"
           },
-          "loginName": {
+          "LoginName": {
             "type": "string",
             "nullable": true
           },
-          "company": {
+          "Company": {
             "type": "string",
             "nullable": true
           },
-          "fullName": {
+          "FullName": {
             "type": "string",
             "nullable": true
           },
-          "fullNameLastFirst": {
+          "FullNameLastFirst": {
             "type": "string",
             "nullable": true
           }
@@ -1672,26 +1626,26 @@
       },
       "UserInviteDto": {
         "required": [
-          "email",
-          "firstName",
-          "lastName",
-          "roleID"
+          "Email",
+          "FirstName",
+          "LastName",
+          "RoleID"
         ],
         "type": "object",
         "properties": {
-          "firstName": {
+          "FirstName": {
             "minLength": 1,
             "type": "string"
           },
-          "lastName": {
+          "LastName": {
             "minLength": 1,
             "type": "string"
           },
-          "email": {
+          "Email": {
             "minLength": 1,
             "type": "string"
           },
-          "roleID": {
+          "RoleID": {
             "type": "integer",
             "format": "int32"
           }
@@ -1700,36 +1654,36 @@
       },
       "UserUpsertDto": {
         "required": [
-          "receiveSupportEmails",
-          "roleID"
+          "ReceiveSupportEmails",
+          "RoleID"
         ],
         "type": "object",
         "properties": {
-          "firstName": {
+          "FirstName": {
             "type": "string",
             "nullable": true
           },
-          "lastName": {
+          "LastName": {
             "type": "string",
             "nullable": true
           },
-          "organizationName": {
+          "OrganizationName": {
             "type": "string",
             "nullable": true
           },
-          "email": {
+          "Email": {
             "type": "string",
             "nullable": true
           },
-          "phoneNumber": {
+          "PhoneNumber": {
             "type": "string",
             "nullable": true
           },
-          "roleID": {
+          "RoleID": {
             "type": "integer",
             "format": "int32"
           },
-          "receiveSupportEmails": {
+          "ReceiveSupportEmails": {
             "type": "boolean"
           }
         },
@@ -1738,11 +1692,11 @@
       "WatershedDto": {
         "type": "object",
         "properties": {
-          "watershedID": {
+          "WatershedID": {
             "type": "integer",
             "format": "int32"
           },
-          "watershedName": {
+          "WatershedName": {
             "type": "string",
             "nullable": true
           }
@@ -1752,7 +1706,7 @@
       "WatershedIDListDto": {
         "type": "object",
         "properties": {
-          "watershedIDs": {
+          "WatershedIDs": {
             "type": "array",
             "items": {
               "type": "integer",

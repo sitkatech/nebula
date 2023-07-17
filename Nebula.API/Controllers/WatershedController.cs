@@ -10,6 +10,7 @@ using Nebula.Models.DataTransferObjects;
 using Nebula.Models.DataTransferObjects.Watershed;
 using NetTopologySuite.Features;
 using NetTopologySuite.Operation.Union;
+using Qanat.API.GeoSpatial;
 
 namespace Nebula.API.Controllers
 {
@@ -58,7 +59,8 @@ namespace Nebula.API.Controllers
                     ?.WatershedGeometry4326
                 : UnaryUnionOp.Union(_dbContext.Watersheds.Select(x => x.WatershedGeometry4326));
 
-            return Ok(GeoJsonWriterService.buildFeatureCollectionAndWriteGeoJson(new List<Feature> { new Feature() { Geometry = geometry } }));
+            var geoJson = GeoJsonHelpers.WriteFeaturesToGeoJsonString(new List<Feature> { new Feature() { Geometry = geometry } }, 2);
+            return Ok(geoJson);
         }
     }
 }

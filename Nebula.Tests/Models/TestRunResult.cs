@@ -3,7 +3,6 @@ using System.Collections;
 using System.Text;
 using Humanizer.Bytes;
 using Nebula.Tests.Interfaces;
-using Newtonsoft.Json;
 
 namespace Nebula.Tests.Models
 {
@@ -38,7 +37,7 @@ namespace Nebula.Tests.Models
         {
             if (serializeResult)
             {
-                SerializedResult = JsonConvert.SerializeObject(result, Formatting.Indented);
+                SerializedResult = System.Text.Json.JsonSerializer.Serialize(result);
             }
 
             ResultSize = ResultByteSize.Bits;

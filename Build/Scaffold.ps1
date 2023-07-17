@@ -63,8 +63,3 @@ if ($path)
   Write-Output "Errors: $stderr"
   Write-Output "Exit Code: " $p.ExitCode
 }
-
-$beehiveTablesFiles = Get-ChildItem -Path ..\Nebula.Database\beehive\Tables\ -File
-
-"Scaffold Beehive"
-& Scaffold-DbContext $connectionString Microsoft.EntityFrameworkCore.SqlServer -OutputDir Entities/Generated/Beehive -Project $config.ApiEFModelsProject -Context BeehiveDbContext -Force -StartupProject $config.ApiEFModelsProject -DataAnnotations -UseDatabaseNames -NoOnConfiguring -Namespace Nebula.EFModels.Entities.Generated.Beehive -Tables $beehiveTablesFiles.BaseName
