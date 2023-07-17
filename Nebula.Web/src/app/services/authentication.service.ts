@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
 import { OAuthService } from 'angular-oauth2-oidc';
-import { UserService } from './user/user.service';
 import { Observable, race, Subject } from 'rxjs';
-import { filter, finalize, first, map } from 'rxjs/operators';
+import { filter, first, map } from 'rxjs/operators';
 import { CookieStorageService } from '../shared/services/cookies/cookie-storage.service';
 import { Router } from '@angular/router';
-import { RoleEnum } from '../shared/models/enums/role.enum';
 import { AlertService } from '../shared/services/alert.service';
 import { Alert } from '../shared/models/alert';
 import { AlertContext } from '../shared/models/enums/alert-context.enum';
 import { environment } from 'src/environments/environment';
-import { UserDto } from '../shared/models/generated/user-dto';
-import { UserCreateDto } from '../shared/models/user/user-create-dto';
-import { UserDetailedDto } from '../shared/models';
+import { RoleEnum } from '../shared/generated/enum/role-enum';
+import { UserCreateDto, UserDto, UserService } from '../shared/generated';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private currentUser: UserDetailedDto;
+  private currentUser: UserDto;
 
-  private _currentUserSetSubject = new Subject<UserDetailedDto>();
+  private _currentUserSetSubject = new Subject<UserDto>();
   public currentUserSetObservable = this._currentUserSetSubject.asObservable();
 
   constructor(private router: Router,
@@ -65,7 +62,7 @@ export class AuthenticationService {
   public getUser(claims: any) {
     var globalID = claims["sub"];
 
-    this.userService.getUserFromGlobalID(globalID).subscribe(
+    this.userService.userClaimsGlobalIDGet(globalID).subscribe(
       result => { this.updateUser(result); },
       error => { this.onGetUserError(error, claims) }
     );
@@ -85,22 +82,22 @@ export class AuthenticationService {
         UserGuid: claims["sub"],
       });
 
-      this.userService.createNewUser(newUser).subscribe(user => {
+      this.userService.usersPost(newUser).subscribe(user => {
         this.updateUser(user);
       })
     }
   }
 
-  private updateUser(user: UserDetailedDto) {
+  private updateUser(user: UserDto) {
     this.currentUser = user;
     this._currentUserSetSubject.next(this.currentUser);
   }
 
-  public refreshUserInfo(user: UserDetailedDto) {
+  public refreshUserInfo(user: UserDto) {
     this.updateUser(user);
   }
 
-  public getCurrentUser(): Observable<UserDetailedDto> {
+  public getCurrentUser(): Observable<UserDto> {
     return race(
       new Observable(subscriber => {
         if (this.currentUser) {

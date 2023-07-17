@@ -1,14 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef, OnDestroy, ViewChild } from '@angular/core';
-import { UserService } from 'src/app/services/user/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ColDef } from 'ag-grid-community';
 import { LinkRendererComponent } from 'src/app/shared/components/ag-grid/link-renderer/link-renderer.component';
 import { DecimalPipe } from '@angular/common';
 import { AgGridAngular } from 'ag-grid-angular';
 import { UtilityFunctionsService } from 'src/app/services/utility-functions.service';
-import { UserCreateDto } from 'src/app/shared/models/user/user-create-dto';
-import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
-import { UserDetailedDto } from 'src/app/shared/models/user/user-detailed-dto';
+import { RoleEnum } from 'src/app/shared/generated/enum/role-enum';
+import { UserDto, UserService } from 'src/app/shared/generated';
 
 declare var $:any;
 
@@ -20,23 +18,28 @@ declare var $:any;
 export class UserListComponent implements OnInit, OnDestroy {
   @ViewChild('usersGrid') usersGrid: AgGridAngular;
   @ViewChild('unassignedUsersGrid') unassignedUsersGrid: AgGridAngular;
-
   
-  private currentUser: UserDetailedDto;
+  private currentUser: UserDto;
 
   public rowData = [];
   columnDefs: ColDef[];
   columnDefsUnassigned: ColDef[];
-  users: UserDetailedDto[];
-  unassignedUsers: UserDetailedDto[];
+  users: UserDto[];
+  unassignedUsers: UserDto[];
 
-  constructor(private cdr: ChangeDetectorRef, private authenticationService: AuthenticationService, private utilityFunctionsService: UtilityFunctionsService, private userService: UserService, private decimalPipe: DecimalPipe) { }
+  constructor(
+    private cdr: ChangeDetectorRef, 
+    private authenticationService: AuthenticationService, 
+    private utilityFunctionsService: UtilityFunctionsService, 
+    private userService: UserService, 
+    private decimalPipe: DecimalPipe
+  ) { }
 
   ngOnInit() {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
       this.usersGrid?.api.showLoadingOverlay();
-      this.userService.getUsers().subscribe(users => {
+      this.userService.usersGet().subscribe(users => {
         this.rowData = users;
         this.usersGrid.api.hideOverlay();
         this.users = users;

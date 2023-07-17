@@ -1,12 +1,10 @@
 import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
-import { FieldDefinitionDto } from 'src/app/shared/models/generated/field-definition-dto';
-import { FieldDefinitionService } from 'src/app/shared/services/field-definition-service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LinkRendererComponent } from 'src/app/shared/components/ag-grid/link-renderer/link-renderer.component';
 import { ColDef } from 'ag-grid-community';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
-import { UserDetailedDto } from 'src/app/shared/models';
 import { AgGridAngular } from 'ag-grid-angular';
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
+import { FieldDefinitionDto, FieldDefinitionService, UserDto } from 'src/app/shared/generated';
 
 @Component({
   selector: 'nebula-field-definition-list',
@@ -17,10 +15,10 @@ export class FieldDefinitionListComponent implements OnInit {
 
   @ViewChild("fieldDefinitionsGrid") fieldDefinitionsGrid: AgGridAngular;
   
-  private currentUser: UserDetailedDto;
+  private currentUser: UserDto;
 
   public fieldDefinitions: Array<FieldDefinitionDto>
-  public richTextTypeID : number = CustomRichTextType.LabelsAndDefinitionsList;
+  public richTextTypeID : number = CustomRichTextTypeEnum.LabelsAndDefinitionsList;
 
   public rowData = [];
   public columnDefs: ColDef[];
@@ -34,7 +32,7 @@ export class FieldDefinitionListComponent implements OnInit {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
       this.fieldDefinitionsGrid?.api.showLoadingOverlay();
-      this.fieldDefinitionService.listAllFieldDefinitions().subscribe(fieldDefinitions => {
+      this.fieldDefinitionService.fieldDefinitionsGet().subscribe(fieldDefinitions => {
         this.fieldDefinitions = fieldDefinitions;
         this.rowData = fieldDefinitions;
         this.fieldDefinitionsGrid.api.hideOverlay();

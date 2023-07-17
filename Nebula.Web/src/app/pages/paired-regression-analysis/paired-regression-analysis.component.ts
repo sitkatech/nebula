@@ -2,10 +2,8 @@ import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@an
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LyraService } from 'src/app/services/lyra.service';
-import { UserDetailedDto } from 'src/app/shared/models';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { HydstraAggregationMethod } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
 import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { HydstraInterval } from 'src/app/shared/models/hydstra/hydstra-interval';
@@ -14,6 +12,8 @@ import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { ActivatedRoute } from '@angular/router';
 import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
 import { DateTime } from 'luxon';
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
+import { UserDto } from 'src/app/shared/generated';
 
 declare var vegaEmbed: any;
 
@@ -24,14 +24,14 @@ declare var vegaEmbed: any;
 })
 export class PairedRegressionAnalysisComponent implements OnInit {
   
-  private currentUser: UserDetailedDto;
+  private currentUser: UserDto;
 
   @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
   @ViewChild("stationSelect") stationSelect : StationSelectCardComponent;
 
   public mapID: string = 'PairedRegressionAnalysisStationSelectMap';
 
-  public richTextTypeID = CustomRichTextType.PairedRegressionAnalysis;
+  public richTextTypeID = CustomRichTextTypeEnum.PairedRegressionAnalysis;
 
   public vegaSpec: Object = null;
 

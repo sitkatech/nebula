@@ -1,16 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { CustomPageService } from 'src/app/services/custom-page.service';
-import { MenuItemService } from 'src/app/services/menu-item.service';
-import { RoleService } from 'src/app/services/role/role.service';
+import { CustomPageService, CustomPageUpsertDto, MenuItemDto, MenuItemService, RoleDto, RoleService, UserDto } from 'src/app/shared/generated';
+import { RoleEnum } from 'src/app/shared/generated/enum/role-enum';
 import { Alert } from 'src/app/shared/models/alert';
-import { CustomPageUpsertDto } from 'src/app/shared/models/custom-page-upsert-dto';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
-import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
-import { MenuItemDto } from 'src/app/shared/models/generated/menu-item-dto';
-import { RoleDto } from 'src/app/shared/models/generated/role-dto';
-import { UserDetailedDto } from 'src/app/shared/models/user/user-detailed-dto';
+
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
@@ -28,7 +23,7 @@ export class CustomPageCreateComponent implements OnInit, OnDestroy {
     public model: CustomPageUpsertDto;
     
     public isLoadingSubmit: boolean = false;
-    private currentUser: UserDetailedDto;
+    private currentUser: UserDto;
 
     constructor(
         private cdr: ChangeDetectorRef,
@@ -43,12 +38,12 @@ export class CustomPageCreateComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.watchUserChangeSubscription = this.authenticationService.getCurrentUser().subscribe(currentUser => {
             this.currentUser = currentUser;
-            this.menuItemService.getMenuItems().subscribe(result => {
+            this.menuItemService.menuItemsGet().subscribe(result => {
               // only exposing learn more menu option for now, but will be easy to add others as needed
               this.menuItems = result.filter(x => x.MenuItemName == 'LearnMore');
               this.cdr.detectChanges();
             });
-            this.roleService.getRoles().subscribe(roles => {
+            this.roleService.rolesGet().subscribe(roles => {
                 // remove admin from role picker as admins default to viewable for all custom pages
                 // and remove disabled users as well since they should not have viewable rights by default
                 this.roles = roles.filter(role => 
@@ -95,7 +90,7 @@ export class CustomPageCreateComponent implements OnInit, OnDestroy {
     onSubmit(createNewCustomPageForm: HTMLFormElement): void {
         this.isLoadingSubmit = true;
 
-        this.customPageService.createNewCustomPage(this.model)
+        this.customPageService.customPagesPost(this.model)
             .subscribe(response => {
                 this.isLoadingSubmit = false;
                 createNewCustomPageForm.reset();

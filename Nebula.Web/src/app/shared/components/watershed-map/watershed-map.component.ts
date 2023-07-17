@@ -19,11 +19,10 @@ import {
     LayerGroup
 } from 'leaflet';
 import 'leaflet.fullscreen';
-import { forkJoin } from 'rxjs';
-import { WatershedService } from 'src/app/services/watershed/watershed.service';
-import { BoundingBoxDto } from '../../models/bounding-box-dto';
 import { WatershedDetailPopupComponent } from '../watershed-detail-popup/watershed-detail-popup.component';
 import { CustomCompileService } from '../../services/custom-compile.service';
+import { WatershedIDListDto, WatershedService } from '../../generated';
+import { BoundingBoxDto } from '../../models/bounding-box-dto';
 
 declare var $: any
 
@@ -155,7 +154,8 @@ export class WatershedMapComponent implements OnInit, AfterViewInit {
 
 
     private fitBoundsToSelectedWatersheds(watershedIDs: Array<number>) {
-        this.watershedService.getBoundingBoxByWatershedIDs(watershedIDs).subscribe(boundingBox => {
+        var watershedIDListDto = new WatershedIDListDto({ watershedIDs: watershedIDs});
+        this.watershedService.watershedsGetBoundingBoxPost(watershedIDListDto).subscribe((boundingBox: BoundingBoxDto) => {
             this.boundingBox = boundingBox;
             this.map.fitBounds([[this.boundingBox.Bottom, this.boundingBox.Left], [this.boundingBox.Top, this.boundingBox.Right]], this.defaultFitBoundsOptions);
         });
@@ -166,7 +166,7 @@ export class WatershedMapComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this.watershedService.getWatersheds().subscribe(watersheds => {
+        this.watershedService.watershedsGet().subscribe(watersheds => {
             this.allWatershedIDs = watersheds.map(x => x.WatershedID);
             this.initializeMap();
         });

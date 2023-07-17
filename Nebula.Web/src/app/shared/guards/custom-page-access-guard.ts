@@ -2,7 +2,7 @@ import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from
 import { Injectable } from '@angular/core';
 import { AlertService } from '../services/alert.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { CustomPageService } from 'src/app/services/custom-page.service';
+import { CustomPageService } from '../generated';
 @Injectable({
   providedIn: 'root'
 })
@@ -11,7 +11,8 @@ export class CustomPageAccessGuard implements CanActivate {
     private router: Router, 
     private alertService: AlertService, 
     private authenticationService: AuthenticationService, 
-    private customPageService: CustomPageService) { }
+    private customPageService: CustomPageService
+  ) { }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
     let vanityUrl = next.paramMap.get("vanity-url");
@@ -48,7 +49,7 @@ export class CustomPageAccessGuard implements CanActivate {
 
     return new Promise((resolve, reject) => {
  
-      this.customPageService.getCustomPageRolesByVanityUrl(vanityUrl).subscribe(roles => {
+      this.customPageService.customPagesGetByURLCustomPageVanityURLRolesGet(vanityUrl).subscribe(roles => {
         let viewableRoleIDs = roles.map(x => x.RoleID);
         resolve(viewableRoleIDs)
       }, 

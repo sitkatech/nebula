@@ -1,0 +1,17 @@
+export * from './custom-page.service';
+import { CustomPageService } from './custom-page.service';
+export * from './custom-rich-text.service';
+import { CustomRichTextService } from './custom-rich-text.service';
+export * from './field-definition.service';
+import { FieldDefinitionService } from './field-definition.service';
+export * from './file-resource.service';
+import { FileResourceService } from './file-resource.service';
+export * from './menu-item.service';
+import { MenuItemService } from './menu-item.service';
+export * from './role.service';
+import { RoleService } from './role.service';
+export * from './user.service';
+import { UserService } from './user.service';
+export * from './watershed.service';
+import { WatershedService } from './watershed.service';
+export const APIS = [CustomPageService, CustomRichTextService, FieldDefinitionService, FileResourceService, MenuItemService, RoleService, UserService, WatershedService];

@@ -1,14 +1,12 @@
 import { Component, OnInit, Input, ChangeDetectorRef, ViewChild, ElementRef } from '@angular/core';
 import { Alert } from '../../models/alert';
-import { UserDetailedDto } from '../../models';
-import { FieldDefinitionService } from '../../services/field-definition-service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { AlertService } from '../../services/alert.service';
 import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
 import { AlertContext } from '../../models/enums/alert-context.enum';
-import { FieldDefinitionDto } from '../../models/generated/field-definition-dto';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
-import { FieldDefinitionTypeEnum } from '../../models/enums/field-definition-type.enum';
+import { FieldDefinitionTypeEnum } from '../../generated/enum/field-definition-type-enum';
+import { FieldDefinitionDto, FieldDefinitionService, UserDto } from '../../generated';
 
 declare var $ : any
 
@@ -31,7 +29,7 @@ export class FieldDefinitionComponent implements OnInit {
   public editedContent: string;
   public editor;
 
-  currentUser: UserDetailedDto;
+  currentUser: UserDto;
 
   public ckConfig = {"removePlugins": ["MediaEmbed", "ImageUpload"]};
 
@@ -42,7 +40,7 @@ export class FieldDefinitionComponent implements OnInit {
     private elem: ElementRef) { }
 
   ngOnInit() {
-    this.fieldDefinitionService.getFieldDefinition(FieldDefinitionTypeEnum[this.fieldDefinitionType]).subscribe(x => {
+    this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDGet(FieldDefinitionTypeEnum[this.fieldDefinitionType]).subscribe(x => {
       this.loadFieldDefinition(x);
     });
   }
@@ -76,7 +74,7 @@ export class FieldDefinitionComponent implements OnInit {
     this.isEditing = false;
     this.isLoading = true;
     this.fieldDefinition.FieldDefinitionValue = this.editedContent;
-    this.fieldDefinitionService.updateFieldDefinition(this.fieldDefinition).subscribe(x => {
+    this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDPut(this.fieldDefinition.FieldDefinitionID, this.fieldDefinition).subscribe(x => {
       this.loadFieldDefinition(x);
     }, error => {
       this.isLoading = false;

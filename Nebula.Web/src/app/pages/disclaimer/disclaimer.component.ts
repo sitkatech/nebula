@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { UserService } from 'src/app/services/user/user.service';
 import { AuthenticationService } from 'src/app/services/authentication.service'
-import { UserDetailedDto } from 'src/app/shared/models';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
-import { UserDto } from 'src/app/shared/models/generated/user-dto';
+import { UserDto, UserService } from 'src/app/shared/generated';
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
 
 @Component({
   selector: 'nebula-disclaimer',
@@ -17,7 +15,7 @@ export class DisclaimerComponent implements OnInit {
   private currentUser : UserDto;
   private forced : boolean = true;
   private returnRoute : string = '';
-  public richTextTypeID : number = CustomRichTextType.Disclaimer;
+  public richTextTypeID : number = CustomRichTextTypeEnum.Disclaimer;
   returnQueryParams: any;
 
   constructor(
@@ -43,7 +41,7 @@ export class DisclaimerComponent implements OnInit {
   }
 
   public setDisclaimerAcknowledged(): void {
-    this.userService.setDisclaimerAcknowledgedDate(this.currentUser.UserID).subscribe(x=>{
+    this.userService.usersSetDisclaimerAcknowledgedDatePut(this.currentUser.UserID).subscribe(x=>{
       this.authenticationService.refreshUserInfo(x);
 
       this.router.navigate([this.returnRoute], {queryParams : JSON.parse(this.returnQueryParams)});

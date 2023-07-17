@@ -4,16 +4,15 @@ import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LyraService } from 'src/app/services/lyra.service';
 import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
-import { UserDetailedDto } from 'src/app/shared/models';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { SiteFilterEnum } from 'src/app/shared/models/enums/site-filter.enum';
 import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { DateTime } from 'luxon';
-import { UserDto } from 'src/app/shared/models/generated/user-dto';
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
+import { UserDto } from 'src/app/shared/generated';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -25,14 +24,14 @@ declare var vegaEmbed: any;
 })
 export class DiversionScenarioComponent implements OnInit {
   public watchUserChangeSubscription: any;
-  public currentUser: UserDetailedDto;
+  public currentUser: UserDto;
 
   @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
   @ViewChild("stationSelect") stationSelect: StationSelectCardComponent;
 
   public mapID: string = 'DiversionScenarioStationSelectMap';
 
-  public richTextTypeID = CustomRichTextType.DiversionScenario;
+  public richTextTypeID = CustomRichTextTypeEnum.DiversionScenario;
   public defaultSelectedMapFilter = SiteFilterEnum.HasDischarge;
 
   public vegaSpec: Object = null;

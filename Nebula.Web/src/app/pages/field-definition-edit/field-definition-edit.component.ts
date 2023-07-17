@@ -1,13 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { FieldDefinitionService } from 'src/app/shared/services/field-definition-service';
 import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
-import { UserDetailedDto } from 'src/app/shared/models';
-import { FieldDefinitionDto } from 'src/app/shared/models/generated/field-definition-dto';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { FieldDefinitionDto, FieldDefinitionService, UserDto } from 'src/app/shared/generated';
 
 @Component({
   selector: 'nebula-field-definition-edit',
@@ -16,7 +14,7 @@ import { AlertService } from 'src/app/shared/services/alert.service';
 })
 export class FieldDefinitionEditComponent implements OnInit {
   
-  private currentUser: UserDetailedDto;
+  private currentUser: UserDto;
 
   public fieldDefinition: FieldDefinitionDto;
   public Editor = ClassicEditor;
@@ -40,7 +38,7 @@ export class FieldDefinitionEditComponent implements OnInit {
           this.currentUser = currentUser;
           const id = parseInt(this.route.snapshot.paramMap.get("id"));
           if (id) {
-              this.fieldDefinitionService.getFieldDefinition(id).subscribe(fieldDefinition => {
+              this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDGet(id).subscribe(fieldDefinition => {
                 this.fieldDefinition = fieldDefinition;
               })
           }
@@ -66,7 +64,7 @@ export class FieldDefinitionEditComponent implements OnInit {
   saveDefinition(): void {
     this.isLoadingSubmit = true;
 
-    this.fieldDefinitionService.updateFieldDefinition(this.fieldDefinition)
+    this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDPut(this.fieldDefinition.FieldDefinitionID, this.fieldDefinition)
       .subscribe(response => {
         this.isLoadingSubmit = false;
         this.router.navigateByUrl("/labels-and-definitions").then(x => {

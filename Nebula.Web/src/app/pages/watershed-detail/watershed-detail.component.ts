@@ -1,10 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { WatershedService } from 'src/app/services/watershed/watershed.service';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { forkJoin } from 'rxjs';
-import { WatershedDto } from 'src/app/shared/models/generated/watershed-dto';
-import { UserDetailedDto } from 'src/app/shared/models';
+import { UserDto, WatershedDto, WatershedService } from 'src/app/shared/generated';
 
 @Component({
   selector: 'template-watershed-detail',
@@ -13,7 +11,7 @@ import { UserDetailedDto } from 'src/app/shared/models';
 })
 export class WatershedDetailComponent implements OnInit, OnDestroy {
   
-  private currentUser: UserDetailedDto;
+  private currentUser: UserDto;
 
   public watershed: WatershedDto;
 
@@ -37,7 +35,7 @@ export class WatershedDetailComponent implements OnInit, OnDestroy {
       const id = parseInt(this.route.snapshot.paramMap.get("id"));
       if (id) {
         forkJoin(
-          this.watershedService.getWatershedByWatershedID(id),
+          this.watershedService.watershedsWatershedIDGet(id),
         ).subscribe(([watershed]) => {
           this.watershed = watershed instanceof Array
             ? null

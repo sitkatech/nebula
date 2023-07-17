@@ -1,19 +1,18 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { LyraService } from 'src/app/services/lyra.service';
 import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { HydstraAggregationMethod } from 'src/app/shared/models/hydstra/hydstra-aggregation-mode';
 import { HydstraInterval } from "src/app/shared/models/hydstra/hydstra-interval";
 import { HydstraWeatherCondition } from 'src/app/shared/models/hydstra/hydstra-weather-condition';
-import { UserDetailedDto } from 'src/app/shared/models';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { ActivatedRoute } from '@angular/router';
 import { StationSelectCardComponent } from 'src/app/shared/components/station-select-card/station-select-card.component';
 import { DateTime } from 'luxon';
-import { UserDto } from 'src/app/shared/models/generated/user-dto';
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
+import { UserDto } from 'src/app/shared/generated';
 
 declare var $: any;
 declare var vegaEmbed: any;
@@ -25,14 +24,14 @@ declare var vegaEmbed: any;
 })
 export class TimeSeriesAnalysisComponent implements OnInit {
   public watchUserChangeSubscription: any;
-  public currentUser: UserDetailedDto;
+  public currentUser: UserDto;
 
   @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
   @ViewChild("stationSelect") stationSelect: StationSelectCardComponent;
 
   public mapID: string = 'TimeSeriesAnalysisStationSelectMap';
 
-  public richTextTypeID = CustomRichTextType.TimeSeriesAnalysis;
+  public richTextTypeID = CustomRichTextTypeEnum.TimeSeriesAnalysis;
 
   public vegaSpec: Object = null;
 

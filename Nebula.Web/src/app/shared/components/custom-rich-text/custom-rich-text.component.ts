@@ -1,13 +1,12 @@
 import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
-import { CustomRichTextService } from '../../services/custom-rich-text.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserDetailedDto } from '../../models/user/user-detailed-dto';
-import { CustomRichTextDetailedDto } from '../../models/custom-rich-text-detailed-dto';
 import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
 import { AlertContext } from '../../models/enums/alert-context.enum';
 import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
 import { environment } from 'src/environments/environment';
+import { CustomRichTextDto, CustomRichTextService, FileResourceService, UserDto } from '../../generated';
+import { CkEditorUploadAdapter } from '../../services/ck-editor-upload-adapter.service';
 
 @Component({
   selector: 'custom-rich-text',
@@ -25,14 +24,17 @@ export class CustomRichTextComponent implements OnInit {
   public editedContent: string;
   public editor;
 
-  currentUser: UserDetailedDto;
+  currentUser: UserDto;
 
   public ckConfig = {"removePlugins": ["MediaEmbed"]}
 
-  constructor(private customRichTextService: CustomRichTextService,
+  constructor (
+    private customRichTextService: CustomRichTextService,
     private authenticationService: AuthenticationService,
     private cdr: ChangeDetectorRef,
-    private alertService: AlertService) { }
+    private alertService: AlertService,
+    private fileResourceService: FileResourceService
+  ) { }
 
   ngOnInit() {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
@@ -40,7 +42,7 @@ export class CustomRichTextComponent implements OnInit {
     });
     //window.Editor = this.Editor;
 
-    this.customRichTextService.getCustomRichText(this.customRichTextTypeID).subscribe(x => {
+    this.customRichTextService.customRichTextCustomRichTextTypeIDGet(this.customRichTextTypeID).subscribe(x => {
       this.customRichTextContent = x.CustomRichTextContent;
       this.isEmptyContent = x.IsEmptyContent;
       this.isLoading = false;
@@ -50,13 +52,13 @@ export class CustomRichTextComponent implements OnInit {
   // tell CkEditor to use the class below as its upload adapter
   // see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html#how-does-the-image-upload-work
   public ckEditorReady(editor) {
-    const customRichTextService = this.customRichTextService
+    const fileResourceService = this.fileResourceService;
     this.editor = editor;
 
     editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
       // disable the editor until the image comes back
       editor.isReadOnly = true;
-      return new CkEditorUploadAdapter(loader, customRichTextService, environment.mainAppApiUrl, editor);
+      return new CkEditorUploadAdapter(loader, fileResourceService, environment.mainAppApiUrl, editor);
     };
   }
 
@@ -76,8 +78,8 @@ export class CustomRichTextComponent implements OnInit {
   public saveEdit(): void {
     this.isEditing = false;
     this.isLoading = true;
-    const updateDto = new CustomRichTextDetailedDto({ CustomRichTextContent: this.editedContent });
-    this.customRichTextService.updateCustomRichText(this.customRichTextTypeID, updateDto).subscribe(x => {
+    const updateDto = new CustomRichTextDto({ CustomRichTextContent: this.editedContent });
+    this.customRichTextService.customRichTextCustomRichTextTypeIDPut(this.customRichTextTypeID, updateDto).subscribe(x => {
       this.customRichTextContent = x.CustomRichTextContent;
       this.isLoading = false;
     }, error => {
@@ -90,48 +92,4 @@ export class CustomRichTextComponent implements OnInit {
     return this.editor && this.editor.isReadOnly;
   }
 
-}
-
-class CkEditorUploadAdapter {
-  loader;
-  service: CustomRichTextService;
-  apiUrl: string;
-  editor;
-
-  constructor(loader, uploadService: CustomRichTextService, apiUrl: string, editor) {
-    // The file loader instance to use during the upload.
-    this.loader = loader;
-    this.service = uploadService;
-    this.apiUrl = apiUrl;
-    this.editor = editor;
-  }
-
-  // Starts the upload process.
-  upload() {
-    const editor = this.editor;
-    const service = this.service;
-
-
-    return this.loader.file.then(file => new Promise((resolve, reject) => {
-      service.uploadFile(file).subscribe(x => {
-        const imageUrl = `${this.apiUrl}${x.imageUrl}`;
-        editor.isReadOnly = false;
-
-        resolve({
-          // todo: this should be correct instead of incorrect.
-          default: imageUrl
-        });
-      }, error => {
-        editor.isReadOnly = false;
-
-        reject("There was an error uploading the file. Please try again.")
-      });
-    })
-    );
-  }
-
-  // Aborts the upload process.
-  abort() {
-    // NP 4/23/2020 todo? I'm not sure this is actually necessary, I don't see any way for the user to cancel the upload once triggered.
-  }
 }

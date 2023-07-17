@@ -1,13 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserDetailedDto } from 'src/app/shared/models';
-import { error } from 'protractor';
-import { RoleEnum } from 'src/app/shared/models/enums/role.enum';
 import { environment } from 'src/environments/environment';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { ActivatedRoute, Router } from '@angular/router';
-import { LoginCallbackComponent } from '../../login-callback/login-callback.component';
-import { UserDto } from 'src/app/shared/models/generated/user-dto';
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
+import { RoleEnum } from 'src/app/shared/generated/enum/role-enum';
+import { UserDto } from 'src/app/shared/generated';
 
 @Component({
     selector: 'app-home-index',
@@ -16,9 +13,9 @@ import { UserDto } from 'src/app/shared/models/generated/user-dto';
 })
 export class HomeIndexComponent implements OnInit, OnDestroy {
     public watchUserChangeSubscription: any;
-    public currentUser: UserDetailedDto;
+    public currentUser: UserDto;
 
-    public richTextTypeID: number = CustomRichTextType.Homepage;
+    public richTextTypeID: number = CustomRichTextTypeEnum.Homepage;
 
     constructor(private authenticationService: AuthenticationService,
         private router: Router,
@@ -62,7 +59,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
             return false; // doesn't exist != unassigned
         }
 
-        return this.currentUser.Role.RoleID === RoleEnum.Unassigned;
+        return this.currentUser.Role.RoleID == RoleEnum.Unassigned;
     }
 
     public userRoleIsDisabled() {
@@ -70,7 +67,7 @@ export class HomeIndexComponent implements OnInit, OnDestroy {
             return false; // doesn't exist != unassigned
         }
 
-        return this.currentUser.Role.RoleID === RoleEnum.Disabled;
+        return this.currentUser.Role.RoleID == RoleEnum.Disabled;
     }
 
     public isUserAnAdministrator() {

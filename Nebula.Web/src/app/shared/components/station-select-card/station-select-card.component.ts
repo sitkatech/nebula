@@ -8,10 +8,10 @@ import 'leaflet.snogylop';
 import 'leaflet-loading';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
 import { environment } from 'src/environments/environment';
-import { WatershedService } from 'src/app/services/watershed/watershed.service';
 import { forkJoin } from 'rxjs';
 import { LyraService } from 'src/app/services/lyra.service';
 import './leaflet.topojson.js'
+import { WatershedService } from '../../generated';
 
 declare var $: any;
 
@@ -307,7 +307,7 @@ export class StationSelectCardComponent implements OnInit {
     this.initializeMapEvents();
 
     forkJoin([
-      this.watershedService.getWatershedMask("Aliso Creek"),
+      this.watershedService.watershedsWatershedNameGetWatershedMaskGet("Aliso Creek"),
       this.lyraService.getRSBTopoJson(),
       this.lyraService.getSiteLocationGeoJson()
     ])

@@ -4,14 +4,13 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { CustomPageService } from 'src/app/services/custom-page.service';
 import { FontAwesomeIconLinkRendererComponent } from 'src/app/shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { LinkRendererComponent } from 'src/app/shared/components/ag-grid/link-renderer/link-renderer.component';
 import { CustomDropdownFilterComponent } from 'src/app/shared/components/custom-dropdown-filter/custom-dropdown-filter.component';
-import { UserDetailedDto } from 'src/app/shared/models';
+import { CustomPageService, UserDto } from 'src/app/shared/generated';
+import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
-import { CustomRichTextType } from 'src/app/shared/models/enums/custom-rich-text-type.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
 
 @Component({
@@ -23,7 +22,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
   @ViewChild('pageGrid') pageGrid: AgGridAngular;
   @ViewChild('deletePageModal') deleteEntity: any;
   
-  public richTextTypeID : number = CustomRichTextType.CustomPage;
+  public richTextTypeID : number = CustomRichTextTypeEnum.CustomPages;
   public rowData = [];
   public columnDefs: ColDef[];
   
@@ -31,7 +30,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
 
   public modalReference: NgbModalRef;
   public customPageIDToRemove: number;
-  public currentUser: UserDetailedDto;
+  public currentUser: UserDto;
   public isPerformingAction: boolean = false;
   public closeResult: string;
   public watchUserChangeSubscription: any;
@@ -51,7 +50,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
       
-      this.customPageService.getAllCustomPagesWithRoles().subscribe(customPagesWithRoles => {
+      this.customPageService.customPagesWithRolesGet().subscribe(customPagesWithRoles => {
         this.rowData = customPagesWithRoles;
         this.cdr.detectChanges();
         this.pageGrid.api.hideOverlay();
@@ -142,7 +141,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
   }
 
   public updateGridData(): void {
-    this.customPageService.getAllCustomPagesWithRoles().subscribe(customPagesWithRoles => {
+    this.customPageService.customPagesWithRolesGet().subscribe(customPagesWithRoles => {
       this.rowData = customPagesWithRoles;
       this.cdr.detectChanges();
     });
@@ -171,7 +170,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
 
   public removePageByID(): void {
     this.isPerformingAction = true;
-    this.customPageService.deleteCustomPageByID(this.customPageIDToRemove).subscribe(() => {
+    this.customPageService.customPagesCustomPageIDDelete(this.customPageIDToRemove).subscribe(() => {
       this.modalReference.close();
       this.isPerformingAction = false;
       this.authenticationService.refreshUserInfo(this.currentUser);

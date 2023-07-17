@@ -1,16 +1,12 @@
 import { Component, OnInit, HostListener, ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { CookieStorageService } from '../../services/cookies/cookie-storage.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
-import { UserDetailedDto } from '../../models';
-import { UserService } from 'src/app/services/user/user.service';
 import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
 import { environment } from 'src/environments/environment';
 import { AlertContext } from '../../models/enums/alert-context.enum';
-import { RoleEnum } from '../../models/enums/role.enum';
 import { Router } from '@angular/router';
-import { CustomPageService } from 'src/app/services/custom-page.service';
-import { CustomPageWithRolesDto } from '../../models/custom-page-with-roles-dto';
+import { RoleEnum } from '../../generated/enum/role-enum';
+import { CustomPageService, CustomPageWithRolesDto, UserDto, UserService } from '../../generated';
 
 @Component({
     selector: 'header-nav',
@@ -20,7 +16,7 @@ import { CustomPageWithRolesDto } from '../../models/custom-page-with-roles-dto'
 
 export class HeaderNavComponent implements OnInit, OnDestroy {
     
-    private currentUser: UserDetailedDto;
+    private currentUser: UserDto;
 
     windowWidth: number;
 
@@ -34,7 +30,6 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
 
     constructor(
         private authenticationService: AuthenticationService,
-        private cookieStorageService: CookieStorageService,
         private userService: UserService,
         private alertService: AlertService,
         private cdr: ChangeDetectorRef,
@@ -48,13 +43,13 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         this.watchUserChangeSubscription = this.authenticationService.currentUserSetObservable.subscribe(currentUser => {
             this.currentUser = currentUser;
             if (currentUser && this.isAdministrator()){
-                this.userService.getUnassignedUserReport().subscribe(report =>{
+                this.userService.usersUnassignedReportGet().subscribe(report =>{
                     if (report.Count > 0){
                         this.alertService.pushAlert(new Alert(`There are ${report.Count} users who are waiting for you to configure their account. <a href='/users'>Manage Users</a>.`, AlertContext.Info, true, AlertService.USERS_AWAITING_CONFIGURATION));
                     }
                 })
             }
-            this.customPageService.getAllCustomPagesWithRoles().subscribe(customPagesWithRoles => {
+            this.customPageService.customPagesWithRolesGet().subscribe(customPagesWithRoles => {
                 customPagesWithRoles = customPagesWithRoles
                     .filter(x => x.ViewableRoles.map(role => role.RoleID).includes(this.currentUser?.Role?.RoleID));
                 this.learnMorePages = customPagesWithRoles.filter(x => x.MenuItem.MenuItemName == "LearnMore");
