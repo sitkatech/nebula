@@ -58,65 +58,64 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
 }
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    HomeIndexComponent,
-    UserListComponent,
-    UserInviteComponent,
-    UserDetailComponent,
-    UserEditComponent,
-    WatershedDetailComponent,
-    LoginCallbackComponent,
-    HelpComponent,
-    CreateUserCallbackComponent,
-    DisclaimerComponent,
-    FieldDefinitionListComponent,
-    FieldDefinitionEditComponent,
-    TimeSeriesAnalysisComponent,
-    PairedRegressionAnalysisComponent,
-    DiversionScenarioComponent,
-    CustomPageListComponent,
-    CustomPageDetailComponent,
-    CustomPageCreateComponent,
-    CustomPageEditPropertiesComponent
-  ],
-  imports: [
-    AppRoutingModule,
-    BrowserModule,
-    BrowserAnimationsModule,
-    NgbModule,
-    RouterModule,
-    OAuthModule.forRoot(),
-    SharedModule.forRoot(),
-    FormsModule,
-    ReactiveFormsModule,
-    BrowserAnimationsModule,
-    AgGridModule.withComponents([]),
-    SelectDropDownModule,
-    CKEditorModule,
-    NgSelectModule,
-    ApiModule.forRoot(() => {
-      return new Configuration({
-          basePath: `${environment.mainAppApiUrl}`,
-      });
-    })
-  ],  
-  providers: [
-    CookieService,
-    AppInitService,
-    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService, AppInsightsService], multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-    {
-      provide: ErrorHandler,
-      useClass: GlobalErrorHandlerService
-    },
-    DecimalPipe, CurrencyPipe, DatePipe,
-    {
-      provide: OAuthStorage,
-      useClass: CookieStorageService
-    }
-  ],
-  entryComponents: [LinkRendererComponent, FontAwesomeIconLinkRendererComponent, MultiLinkRendererComponent],
-  bootstrap: [AppComponent]
+    declarations: [
+        AppComponent,
+        HomeIndexComponent,
+        UserListComponent,
+        UserInviteComponent,
+        UserDetailComponent,
+        UserEditComponent,
+        WatershedDetailComponent,
+        LoginCallbackComponent,
+        HelpComponent,
+        CreateUserCallbackComponent,
+        DisclaimerComponent,
+        FieldDefinitionListComponent,
+        FieldDefinitionEditComponent,
+        TimeSeriesAnalysisComponent,
+        PairedRegressionAnalysisComponent,
+        DiversionScenarioComponent,
+        CustomPageListComponent,
+        CustomPageDetailComponent,
+        CustomPageCreateComponent,
+        CustomPageEditPropertiesComponent
+    ],
+    imports: [
+        AppRoutingModule,
+        BrowserModule,
+        BrowserAnimationsModule,
+        NgbModule,
+        RouterModule,
+        OAuthModule.forRoot(),
+        SharedModule.forRoot(),
+        FormsModule,
+        ReactiveFormsModule,
+        BrowserAnimationsModule,
+        AgGridModule.withComponents([]),
+        SelectDropDownModule,
+        CKEditorModule,
+        NgSelectModule,
+        ApiModule.forRoot(() => {
+            return new Configuration({
+                basePath: `${environment.mainAppApiUrl}`,
+            });
+        })
+    ],
+    providers: [
+        CookieService,
+        AppInitService,
+        { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService, AppInsightsService], multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandlerService
+        },
+        DecimalPipe, CurrencyPipe, DatePipe,
+        {
+            provide: OAuthStorage,
+            useClass: CookieStorageService
+        }
+    ],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

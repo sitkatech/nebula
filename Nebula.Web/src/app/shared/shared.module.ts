@@ -80,9 +80,6 @@ import { ClearGridFiltersButtonComponent } from './components/clear-grid-filters
         LinkToAnalysisComponent,
         CsvDownloadButtonComponent,
         ClearGridFiltersButtonComponent
-    ],
-    entryComponents:[
-        WatershedDetailPopupComponent,
     ]
 })
 export class SharedModule {
