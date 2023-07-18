@@ -46,6 +46,7 @@ import { CustomPageListComponent } from './pages/custom-page-list/custom-page-li
 import { CustomPageDetailComponent } from './pages/custom-page-detail/custom-page-detail.component';
 import { CustomPageCreateComponent } from './pages/custom-page-create/custom-page-create.component';
 import { CustomPageEditPropertiesComponent } from './pages/custom-page-edit-properties/custom-page-edit-properties.component';
+import { ApiModule, Configuration } from './shared/generated';
 
 
 export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
@@ -93,7 +94,12 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
     AgGridModule.withComponents([]),
     SelectDropDownModule,
     CKEditorModule,
-    NgSelectModule
+    NgSelectModule,
+    ApiModule.forRoot(() => {
+      return new Configuration({
+          basePath: `${environment.mainAppApiUrl}`,
+      });
+    })
   ],  
   providers: [
     CookieService,
