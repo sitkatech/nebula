@@ -32,7 +32,12 @@
                 "glob": "**/*",
                 "input": "node_modules/leaflet/dist/images/",
                 "output": "./assets/"
-             }
+              },
+              {
+                "glob": "**/*", 
+                "input": "node_modules/tinymce", 
+                "output": "/assets/tinymce/"
+              }
             ],
             
             "styles": [

@@ -22,18 +22,14 @@ import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer
 
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FontAwesomeIconLinkRendererComponent } from './shared/components/ag-grid/fontawesome-icon-link-renderer/fontawesome-icon-link-renderer.component';
 import { LoginCallbackComponent } from './pages/login-callback/login-callback.component';
 import { HelpComponent } from './pages/help/help.component';
 import { SelectDropDownModule } from 'ngx-select-dropdown'
-import { MultiLinkRendererComponent } from './shared/components/ag-grid/multi-link-renderer/multi-link-renderer.component';
 import { CreateUserCallbackComponent } from './pages/create-user-callback/create-user-callback.component';
 import { DisclaimerComponent } from './pages/disclaimer/disclaimer.component';
 import { AppInitService } from './app.init';
 import { FieldDefinitionListComponent } from './pages/field-definition-list/field-definition-list.component';
 import { FieldDefinitionEditComponent } from './pages/field-definition-edit/field-definition-edit.component';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
-import { HttpErrorInterceptor } from './shared/interceptors/httpErrorInterceptor';
 import { TimeSeriesAnalysisComponent } from './pages/time-series-analysis/time-series-analysis.component';
 import { environment } from 'src/environments/environment';
 import { AppInsightsService } from './shared/services/app-insights.service';
@@ -93,7 +89,6 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
         BrowserAnimationsModule,
         AgGridModule.withComponents([]),
         SelectDropDownModule,
-        CKEditorModule,
         NgSelectModule,
         ApiModule.forRoot(() => {
             return new Configuration({

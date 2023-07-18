@@ -14,7 +14,6 @@ import { WatershedMapComponent } from './components/watershed-map/watershed-map.
 import { MultiLinkRendererComponent } from './components/ag-grid/multi-link-renderer/multi-link-renderer.component';
 import { SelectDropDownModule } from 'ngx-select-dropdown';
 import { CustomRichTextComponent } from './components/custom-rich-text/custom-rich-text.component'
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FieldDefinitionComponent } from './components/field-definition/field-definition.component';
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { AlertDisplayComponent } from './components/alert-display/alert-display.component';
@@ -28,6 +27,7 @@ import { LinkToAnalysisComponent } from './components/link-to-analysis/link-to-a
 import { CustomDropdownFilterComponent } from './components/custom-dropdown-filter/custom-dropdown-filter.component';
 import { CsvDownloadButtonComponent } from './components/csv-download-button/csv-download-button.component';
 import { ClearGridFiltersButtonComponent } from './components/clear-grid-filters-button/clear-grid-filters-button.component';
+import { EditorModule, TINYMCE_SCRIPT_SRC } from "@tinymce/tinymce-angular";
 
 @NgModule({
     declarations: [
@@ -59,7 +59,7 @@ import { ClearGridFiltersButtonComponent } from './components/clear-grid-filters
         HttpClientModule,
         RouterModule,
         SelectDropDownModule,
-        CKEditorModule,
+        EditorModule,
         NgbModule,
         NgSelectModule,
         AutoCompleteModule
@@ -79,7 +79,11 @@ import { ClearGridFiltersButtonComponent } from './components/clear-grid-filters
         StationSelectCardComponent,
         LinkToAnalysisComponent,
         CsvDownloadButtonComponent,
-        ClearGridFiltersButtonComponent
+        ClearGridFiltersButtonComponent,
+        EditorModule
+    ],
+    providers:[
+        { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' }
     ]
 })
 export class SharedModule {

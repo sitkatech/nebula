@@ -1,21 +1,23 @@
-import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { SafeHtml, DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
-import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
-import { environment } from 'src/environments/environment';
 import { CustomPageDto, CustomPageService, CustomPageUpsertDto, FileResourceService, UserDto } from 'src/app/shared/generated';
-import { CkEditorUploadAdapter } from 'src/app/shared/services/ck-editor-upload-adapter.service';
+import { EditorComponent } from '@tinymce/tinymce-angular';
+import TinyMCEHelpers from 'src/app/shared/helpers/tiny-mce-helpers';
 
 @Component({
   selector: 'nebula-custom-page-detail',
   templateUrl: './custom-page-detail.component.html',
   styleUrls: ['./custom-page-detail.component.scss']
 })
-export class CustomPageDetailComponent implements OnInit {
+export class CustomPageDetailComponent implements OnInit, AfterViewChecked {
+  @ViewChild('tinyMceEditor') tinyMceEditor: EditorComponent;
+  public tinyMceConfig: object;
+  
   @Input() customPageVanityUrl: string;
   public customPageContent: SafeHtml;
   public customPageDisplayName: string;
@@ -25,15 +27,10 @@ export class CustomPageDetailComponent implements OnInit {
   public isEmptyContent: boolean = false;
   
   public watchUserChangeSubscription: any;
-  public Editor = ClassicEditor;
   public editor;
   public editedContent: string;
   
   private currentUser: UserDto;
-  
-  //For media embed https://ckeditor.com/docs/ckeditor5/latest/api/module_media-embed_mediaembed-MediaEmbedConfig.html
-  //Only some embeds will work, and if we want others to work we'll likely need to write some extra functions
-  public ckConfig = {mediaEmbed: {previewsInData: true}};
   public customPage: CustomPageDto;
 
   constructor(
@@ -68,19 +65,21 @@ export class CustomPageDetailComponent implements OnInit {
     }
   }
 
-  ngOnDestroy() {
-    this.cdr.detach();
+  ngAfterViewChecked() {
+    // viewChild is updated after the view has been checked
+    this.initalizeEditor();
   }
 
-  // see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html#how-does-the-image-upload-work
-  public ckEditorReady(editor) {
-    const customPageService = this.customPageService
-    this.editor = editor;
+  initalizeEditor() {
+    if (!this.isLoading && this.isEditing) {
+      this.tinyMceConfig = TinyMCEHelpers.DefaultInitConfig(
+        this.tinyMceEditor
+      );
+    }
+  }
 
-    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-      editor.isReadOnly = true;
-      return new CkEditorUploadAdapter(loader, customPageService, environment.mainAppApiUrl, editor);
-    };
+  ngOnDestroy() {
+    this.cdr.detach();
   }
 
   public isUserAnAdministrator(): boolean {

@@ -1,32 +1,31 @@
-import { Component, OnInit, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectorRef, AfterViewChecked, ViewChild } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
 import { AlertContext } from '../../models/enums/alert-context.enum';
-import * as ClassicEditor from 'src/assets/main/ckeditor/ckeditor.js';
-import { environment } from 'src/environments/environment';
 import { CustomRichTextDto, CustomRichTextService, FileResourceService, UserDto } from '../../generated';
-import { CkEditorUploadAdapter } from '../../services/ck-editor-upload-adapter.service';
+import TinyMCEHelpers from '../../helpers/tiny-mce-helpers';
+import { EditorComponent } from '@tinymce/tinymce-angular';
 
 @Component({
   selector: 'custom-rich-text',
   templateUrl: './custom-rich-text.component.html',
   styleUrls: ['./custom-rich-text.component.scss']
 })
-export class CustomRichTextComponent implements OnInit {
+export class CustomRichTextComponent implements OnInit, AfterViewChecked {
+  @ViewChild('tinyMceEditor') tinyMceEditor : EditorComponent;
+  public tinyMceConfig: object;
+  
   @Input() customRichTextTypeID: number;
   public customRichTextContent: string;
   public isLoading: boolean = true;
   public isEditing: boolean = false;
   public isEmptyContent: boolean = false;
   public watchUserChangeSubscription: any;
-  public Editor = ClassicEditor;
   public editedContent: string;
   public editor;
 
   currentUser: UserDto;
-
-  public ckConfig = {"removePlugins": ["MediaEmbed"]}
 
   constructor (
     private customRichTextService: CustomRichTextService,
@@ -40,7 +39,6 @@ export class CustomRichTextComponent implements OnInit {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
     });
-    //window.Editor = this.Editor;
 
     this.customRichTextService.customRichTextCustomRichTextTypeIDGet(this.customRichTextTypeID).subscribe(x => {
       this.customRichTextContent = x.CustomRichTextContent;
@@ -49,17 +47,17 @@ export class CustomRichTextComponent implements OnInit {
     });
   }
 
-  // tell CkEditor to use the class below as its upload adapter
-  // see https://ckeditor.com/docs/ckeditor5/latest/framework/guides/deep-dive/upload-adapter.html#how-does-the-image-upload-work
-  public ckEditorReady(editor) {
-    const fileResourceService = this.fileResourceService;
-    this.editor = editor;
+  ngAfterViewChecked() {
+    // viewChild is updated after the view has been checked
+    this.initalizeEditor();
+  }
 
-    editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
-      // disable the editor until the image comes back
-      editor.isReadOnly = true;
-      return new CkEditorUploadAdapter(loader, fileResourceService, environment.mainAppApiUrl, editor);
-    };
+  initalizeEditor() {
+    if (!this.isLoading && this.isEditing) {
+      this.tinyMceConfig = TinyMCEHelpers.DefaultInitConfig(
+        this.tinyMceEditor
+      );
+    }
   }
 
   public showEditButton(): boolean {
@@ -87,9 +85,4 @@ export class CustomRichTextComponent implements OnInit {
       this.alertService.pushAlert(new Alert("There was an error updating the rich text content", AlertContext.Danger, true));
     });
   }
-  
-  public isUploadingImage():boolean{
-    return this.editor && this.editor.isReadOnly;
-  }
-
 }
