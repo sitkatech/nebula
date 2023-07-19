@@ -103,16 +103,7 @@ export class HeaderNavComponent implements OnInit, OnDestroy {
         });
     }
 
-
-    public platformShortName(): string{
-        return environment.platformShortName;
-    }
-
-    public leadOrganizationHomeUrl(): string{
-        return environment.leadOrganizationHomeUrl;
-    }
-
     public leadOrganizationLogoSrc(): string{
-        return `assets/main/logos/${environment.leadOrganizationLogoFilename}`;
+        return "assets/main/logos/nebula_logo.png";
     }
 }

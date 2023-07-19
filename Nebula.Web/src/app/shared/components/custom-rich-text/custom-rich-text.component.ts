@@ -30,9 +30,7 @@ export class CustomRichTextComponent implements OnInit, AfterViewChecked {
   constructor (
     private customRichTextService: CustomRichTextService,
     private authenticationService: AuthenticationService,
-    private cdr: ChangeDetectorRef,
-    private alertService: AlertService,
-    private fileResourceService: FileResourceService
+    private alertService: AlertService
   ) { }
 
   ngOnInit() {

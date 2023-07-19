@@ -44,7 +44,7 @@ export class AppComponent {
             }
         });
 
-        this.titleService.setTitle(`${environment.platformShortName}`)
+        this.titleService.setTitle("Smart Watershed Network Platform")
         this.setAppFavicon();
     }
 
@@ -54,6 +54,6 @@ export class AppComponent {
     }
 
     setAppFavicon(){
-        this._document.getElementById('appFavicon').setAttribute('href', "assets/main/favicons/" + environment.faviconFilename);
+        this._document.getElementById('appFavicon').setAttribute('href', "assets/main/favicons/favicon.ico");
      }
 }

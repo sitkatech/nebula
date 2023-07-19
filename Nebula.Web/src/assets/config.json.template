@@ -8,15 +8,6 @@
   
     "keystoneSupportBaseUrl": [TODO],
     "geoserverMapServiceUrl": [TODO],
-    
-    "platformLongName": [TODO],
-    "platformShortName": [TODO],
-    "leadOrganizationShortName": [TODO], 
-    "leadOrganizationLongName": [TODO], 
-    "leadOrganizationHomeUrl": [TODO],
-
-    "faviconFilename": [TODO],
-    "leadOrganizationLogoFilename": [TODO],
   
     "keystoneAuthConfiguration": {
       "clientId": [TODO],
