@@ -31,7 +31,7 @@
           <select name="RoleID" class="form-control" [(ngModel)]="model.RoleID" (change)="checkReceiveSupportEmails()"
             required>
             <option value=""></option>
-            <option *ngFor="let role of roles" [value]="role.RoleID">
+            <option *ngFor="let role of roles" [ngValue]="role.RoleID">
               {{role.RoleDisplayName}}
             </option>
           </select>

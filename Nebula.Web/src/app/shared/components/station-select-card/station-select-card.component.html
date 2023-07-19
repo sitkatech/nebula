@@ -38,8 +38,8 @@
         <hr>
         <div class="row">
             <div class="col-md-7 col-xl-8">
-                <div id={{mapID}} class="location-card"
-                                    style="height:100%" [style.min-height]="mapHeight"></div>
+                <div id={{mapID}} class="location-card" style="height:100%" [style.min-height]="mapHeight">
+                </div>
             </div>
             <div class="col-md-5 col-xl-4" [style.max-height]="mapHeight" [style.overflow]="'auto'">
                 <ng-container *ngIf="!selectedSiteStation">

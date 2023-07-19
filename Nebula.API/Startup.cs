@@ -21,8 +21,9 @@ using Nebula.API.Services.Telemetry;
 using Nebula.EFModels.Entities;
 using Serilog.Sinks.ApplicationInsights.TelemetryConverters;
 using ILogger = Serilog.ILogger;
-using Microsoft.OpenApi.Models;
 using System.Text.Json.Serialization;
+using Nebula.API.Converters;
+using NetTopologySuite.IO.Converters;
 
 namespace Nebula.API
 {
@@ -58,8 +59,16 @@ namespace Nebula.API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry(_instrumentationKey);
+
             services.AddControllers().AddJsonOptions(opt =>
             {
+                opt.JsonSerializerOptions.Converters.Add(new GeoJsonConverterFactory());
+                opt.JsonSerializerOptions.Converters.Add(new DateTimeConverter());
+                opt.JsonSerializerOptions.Converters.Add(new BooleanConverter());
+                opt.JsonSerializerOptions.Converters.Add(new DoubleConverter(2));
+                opt.JsonSerializerOptions.Converters.Add(new IntConverter());
+                opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                opt.JsonSerializerOptions.Converters.Add(new NullableConverterFactory());
                 opt.JsonSerializerOptions.PropertyNameCaseInsensitive = false;
                 opt.JsonSerializerOptions.PropertyNamingPolicy = null;
                 opt.JsonSerializerOptions.NumberHandling = JsonNumberHandling.AllowNamedFloatingPointLiterals;

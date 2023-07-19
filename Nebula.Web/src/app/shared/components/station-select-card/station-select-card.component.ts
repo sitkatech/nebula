@@ -310,21 +310,21 @@ export class StationSelectCardComponent implements OnInit {
       this.watershedService.watershedsWatershedNameGetWatershedMaskGet("Aliso Creek"),
       this.lyraService.getRSBTopoJson(),
       this.lyraService.getSiteLocationGeoJson()
-    ])
-      .subscribe(([maskString, topoJSON, sites]) => {
-        this.maskLayer = L.geoJSON(maskString, {
-          invert: true,
-          style: function (feature) {
-            return {
-              fillColor: "#323232",
-              fill: true,
-              fillOpacity: 0.2,
-              color: "#3388ff",
-              weight: 5,
-              stroke: true
-            };
-          }
-        });
+    ]).subscribe(([maskString, topoJSON, sites]) => {
+      const mask = JSON.parse(maskString);
+      this.maskLayer = L.geoJSON(mask, {
+        invert: true,
+        style: function (feature) {
+          return {
+            fillColor: "#323232",
+            fill: true,
+            fillOpacity: 0.2,
+            color: "#3388ff",
+            weight: 5,
+            stroke: true
+          };
+        }
+      });
 
         L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
 
