@@ -100,7 +100,7 @@ namespace Nebula.API.Controllers
 
         [HttpPost("users")]
         [LoggedInUnclassifiedFeature]
-        public ActionResult<UserDto> CreateUser([FromBody] UserCreateDto userCreateDto)
+        public async Task<ActionResult<UserDto>> CreateUser([FromBody] UserCreateDto userCreateDto)
         {
             // Validate request body; all fields required in Dto except Org Name and Phone
             if (userCreateDto == null)
@@ -121,7 +121,7 @@ namespace Nebula.API.Controllers
             var mailMessage = GenerateUserCreatedEmail(_nebulaConfiguration.WEB_URL, user, _dbContext, smtpClient);
             SitkaSmtpClientService.AddCcRecipientsToEmail(mailMessage,
                         EFModels.Entities.User.GetEmailAddressesForAdminsThatReceiveSupportEmails(_dbContext));
-            SendEmailMessage(smtpClient, mailMessage);
+            await SendEmailMessage(smtpClient, mailMessage);
 
             return Ok(user);
         }
@@ -232,12 +232,12 @@ As an administrator of the {_nebulaConfiguration.PlatformShortName}, you can ass
             return mailMessage;
         }
 
-        private void SendEmailMessage(SitkaSmtpClientService smtpClient, MailMessage mailMessage)
+        private async Task SendEmailMessage(SitkaSmtpClientService smtpClient, MailMessage mailMessage)
         {
             mailMessage.IsBodyHtml = true;
             mailMessage.From = smtpClient.GetDefaultEmailFrom();
             mailMessage.ReplyToList.Add(!String.IsNullOrWhiteSpace(_nebulaConfiguration.LeadOrganizationEmail) ? _nebulaConfiguration.LeadOrganizationEmail : "donotreply@sitkatech.com");
-            smtpClient.Send(mailMessage);
+            await smtpClient.Send(mailMessage);
         }
     }
 }
