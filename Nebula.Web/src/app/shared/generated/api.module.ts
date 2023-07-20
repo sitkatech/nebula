@@ -6,7 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { CustomPageService } from './api/custom-page.service';
 import { CustomRichTextService } from './api/custom-rich-text.service';
 import { FieldDefinitionService } from './api/field-definition.service';
-import { FileResourceService } from './api/file-resource.service';
 import { MenuItemService } from './api/menu-item.service';
 import { RoleService } from './api/role.service';
 import { UserService } from './api/user.service';
@@ -20,7 +19,6 @@ import { WatershedService } from './api/watershed.service';
     CustomPageService,
     CustomRichTextService,
     FieldDefinitionService,
-    FileResourceService,
     MenuItemService,
     RoleService,
     UserService,

@@ -22,7 +22,6 @@ namespace Nebula.EFModels.Entities
         public virtual DbSet<CustomPageRole> CustomPageRoles { get; set; }
         public virtual DbSet<CustomRichText> CustomRichTexts { get; set; }
         public virtual DbSet<FieldDefinition> FieldDefinitions { get; set; }
-        public virtual DbSet<FileResource> FileResources { get; set; }
         public virtual DbSet<RegionalSubbasin> RegionalSubbasins { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Watershed> Watersheds { get; set; }
@@ -56,15 +55,6 @@ namespace Nebula.EFModels.Entities
                     .WithMany(p => p.CustomPageRoles)
                     .HasForeignKey(d => d.CustomPageID)
                     .OnDelete(DeleteBehavior.ClientSetNull);
-            });
-
-            modelBuilder.Entity<FileResource>(entity =>
-            {
-                entity.HasOne(d => d.CreateUser)
-                    .WithMany(p => p.FileResources)
-                    .HasForeignKey(d => d.CreateUserID)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_FileResource_User_CreateUserID_UserID");
             });
 
             modelBuilder.Entity<RegionalSubbasin>(entity =>

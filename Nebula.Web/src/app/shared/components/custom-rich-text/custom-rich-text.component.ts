@@ -1,9 +1,9 @@
-import { Component, OnInit, Input, ChangeDetectorRef, AfterViewChecked, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, AfterViewChecked, ViewChild } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { AlertService } from '../../services/alert.service';
 import { Alert } from '../../models/alert';
 import { AlertContext } from '../../models/enums/alert-context.enum';
-import { CustomRichTextDto, CustomRichTextService, FileResourceService, UserDto } from '../../generated';
+import { CustomRichTextDto, CustomRichTextService, UserDto } from '../../generated';
 import TinyMCEHelpers from '../../helpers/tiny-mce-helpers';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 

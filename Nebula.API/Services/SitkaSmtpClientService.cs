@@ -170,11 +170,11 @@ namespace Nebula.API.Services
         public string GetDefaultEmailSignature()
         {
             string defaultEmailSignature = $@"<br /><br />
-Respectfully, the {_nebulaConfiguration.PlatformLongName} team
+Respectfully, the Smart Watershed Network Platform team
 <br /><br />
 ***
 <br /><br />
-You have received this email because you are a registered user of the {_nebulaConfiguration.PlatformLongName}. 
+You have received this email because you are a registered user of the Smart Watershed Network Platform. 
 <br /><br />
 <a href=""mailto:{_nebulaConfiguration.LeadOrganizationEmail}"">{_nebulaConfiguration.LeadOrganizationEmail}</a>";
             return defaultEmailSignature;
@@ -183,11 +183,11 @@ You have received this email because you are a registered user of the {_nebulaCo
         public string GetSupportNotificationEmailSignature()
         {
             string supportNotificationEmailSignature = $@"<br /><br />
-Respectfully, the {_nebulaConfiguration.PlatformLongName} team
+Respectfully, the Smart Watershed Network Platform team
 <br /><br />
 ***
 <br /><br />
-You have received this email because you are assigned to receive support notifications within the {_nebulaConfiguration.PlatformLongName}. 
+You have received this email because you are assigned to receive support notifications within the Smart Watershed Network Platform. 
 <br /><br />
 <a href=""mailto:{_nebulaConfiguration.LeadOrganizationEmail}"">{_nebulaConfiguration.LeadOrganizationEmail}</a>";
             return supportNotificationEmailSignature;
@@ -195,7 +195,7 @@ You have received this email because you are assigned to receive support notific
 
         public MailAddress GetDefaultEmailFrom()
         {
-            return new MailAddress("donotreply@sitkatech.net", $"{_nebulaConfiguration.PlatformLongName}");
+            return new MailAddress("donotreply@sitkatech.net", $"Smart Watershed Network Platform");
         }
 
         public static void AddBccRecipientsToEmail(MailMessage mailMessage, IEnumerable<string> recipients)

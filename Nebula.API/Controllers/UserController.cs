@@ -40,17 +40,15 @@ namespace Nebula.API.Controllers
                 return BadRequest("Role ID is required.");
             }
 
-            var applicationName = $"{_nebulaConfiguration.PlatformLongName}";
-            var leadOrganizationLongName = $"{_nebulaConfiguration.LeadOrganizationLongName}";
             var inviteModel = new KeystoneService.KeystoneInviteModel
             {
                 FirstName = inviteDto.FirstName,
                 LastName = inviteDto.LastName,
                 Email = inviteDto.Email,
-                Subject = $"Invitation to the {applicationName}",
-                WelcomeText = $"You are receiving this notification because an administrator of the {applicationName}, an online service of the {leadOrganizationLongName}, has invited you to create an account.",
-                SiteName = applicationName,
-                SignatureBlock = $"{leadOrganizationLongName}<br /><a href='mailto:{_nebulaConfiguration.LeadOrganizationEmail}'>{_nebulaConfiguration.LeadOrganizationEmail}</a><a href='{_nebulaConfiguration.LeadOrganizationHomeUrl}'>{_nebulaConfiguration.LeadOrganizationHomeUrl}</a>",
+                Subject = $"Invitation to the Smart Watershed Network Platform",
+                WelcomeText = $"You are receiving this notification because an administrator of the Smart Watershed Network Platform, an online service of the Environmental Science Associates, has invited you to create an account.",
+                SiteName = "Smart Watershed Network Platform",
+                SignatureBlock = $"Environmental Science Associates<br /><a href='mailto:{_nebulaConfiguration.LeadOrganizationEmail}'>{_nebulaConfiguration.LeadOrganizationEmail}</a><a href='https://esassoc.com'>https://esassoc.com</a>",
                 RedirectURL = _nebulaConfiguration.KEYSTONE_REDIRECT_URL
             };
 
@@ -217,14 +215,14 @@ namespace Nebula.API.Controllers
         private MailMessage GenerateUserCreatedEmail(string nebulaUrl, UserDto user, NebulaDbContext dbContext,
             SitkaSmtpClientService smtpClient)
         {
-            var messageBody = $@"A new user has signed up to the {_nebulaConfiguration.PlatformLongName}: <br/><br/>
+            var messageBody = $@"A new user has signed up to the Smart Watershed Network Platform: <br/><br/>
  {user.FullName} ({user.Email}) <br/><br/>
-As an administrator of the {_nebulaConfiguration.PlatformShortName}, you can assign them a role and associate them with a Billing Account by following <a href='{nebulaUrl}/users/{user.UserID}'>this link</a>. <br/><br/>
+As an administrator of the Smart Watershed Network Platform, you can assign them a role and associate them with a Billing Account by following <a href='{nebulaUrl}/users/{user.UserID}'>this link</a>. <br/><br/>
 {smtpClient.GetSupportNotificationEmailSignature()}";
 
             var mailMessage = new MailMessage
             {
-                Subject = $"New User in {_nebulaConfiguration.PlatformLongName}",
+                Subject = $"New User in the Smart Watershed Network Platform",
                 Body = $"Hello,<br /><br />{messageBody}",
             };
 

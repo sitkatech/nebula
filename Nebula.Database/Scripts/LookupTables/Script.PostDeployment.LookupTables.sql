@@ -12,8 +12,6 @@ GO
 GO
 :r ".\dbo.FieldDefinitionType.sql"
 GO
-:r ".\dbo.FileResourceMimeType.sql"
-GO
 :r ".\dbo.MenuItem.sql"
 GO
 :r ".\dbo.Role.sql"

@@ -653,28 +653,6 @@
         }
       }
     },
-    "/FileResource/{fileResourceGuidAsString}": {
-      "get": {
-        "tags": [
-          "FileResource"
-        ],
-        "parameters": [
-          {
-            "name": "fileResourceGuidAsString",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success"
-          }
-        }
-      }
-    },
     "/menuItems": {
       "get": {
         "tags": [

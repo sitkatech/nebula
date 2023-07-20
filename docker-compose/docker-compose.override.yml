@@ -11,8 +11,5 @@ services:
       - WEB_URL=${WEB_URL}
       - SECRET_PATH=${SECRET_PATH}
       - KEYSTONE_REDIRECT_URL=${KEYSTONE_REDIRECT_URL}
-      - PlatformLongName=${PlatformLongName}
-      - LeadOrganizationLongName=${LeadOrganizationLongName}
-      - LeadOrganizationHomeUrl=${LeadOrganizationHomeUrl}
       - LeadOrganizationEmail=${LeadOrganizationEmail}
       - APPINSIGHTS_INSTRUMENTATIONKEY=${APPINSIGHTS_INSTRUMENTATIONKEY}

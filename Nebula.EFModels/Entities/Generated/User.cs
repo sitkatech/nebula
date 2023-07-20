@@ -10,11 +10,6 @@ namespace Nebula.EFModels.Entities
     [Index("Email", Name = "AK_User_Email", IsUnique = true)]
     public partial class User
     {
-        public User()
-        {
-            FileResources = new HashSet<FileResource>();
-        }
-
         [Key]
         public int UserID { get; set; }
         public Guid? UserGuid { get; set; }
@@ -50,8 +45,5 @@ namespace Nebula.EFModels.Entities
         [StringLength(100)]
         [Unicode(false)]
         public string Company { get; set; }
-
-        [InverseProperty("CreateUser")]
-        public virtual ICollection<FileResource> FileResources { get; set; }
     }
 }

@@ -24,6 +24,7 @@ using ILogger = Serilog.ILogger;
 using System.Text.Json.Serialization;
 using Nebula.API.Converters;
 using NetTopologySuite.IO.Converters;
+using SendGrid.Extensions.DependencyInjection;
 
 namespace Nebula.API
 {
@@ -121,7 +122,9 @@ namespace Nebula.API
             services.AddSingleton(logger);
 
             services.AddTransient(s => new KeystoneService(s.GetService<IHttpContextAccessor>(), keystoneHost));
-            services.AddSingleton(x => new SitkaSmtpClientService(nebulaConfiguration));
+
+            services.AddSendGrid(options => { options.ApiKey = nebulaConfiguration.SendGridApiKey; });
+            services.AddSingleton<SitkaSmtpClientService>();
 
             services.AddScoped(s => s.GetService<IHttpContextAccessor>().HttpContext);
             services.AddScoped(s => UserContext.GetUserFromHttpContext(s.GetService<NebulaDbContext>(),
