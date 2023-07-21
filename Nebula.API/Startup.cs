@@ -137,6 +137,8 @@ namespace Nebula.API
             {
             });
             #endregion
+
+            services.AddHealthChecks();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -171,7 +173,11 @@ namespace Nebula.API
 
             app.Use(TelemetryHelper.PostBodyTelemetryMiddleware);
 
-            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/");
+            });
 
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
 
