@@ -1,0 +1,45 @@
+<div class="breadcrumb-container">
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div *ngIf="isLoading" class="text-center">
+    <span class="fa fa-spinner loading-spinner"></span>
+</div>
+
+<div class="container mt-sm-4 mb-5" *ngIf="!isLoading">
+    <app-alert-display></app-alert-display>
+    <div>
+        <h2 class="d-inline-block">{{customPageDisplayName}}</h2>
+    </div>
+    <ng-container *ngIf="!isEditing">
+        <div *ngIf="showEditButton()" class="customPageContent" style="position: relative; min-height: 60px;">
+            <div class="hoverEditButton">
+                <div style="margin-top: 10px">
+                    <button type="button" class="btn btn-nebula" (click)="enterEdit()">
+                        Edit
+                    </button>
+                </div>
+            </div>
+            <div *ngIf="!emptyContent" [innerHtml]="customPageContent"></div>
+
+            <div *ngIf="emptyContent" class="hoverEmptySpace"></div>
+        </div>
+        <div *ngIf="!showEditButton()" [innerHtml]="customPageContent"></div>
+    </ng-container>
+
+    <div *ngIf="isEditing">
+        <editor #tinyMceEditor
+            [init]="tinyMceConfig"
+            [(ngModel)]="editedContent">
+        </editor>
+        <div style="float:right;" >
+            <button type="button" class="btn btn-primary mt-1 mr-1" (click)="saveEdit()">Save</button>
+            <button type="button" class="btn btn-secondary mt-1" (click)="cancelEdit()">Cancel</button>
+        </div>
+    </div>
+</div>

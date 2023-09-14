@@ -1,0 +1,22 @@
+{
+    "production": [TODO],
+    "staging": [TODO],
+    "dev": [TODO],
+    "mainAppApiUrl": [TODO],
+    "createAccountUrl": [TODO],
+    "createAccountRedirectUrl": [TODO],
+  
+    "keystoneSupportBaseUrl": [TODO],
+    "geoserverMapServiceUrl": [TODO],
+  
+    "keystoneAuthConfiguration": {
+      "clientId": [TODO],
+      "issuer": [TODO],
+      "redirectUriRelative": [TODO],
+      "scope": [TODO],
+      "sessionChecksEnabled": [TODO],
+      "logoutUrl": [TODO],
+      "postLogoutRedirectUri": [TODO],
+      "waitForTokenInMsec": [TODO]
+    }
+  }
