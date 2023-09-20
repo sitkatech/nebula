@@ -47,7 +47,7 @@ namespace Nebula.Web
             
             app.Use(async (context, next) =>
             {
-                if (!context.Request.Host.Host.Contains("swn.yachats.sitkatech.com", StringComparison.OrdinalIgnoreCase))
+                if (context.Request.Host.Host.Contains("swn.yachats.sitkatech.com", StringComparison.OrdinalIgnoreCase))
                 {
                     // Redirect to the www domain
                     var wwwUri = new UriBuilder
