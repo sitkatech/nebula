@@ -46,6 +46,19 @@ namespace Nebula.Web
             
             app.Use(async (context, next) =>
             {
+                if (!context.Request.Host.Host.Contains("swn.yachats.sitkatech.com", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Redirect to the www domain
+                    var wwwUri = new UriBuilder
+                    {
+                        Scheme = context.Request.Scheme,
+                        Host = "www.smartwatershednetwork.org",
+                        Path = context.Request.Path,
+                        Query = context.Request.QueryString.ToString()
+                    };
+                    context.Response.Redirect(wwwUri.Uri.ToString(), permanent: true);
+                    return;
+                }
                 if (context.Request.Path.Value == "/assets/config.json")
                 {
                     var result = new ConfigDto(Configuration);
