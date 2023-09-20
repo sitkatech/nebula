@@ -107,7 +107,6 @@ web:
       appgw.ingress.kubernetes.io/ssl-redirect: "true"
       appgw.ingress.kubernetes.io/request-timeout: "300"
       cert-manager.io/issue-temporary-certificate: "true"
-      appgw.ingress.kubernetes.io/rewrite-rule-set: SmartWatershedNetwork
   autoscaling:
     enabled: false
     minReplicas: 1
