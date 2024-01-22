@@ -1,4 +1,4 @@
-import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { AlertService } from '../services/alert.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -6,7 +6,7 @@ import { CustomPageService } from '../generated';
 @Injectable({
   providedIn: 'root'
 })
-export class CustomPageAccessGuard implements CanActivate {
+export class CustomPageAccessGuard  {
   constructor(
     private router: Router, 
     private alertService: AlertService, 
