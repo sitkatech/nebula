@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, EventEmitter, ApplicationRef, ChangeDetectorRef, ViewChildren } from '@angular/core';
 import { LyraService } from 'src/app/services/lyra.service';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormArray, UntypedFormBuilder } from '@angular/forms';
 import { SiteVariable } from 'src/app/shared/models/site-variable';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
@@ -41,10 +41,10 @@ export class TimeSeriesAnalysisComponent implements OnInit {
 
   public currentDate = DateTime.utc();
   public startDate = this.currentDate.minus({months:3});
-  public timeSeriesForm = new FormGroup({
-    start_date: new FormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
-    end_date: new FormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
-    timeseries: new FormArray([])
+  public timeSeriesForm = new UntypedFormGroup({
+    start_date: new UntypedFormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
+    end_date: new UntypedFormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
+    timeseries: new UntypedFormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
@@ -65,7 +65,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private lyraService: LyraService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private authenticationService: AuthenticationService,
     private route: ActivatedRoute
   ) {
@@ -94,7 +94,7 @@ export class TimeSeriesAnalysisComponent implements OnInit {
         control.markAsTouched({ onlySelf: true });
       });
       for (let [index, formGroup] of this.timeseries().controls.entries()) {
-        if (formGroup instanceof FormGroup) {
+        if (formGroup instanceof UntypedFormGroup) {
           Object.keys(formGroup.controls).forEach(field => {
             const control = this.timeseries().controls[index].get(field);
             control.markAsTouched({ onlySelf: true });
@@ -242,16 +242,16 @@ export class TimeSeriesAnalysisComponent implements OnInit {
     return this.timeSeriesForm.controls;
   }
 
-  timeseries(): FormArray {
-    return this.timeSeriesForm.get("timeseries") as FormArray
+  timeseries(): UntypedFormArray {
+    return this.timeSeriesForm.get("timeseries") as UntypedFormArray
   }
 
-  newSiteVariableToQuery(variable: SiteVariable): FormGroup {
+  newSiteVariableToQuery(variable: SiteVariable): UntypedFormGroup {
     return this.formBuilder.group({
       variable: variable,
-      interval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
-      aggregation_method: new FormControl(variable.allowedAggregations[0], [Validators.required]),
-      weather_condition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required])
+      interval: new UntypedFormControl(HydstraInterval.Daily.value, [Validators.required]),
+      aggregation_method: new UntypedFormControl(variable.allowedAggregations[0], [Validators.required]),
+      weather_condition: new UntypedFormControl(HydstraWeatherCondition.Both.value, [Validators.required])
     })
   }
 

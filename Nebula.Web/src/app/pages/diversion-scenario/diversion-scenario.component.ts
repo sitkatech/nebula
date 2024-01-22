@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LyraService } from 'src/app/services/lyra.service';
@@ -108,23 +108,23 @@ export class DiversionScenarioComponent implements OnInit {
 
   public currentDate = DateTime.utc();
   public startDate = this.currentDate.minus({months:3});
-  public timeSeriesForm = new FormGroup({
-    start_date: new FormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
-    end_date: new FormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
-    site: new FormControl(null, [Validators.required]),
-    diversion_rate_cfs: new FormControl(0, [Validators.required]),
-    storage_max_depth_ft: new FormControl(0, [Validators.required]),
-    storage_initial_depth_ft: new FormControl(0, [Validators.required]),
-    storage_area_sqft: new FormControl(0, [Validators.required]),
-    infiltration_rate_inhr: new FormControl(0, [Validators.required]),
-    rainfall_event_shutdown: new FormControl(true, [Validators.required]),
-    rainfall_event_depth_threshold: new FormControl(0.1, [Validators.required]),
-    event_seperation_hrs: new FormControl(6, [Validators.required]),
-    after_rain_delay_hrs: new FormControl(72, [Validators.required]),
-    nearest_rainfall_station: new FormControl(null, [Validators.required]),
-    diversion_months_active: new FormControl(this.monthData.map(x => x.id), [Validators.required]),
-    diversion_days_active: new FormControl(this.weekdayData.map(x => x.id), [Validators.required]),
-    diversion_hours_active: new FormControl(this.hourData.map(x => x.id), [Validators.required]),
+  public timeSeriesForm = new UntypedFormGroup({
+    start_date: new UntypedFormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
+    end_date: new UntypedFormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
+    site: new UntypedFormControl(null, [Validators.required]),
+    diversion_rate_cfs: new UntypedFormControl(0, [Validators.required]),
+    storage_max_depth_ft: new UntypedFormControl(0, [Validators.required]),
+    storage_initial_depth_ft: new UntypedFormControl(0, [Validators.required]),
+    storage_area_sqft: new UntypedFormControl(0, [Validators.required]),
+    infiltration_rate_inhr: new UntypedFormControl(0, [Validators.required]),
+    rainfall_event_shutdown: new UntypedFormControl(true, [Validators.required]),
+    rainfall_event_depth_threshold: new UntypedFormControl(0.1, [Validators.required]),
+    event_seperation_hrs: new UntypedFormControl(6, [Validators.required]),
+    after_rain_delay_hrs: new UntypedFormControl(72, [Validators.required]),
+    nearest_rainfall_station: new UntypedFormControl(null, [Validators.required]),
+    diversion_months_active: new UntypedFormControl(this.monthData.map(x => x.id), [Validators.required]),
+    diversion_days_active: new UntypedFormControl(this.weekdayData.map(x => x.id), [Validators.required]),
+    diversion_hours_active: new UntypedFormControl(this.hourData.map(x => x.id), [Validators.required]),
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
   currentlyDisplayingRequestLinkText: string;

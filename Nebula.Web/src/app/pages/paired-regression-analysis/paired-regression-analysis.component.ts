@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormArray, FormBuilder } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators, UntypedFormArray, UntypedFormBuilder } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LyraService } from 'src/app/services/lyra.service';
 import { Alert } from 'src/app/shared/models/alert';
@@ -42,13 +42,13 @@ export class PairedRegressionAnalysisComponent implements OnInit {
 
   public currentDate = DateTime.utc();
   public startDate = this.currentDate.minus({months:3});
-  public timeSeriesForm = new FormGroup({
-    start_date: new FormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
-    end_date: new FormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
-    interval: new FormControl(HydstraInterval.Daily.value, [Validators.required]),
-    weather_condition: new FormControl(HydstraWeatherCondition.Both.value, [Validators.required]),
-    regression_method: new FormControl(HydstraRegressionMethod.Linear.value, [Validators.required]),
-    timeseries: new FormArray([])
+  public timeSeriesForm = new UntypedFormGroup({
+    start_date: new UntypedFormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
+    end_date: new UntypedFormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
+    interval: new UntypedFormControl(HydstraInterval.Daily.value, [Validators.required]),
+    weather_condition: new UntypedFormControl(HydstraWeatherCondition.Both.value, [Validators.required]),
+    regression_method: new UntypedFormControl(HydstraRegressionMethod.Linear.value, [Validators.required]),
+    timeseries: new UntypedFormArray([])
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
 
@@ -69,7 +69,7 @@ export class PairedRegressionAnalysisComponent implements OnInit {
   constructor(
     private cdr: ChangeDetectorRef,
     private lyraService: LyraService,
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private authenticationService: AuthenticationService,
     private route: ActivatedRoute
   ) {
@@ -241,14 +241,14 @@ export class PairedRegressionAnalysisComponent implements OnInit {
     return this.timeSeriesForm.controls;
   }
 
-  timeseries(): FormArray {
-    return this.timeSeriesForm.get("timeseries") as FormArray
+  timeseries(): UntypedFormArray {
+    return this.timeSeriesForm.get("timeseries") as UntypedFormArray
   }
 
-  newSiteVariableToQuery(variable: SiteVariable): FormGroup {
+  newSiteVariableToQuery(variable: SiteVariable): UntypedFormGroup {
     return this.formBuilder.group({
       variable: variable,
-      aggregation_method: new FormControl(variable.allowedAggregations[0], [Validators.required])
+      aggregation_method: new UntypedFormControl(variable.allowedAggregations[0], [Validators.required])
     })
   }
 
