@@ -9,7 +9,7 @@
                 class="col-form-label">
                     Filter Sites By:
                 </label>
-                <div class="d-inline-block ml-2 ml-lg-1">
+                <div class="d-inline-block ms-2 ms-lg-1">
                     <select [(ngModel)]="selectedStationFilter" id="filter" class="form-control" (change)="updateMarkerDisplay()" >
                         <option *ngFor="let type of stationFilterTypes" [ngValue]="type">
                             {{type.Display}}
@@ -20,7 +20,7 @@
                     <label class="col-form-label">
                         Station Search:
                     </label>
-                    <p-autoComplete #stationMapSearch id="stationMapSearch" styleClass="custom" class="d-inline-block ml-1"  appendTo="body" placeholder="Station Name, ID, or Description" emptyMessage="No Results"
+                    <p-autoComplete #stationMapSearch id="stationMapSearch" styleClass="custom" class="d-inline-block ms-1"  appendTo="body" placeholder="Station Name, ID, or Description" emptyMessage="No Results"
                     [(ngModel)]="searchText" [suggestions]="searchSuggestions" (completeMethod)="search($event)"
                     (onFocus)="reFocus(stationMapSearch)" (onSelect)="select($event)" type="search">
                     <ng-template let-result pTemplate="item">
@@ -46,7 +46,7 @@
                     <p>Click a station on the map to get started!</p>
                 </ng-container>
                 <ng-container *ngIf="selectedSiteStation">
-                    <dl class="row no-gutters">
+                    <dl class="row g-0">
                         <dt class="text-sm-left col-sm-6 col-xs-12"><field-definition [fieldDefinitionType]="'StationID'" class="d-inline-block">
                         </field-definition>:</dt>
                         <dd class="col-sm-6 col-xs-12">
@@ -64,8 +64,8 @@
                         </dd>
                         <dd class="col-sm-6 offset-sm-6 col-md-12 offset-md-0 col-xs-12">
                             <em *ngIf="!canViewTributaryArea">No Tributary Information Available</em>
-                            <button *ngIf="canViewTributaryArea && !canZoomTributaryArea" (click)="viewTributaryArea()" class="btn btn-sm btn-nebula float-right"><i class="fas fa-map-marker-alt"></i> View Tributary Area</button>
-                            <button *ngIf="canViewTributaryArea && canZoomTributaryArea" (click)="zoomInOnTributaryArea()" class="btn btn-sm btn-nebula float-right"><i class="fas fa-search-plus"></i> Zoom to Tributary Area</button>
+                            <button *ngIf="canViewTributaryArea && !canZoomTributaryArea" (click)="viewTributaryArea()" class="btn btn-sm btn-nebula float-end"><i class="fas fa-map-marker-alt"></i> View Tributary Area</button>
+                            <button *ngIf="canViewTributaryArea && canZoomTributaryArea" (click)="zoomInOnTributaryArea()" class="btn btn-sm btn-nebula float-end"><i class="fas fa-search-plus"></i> Zoom to Tributary Area</button>
                         </dd>
                     </dl>
                     <dl class="row">
@@ -82,12 +82,12 @@
                             <ng-container *ngIf="siteSelectedAndVariablesFound()">
                                 <dt class="text-sm-left col-sm-11 offset-sm-1 col-xs-12 mb-1"
                                     *ngFor="let variable of selectedSiteAvailableVariables">
-                                    <div class="row no-gutters">
+                                    <div class="row g-0">
                                         <div class="col-10">
                                             {{variable.name}}
                                             <br />
                                             <ng-container *ngIf="variable.description">
-                                                <div class="row no-gutters" style="line-height:1">
+                                                <div class="row g-0" style="line-height:1">
                                                     <div class="col-3 col-md-6 col-lg-4">
                                                         <small style="font-weight:400">Description:</small>
                                                     </div>
@@ -106,7 +106,7 @@
                                                 {{variable.startDate}} -
                                                 {{variable.endDate}}</small>
                                         </div>
-                                        <div *ngIf="variableNameCanBeAddedToSelection(variable.name)" class="col-2 align-self-center text-right">
+                                        <div *ngIf="variableNameCanBeAddedToSelection(variable.name)" class="col-2 align-self-center text-end">
                                             <button class="btn btn-sm btn-nebula"
                                                 [disabled]="disableAddingVariable(variable)"
                                                 (click)="addVariableToSelection(variable)">Add</button>

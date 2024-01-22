@@ -181,9 +181,9 @@
                                         </div>
                                     </ng-container>
                                 </ng-container>
-                                <div class="ml-auto">
+                                <div class="ms-auto">
                                     
-                                    <button type="submit" class="btn btn-nebula btn-sm mt-4 float-right"
+                                    <button type="submit" class="btn btn-nebula btn-sm mt-4 float-end"
                                         [disabled]="isActionBeingPerformed()">
                                         <span *ngIf="gettingTimeSeriesData"
                                             class="fa fa-spinner loading-spinner"></span>
@@ -202,11 +202,11 @@
                                 try again.</span>
                             <ng-container *ngIf="vegaSpec && currentlyDisplayingRequestDto">
                                 <button  (click)="downloadChartData()"
-                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-right"
+                                class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-end"
                                 [disabled]="isActionBeingPerformed()">
                                 <span *ngIf="downloadingChartData"
                                     class="fa fa-spinner loading-spinner"></span>Download Data (.csv)</button>
-                                <link-to-analysis [linkText]="currentlyDisplayingRequestLinkText" class="float-right mr-1"></link-to-analysis>
+                                <link-to-analysis [linkText]="currentlyDisplayingRequestLinkText" class="float-end me-1"></link-to-analysis>
                             </ng-container>
                             <div *ngIf="vegaSpec" id="vis" style="width:100%">
                             </div>

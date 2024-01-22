@@ -3,7 +3,7 @@
         <span class="align-middle">{{headerText}}</span>
         <button (click)="clearAllVariables()"
             [disabled]="selectedVariables.length == 0 || disableActions"
-            class="float-right btn btn-sm btn-nebula">Clear All</button>
+            class="float-end btn btn-sm btn-nebula">Clear All</button>
     </div>
     <div class="card-body table-responsive">
         <ng-container *ngIf="selectedVariables.length > 0">

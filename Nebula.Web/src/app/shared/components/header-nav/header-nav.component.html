@@ -5,12 +5,12 @@
     <a routerLink="/" routerLinkActive="active" class="nav-link" *ngIf="!isHomepageCurrentPage()">
         Home
     </a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-target="#navbarNav"
         aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+        <ul class="navbar-nav me-auto mt-2 mt-lg-0">
             <!-- <a routerLink="/" class="nav-link" *ngIf="!isHomepageCurrentPage()">Home</a> -->
             <ng-container *ngIf="canSeeScenarioOptions()">
                 <a routerLink="/time-series-analysis" class="nav-link">
@@ -23,7 +23,7 @@
                     Diversion Scenario
                 </a>
                 <li class="nav-item dropdown my-auto" routerLinkActive="active">
-                    <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Learn More
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -39,9 +39,9 @@
             </ng-container>
             
         </ul>
-        <ul class="navbar-nav mt-2 mt-lg-0 mr-sm-2">
+        <ul class="navbar-nav mt-2 mt-lg-0 me-sm-2">
             <li class="nav-item dropdown my-auto" routerLinkActive="active" *ngIf="isAdministrator()">
-                <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                <a href="#" class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
                     aria-expanded="false">
                     Manage
                 </a>
@@ -61,7 +61,7 @@
                 <a href="javascript:void(0);" (click)="login()" routerLinkActive="active" class="nav-link">Sign In</a>
             </li>
             <li class="nav-item dropdown welcomeUser" routerLinkActive="active" *ngIf="isAuthenticated()"> 
-                <a href="#" class="nav-link dropdown-toggle pr-3" role="button" data-toggle="dropdown"
+                <a href="#" class="nav-link dropdown-toggle pe-3" role="button" data-bs-toggle="dropdown"
                     aria-haspopup="true" aria-expanded="false">
                     Welcome {{getUserName()}}
                 </a>

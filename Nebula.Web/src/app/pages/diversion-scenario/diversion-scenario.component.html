@@ -361,9 +361,9 @@
                                             selected.</div>
                                     </div>
                                 </div>
-                                <div class="ml-auto">
+                                <div class="ms-auto">
 
-                                    <button type="submit" class="btn btn-nebula btn-sm mt-4 float-right"
+                                    <button type="submit" class="btn btn-nebula btn-sm mt-4 float-end"
                                         [disabled]="isActionBeingPerformed()">
                                         <span *ngIf="gettingTimeSeriesData"
                                             class="fa fa-spinner loading-spinner"></span>
@@ -385,11 +385,11 @@
                                 <div class="row">
                                     <div class="col-12 mt-1">
                                         <link-to-analysis [linkText]="currentlyDisplayingRequestLinkText"
-                                            class="float-right"></link-to-analysis>
+                                            class="float-end"></link-to-analysis>
                                     </div>
                                     <div class="col-12 mt-1">
                                         <button (click)="downloadChartData()"
-                                            class="btn btn-sm btn-nebula float-right"
+                                            class="btn btn-sm btn-nebula float-end"
                                             [disabled]="isActionBeingPerformed()">
                                             <span *ngIf="downloadingChartData"
                                                 class="fa fa-spinner loading-spinner"></span>Download Data
@@ -397,10 +397,10 @@
                                     </div>
                                 </div>
                             </ng-container>
-                            <div class="table-responsive text-left" *ngIf="summaryTableColumns.length > 0 && summaryTableRows.length > 0">
+                            <div class="table-responsive text-start" *ngIf="summaryTableColumns.length > 0 && summaryTableRows.length > 0">
                                 <h6 class="text-center font-weight-bold">Scenario Summary Table</h6>
                                 <table class="table table-bordered table-sm">
-                                    <thead class="thead-light">
+                                    <thead class="table-light">
                                         <tr>
                                             <th *ngFor="let column of summaryTableColumns">{{column | titlecase}}</th>
                                         </tr>

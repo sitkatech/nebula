@@ -18,10 +18,10 @@
             <custom-rich-text [customRichTextTypeID]="richTextTypeID"></custom-rich-text>
         </div>
     </div>
-    <div style="margin: 1rem 0 1rem 0;" class="float-right">
-        <nebula-clear-grid-filters-button class="mr-3" [grid]="pageGrid">
+    <div style="margin: 1rem 0 1rem 0;" class="float-end">
+        <nebula-clear-grid-filters-button class="me-3" [grid]="pageGrid">
         </nebula-clear-grid-filters-button>
-        <a class="float-right btn btn-nebula btn-md mr-1" routerLink="/custom-pages/create">New Custom Page</a>
+        <a class="float-end btn btn-nebula btn-md me-1" routerLink="/custom-pages/create">New Custom Page</a>
     </div>
     <div class="table-responsive">
         <ag-grid-angular #pageGrid style="width: 100%; height: 500px;" class="ag-theme-balham" [rowData]="rowData"
