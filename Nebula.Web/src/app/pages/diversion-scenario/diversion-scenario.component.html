@@ -64,14 +64,14 @@
                                 </ngb-alert>
                             </div>
                         </ng-container>
-                        <div class="col-12">
+                        <div class="col-lg-6">
                             <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
                                 <div *ngIf="errorMessage" class="alert alert-danger">
                                     {{errorMessage}}
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="start_date"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">Start
+                                        class="col-sm-6 col-form-label justify-content-start">Start
                                         Date</label>
                                     <div class="input-group col-sm-6">
                                         <input formControlName="start_date" id="start_date" type="text" ngbDatepicker
@@ -93,7 +93,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="end_date"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">End
+                                        class="col-sm-6 col-form-label justify-content-start">End
                                         Date</label>
                                     <div class="input-group col-sm-6">
                                         <input formControlName="end_date" id="end_date" type="text" ngbDatepicker
@@ -115,7 +115,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="diversion_rate_cfs"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'DiversionRate'">
                                         </field-definition>
                                     </label>
@@ -131,7 +131,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="storage_max_depth_ft"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'StorageMaxDepth'">
                                         </field-definition>
                                     </label>
@@ -149,7 +149,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="storage_initial_depth_ft"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'StorageInitialDepth'">
                                         </field-definition>
                                     </label>
@@ -165,7 +165,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="storage_area_sqft"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'StorageArea'">
                                         </field-definition>
                                     </label>
@@ -181,7 +181,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="infiltration_rate_inhr"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'InfiltrationRate'">
                                         </field-definition>
                                     </label>
@@ -198,7 +198,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="rainfall_event_shutdown"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'RainfallEventShutdown'">
                                         </field-definition>
                                     </label>
@@ -227,7 +227,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="rainfall_event_depth_threshold"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'RainfallEventDepthThreshold'">
                                         </field-definition>
                                     </label>
@@ -245,7 +245,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="event_seperation_hrs"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'EventSeperationTime'">
                                         </field-definition>
                                     </label>
@@ -262,7 +262,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="after_rain_delay_hrs"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'AfterRainDelay'">
                                         </field-definition>
                                     </label>
@@ -279,7 +279,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="nearest_rainfall_station"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end d-flex">
+                                        class="col-sm-6 col-form-label justify-content-start d-flex">
                                         <field-definition [fieldDefinitionType]="'NearestRainfallStation'">
                                         </field-definition>
                                     </label>
@@ -300,7 +300,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="diversion_months_active"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'MonthsActive'">
                                         </field-definition>
                                     </label>
@@ -321,7 +321,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="diversion_days_active"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'WeekdaysActive'">
                                         </field-definition>
                                     </label>
@@ -342,7 +342,7 @@
                                 </div>
                                 <div class="form-group w-100 mb-1">
                                     <label for="diversion_hours_active"
-                                        class="col-sm-6 col-form-label justify-content-start justify-content-sm-end">
+                                        class="col-sm-6 col-form-label justify-content-start">
                                         <field-definition [fieldDefinitionType]="'HoursActive'">
                                         </field-definition>
                                     </label>

@@ -47,6 +47,7 @@
                 {{fieldDefinition.FieldDefinitionType.FieldDefinitionTypeDisplayName}}
                 <i class="fas fa-question-circle small" style="cursor: help;" #p="ngbPopover" [ngbPopover]="popContent"
                     [popoverTitle]="popTitle" triggers="manual" [autoClose]="false"
+                    [placement]="['bottom','right','left','auto']"
                     popoverClass="popover-override" container="body">
                 </i>
             </span>
