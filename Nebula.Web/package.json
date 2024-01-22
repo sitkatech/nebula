@@ -26,7 +26,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^14.3.0",
-    "@angular/cdk": "^13.3.9",
+    "@angular/cdk": "^14.2.7",
     "@angular/common": "^14.3.0",
     "@angular/compiler": "^14.3.0",
     "@angular/core": "^14.3.0",
@@ -44,7 +44,7 @@
     "ag-grid-community": "^26.1.0",
     "angular-oauth2-oidc": "^12.1.0",
     "angular-oauth2-oidc-jwks": "^12.0.0",
-    "bootstrap": "^4.4.1",
+    "bootstrap": "^5.2.0",
     "color-scheme": "^1.0.1",
     "core-js": "^3.6.5",
     "esri-leaflet": "^3.0.4",
