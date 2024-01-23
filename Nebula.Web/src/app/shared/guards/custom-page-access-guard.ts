@@ -15,7 +15,7 @@ export class CustomPageAccessGuard  {
   ) { }
 
   async canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
-    let vanityUrl = next.paramMap.get("vanity-url");
+    const vanityUrl = next.paramMap.get('vanity-url');
     let viewableRoleIDs = Array<number>();
     if (vanityUrl) {
       viewableRoleIDs = await this.getCustomPageRoleIDsByVanityUrl(vanityUrl);
@@ -39,7 +39,7 @@ export class CustomPageAccessGuard  {
   }
 
   private returnUnauthorized() {
-    this.router.navigate(["/"]).then(() => {
+    this.router.navigate(['/']).then(() => {
       this.alertService.pushNotFoundUnauthorizedAlert();
     });
     return false;
@@ -50,18 +50,18 @@ export class CustomPageAccessGuard  {
     return new Promise((resolve, reject) => {
  
       this.customPageService.customPagesGetByURLCustomPageVanityURLRolesGet(vanityUrl).subscribe(roles => {
-        let viewableRoleIDs = roles.map(x => x.RoleID);
+        const viewableRoleIDs = roles.map(x => x.RoleID);
         resolve(viewableRoleIDs)
       }, 
       error => {
-        let errorMessage = <any>error;
+        const errorMessage = <any>error;
         if(errorMessage != null) {
           reject(errorMessage);
         }
       }
       );
 
-   })
+    })
   }
 
 }

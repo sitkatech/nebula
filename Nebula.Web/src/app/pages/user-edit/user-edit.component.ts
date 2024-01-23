@@ -40,12 +40,12 @@ export class UserEditComponent implements OnInit, OnDestroy {
       this.currentUser = currentUser;
 
       if (!this.authenticationService.isUserAnAdministrator(this.currentUser)) {
-        this.router.navigateByUrl("/not-found")
+        this.router.navigateByUrl('/not-found')
           .then();
         return;
       }
 
-      this.userID = parseInt(this.route.snapshot.paramMap.get("id"));
+      this.userID = parseInt(this.route.snapshot.paramMap.get('id'));
 
       forkJoin([
         this.userService.usersUserIDGet(this.userID),
@@ -84,15 +84,15 @@ export class UserEditComponent implements OnInit, OnDestroy {
     this.userService.usersUserIDPut(this.userID, this.model)
       .subscribe(response => {
         this.isLoadingSubmit = false;
-        this.router.navigateByUrl("/users/" + this.userID).then(x => {
-          this.alertService.pushAlert(new Alert("The user was successfully updated.", AlertContext.Success));
+        this.router.navigateByUrl('/users/' + this.userID).then(x => {
+          this.alertService.pushAlert(new Alert('The user was successfully updated.', AlertContext.Success));
         });
       }
-        ,
-        error => {
-          this.isLoadingSubmit = false;
-          this.cdr.detectChanges();
-        }
+      ,
+      error => {
+        this.isLoadingSubmit = false;
+        this.cdr.detectChanges();
+      }
       );
   }
 

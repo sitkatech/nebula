@@ -15,8 +15,8 @@ export class CsvDownloadButtonComponent {
   constructor(private utilityFunctionsService: UtilityFunctionsService) {}
 
   public exportToCsv() {   
-    let columnsKeys = this.grid.columnApi.getAllDisplayedColumns();
-    let columnIDs = columnsKeys.map(keys => keys.getColId()).filter(x => this.colIDsToExclude.indexOf(x) < 0);
+    const columnsKeys = this.grid.columnApi.getAllDisplayedColumns();
+    const columnIDs = columnsKeys.map(keys => keys.getColId()).filter(x => this.colIDsToExclude.indexOf(x) < 0);
     
     this.utilityFunctionsService.exportGridToCsv(this.grid, this.fileName + '.csv', columnIDs);
   }  

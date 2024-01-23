@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NotFoundComponent, UnauthenticatedComponent, SubscriptionInsufficientComponent } from './shared/pages';
 import { UnauthenticatedAccessGuard } from './shared/guards/unauthenticated-access/unauthenticated-access.guard';
-import { ManagerOnlyGuard } from "./shared/guards/unauthenticated-access/manager-only-guard";
-import { AcknowledgedDisclaimerGuard } from "./shared/guards/acknowledged-disclaimer-guard";
+import { ManagerOnlyGuard } from './shared/guards/unauthenticated-access/manager-only-guard';
+import { AcknowledgedDisclaimerGuard } from './shared/guards/acknowledged-disclaimer-guard';
 import { UserListComponent } from './pages/user-list/user-list.component';
 import { HomeIndexComponent } from './pages/home/home-index/home-index.component';
 import { UserDetailComponent } from './pages/user-detail/user-detail.component';
@@ -27,30 +27,30 @@ import { CustomPageDetailComponent } from './pages/custom-page-detail/custom-pag
 import { CustomPageAccessGuard } from './shared/guards/custom-page-access-guard';
 
 const routes: Routes = [
-  { path: "labels-and-definitions/:id", component: FieldDefinitionEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "labels-and-definitions", component: FieldDefinitionListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "custom-pages", component: CustomPageListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "custom-pages/create", component: CustomPageCreateComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "custom-pages/edit-properties/:vanity-url", component: CustomPageEditPropertiesComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "custom-pages/:vanity-url", component: CustomPageDetailComponent, canActivate: [UnauthenticatedAccessGuard, CustomPageAccessGuard, AcknowledgedDisclaimerGuard] },
-  { path: "watersheds/:id", component: WatershedDetailComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard] },
-  { path: "users", component: UserListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard]},
-  { path: "users/:id", component: UserDetailComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "users/:id/edit", component: UserEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "invite-user/:userID", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "invite-user", component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
-  { path: "time-series-analysis", component: TimeSeriesAnalysisComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard]},
-  { path: "paired-regression-analysis", component: PairedRegressionAnalysisComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard]},
-  { path: "diversion-scenario", component: DiversionScenarioComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard]},
-  { path: "disclaimer", component: DisclaimerComponent },
-  { path: "disclaimer/:forced", component: DisclaimerComponent },
-  { path: "help", component: HelpComponent },
-  { path: "create-user-callback", component: CreateUserCallbackComponent },
-  { path: "not-found", component: NotFoundComponent },
+  { path: 'labels-and-definitions/:id', component: FieldDefinitionEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'labels-and-definitions', component: FieldDefinitionListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'custom-pages', component: CustomPageListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'custom-pages/create', component: CustomPageCreateComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'custom-pages/edit-properties/:vanity-url', component: CustomPageEditPropertiesComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'custom-pages/:vanity-url', component: CustomPageDetailComponent, canActivate: [UnauthenticatedAccessGuard, CustomPageAccessGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'watersheds/:id', component: WatershedDetailComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'users', component: UserListComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'users/:id', component: UserDetailComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'users/:id/edit', component: UserEditComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'invite-user/:userID', component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'invite-user', component: UserInviteComponent, canActivate: [UnauthenticatedAccessGuard, ManagerOnlyGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'time-series-analysis', component: TimeSeriesAnalysisComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'paired-regression-analysis', component: PairedRegressionAnalysisComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'diversion-scenario', component: DiversionScenarioComponent, canActivate: [UnauthenticatedAccessGuard, DataExplorerGuard, AcknowledgedDisclaimerGuard] },
+  { path: 'disclaimer', component: DisclaimerComponent },
+  { path: 'disclaimer/:forced', component: DisclaimerComponent },
+  { path: 'help', component: HelpComponent },
+  { path: 'create-user-callback', component: CreateUserCallbackComponent },
+  { path: 'not-found', component: NotFoundComponent },
   { path: 'subscription-insufficient', component: SubscriptionInsufficientComponent },
   { path: 'unauthenticated', component: UnauthenticatedComponent },
-  { path: "signin-oidc", component: LoginCallbackComponent },
-  { path: "", component: HomeIndexComponent},
+  { path: 'signin-oidc', component: LoginCallbackComponent },
+  { path: '', component: HomeIndexComponent },
   { path: '**', component: NotFoundComponent }
 ];
 

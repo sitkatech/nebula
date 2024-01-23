@@ -1,14 +1,14 @@
 .objectType {
-    font-size:0.8em;
-    color:gray;
-  } 
+    font-size: 0.8em;
+    color: gray;
+}
 
-  ::ng-deep .custom.p-autocomplete {
+::ng-deep .custom.p-autocomplete {
     @media only screen and (min-width: 576px) {
-        width:270px;
-      }
-      
-      > input {
+        width: 270px;
+    }
+
+    > input {
         display: block;
         width: 100%;
         height: calc(1.5em + 0.75rem + 2px);
@@ -22,13 +22,14 @@
         border: 1px solid #ced4da;
         border-radius: 0.25rem;
         font-family: "Tahoma", sans-serif, "Helvetica Neue", sans-serif;
-    
-        &:hover, &:focus {
-            border-color:#2ce9ff;
+
+        &:hover,
+        &:focus {
+            border-color: #2ce9ff;
         }
-    
+
         &:focus {
             box-shadow: 0 0 0 0.2rem rgb(0 153 171 / 25%);
         }
-      }
-  }
+    }
+}

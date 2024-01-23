@@ -17,7 +17,7 @@ RUN NODE_VERSION=$(cat Nebula.Web/.nvmrc) \
     && tar -xzf "nodejs.tar.gz" -C /usr/local --strip-components=1 \
     && rm nodejs.tar.gz SHASUMS256.txt sha-sum.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-    
+
 COPY Nebula.Web/                        ./Nebula.Web
 
 RUN dotnet restore Nebula.Web/Nebula.Web.csproj
@@ -27,8 +27,8 @@ WORKDIR /src/Nebula.Web/
 
 RUN npm cache clean --force
 RUN npm uninstall   -g angular-cli
-RUN npm install     -g @angular/cli@13.3.11
-RUN npm install
+RUN npm install     -g @angular/cli@17.1.0
+RUN npm ci
 
 ARG env
 RUN npm run build-${env}

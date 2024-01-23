@@ -1,19 +1,31 @@
 @import "../../../../scss/_variables.scss";
 
-.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value .ng-value-label {
+.ng-select.ng-select-multiple
+    .ng-select-container
+    .ng-value-container
+    .ng-value
+    .ng-value-label {
     padding-right: 0;
     padding-left: 2px;
 }
 
 .ng-select.ng-select-disabled > .ng-select-container,
-.ng-select.ng-select-multiple.ng-select-disabled > .ng-select-container .ng-value-container .ng-value {
+.ng-select.ng-select-multiple.ng-select-disabled
+    > .ng-select-container
+    .ng-value-container
+    .ng-value {
     background-color: #e9ecef;
     border: none;
 }
 
 .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected,
-.ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected.ng-option-marked,
-.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-value {
+.ng-dropdown-panel
+    .ng-dropdown-panel-items
+    .ng-option.ng-option-selected.ng-option-marked,
+.ng-select.ng-select-multiple
+    .ng-select-container
+    .ng-value-container
+    .ng-value {
     background-color: rgba(red($primary), green($primary), blue($primary), 0.3);
 }
 
@@ -21,9 +33,12 @@
     background-color: rgba(red($primary), green($primary), blue($primary), 0.1);
 }
 
-.ng-select.ng-select-multiple .ng-select-container .ng-value-container .ng-placeholder {
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    width:90%
+.ng-select.ng-select-multiple
+    .ng-select-container
+    .ng-value-container
+    .ng-placeholder {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 90%;
 }

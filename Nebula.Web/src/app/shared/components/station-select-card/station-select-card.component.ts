@@ -3,7 +3,7 @@ import { SiteFilterEnum } from '../../models/enums/site-filter.enum';
 import { SiteVariable } from '../../models/site-variable';
 import * as L from 'leaflet';
 import * as esri from 'esri-leaflet'
-import { GestureHandling } from "leaflet-gesture-handling";
+import { GestureHandling } from 'leaflet-gesture-handling';
 import 'leaflet.snogylop';
 import 'leaflet-loading';
 import { CustomCompileService } from 'src/app/shared/services/custom-compile.service';
@@ -13,7 +13,7 @@ import { LyraService } from 'src/app/services/lyra.service';
 import './leaflet.topojson.js'
 import { WatershedService } from '../../generated';
 
-declare var $: any;
+declare let $: any;
 
 @Component({
   selector: 'station-select-card',
@@ -21,7 +21,7 @@ declare var $: any;
   styleUrls: ['./station-select-card.component.scss']
 })
 export class StationSelectCardComponent implements OnInit {
-  @ViewChild("mapDiv") mapElement: ElementRef;
+  @ViewChild('mapDiv') mapElement: ElementRef;
 
   @Input()
   public mapID: string;
@@ -38,13 +38,13 @@ export class StationSelectCardComponent implements OnInit {
     return this._selectedVariables;
   }
   @Input()
-  public lyraStationAvailableVariablesKey: string = "variables";
+  public lyraStationAvailableVariablesKey: string = 'variables';
   @Input()
-  public variableNamesAllowedToBeAdded: string[] = ["All"];
+  public variableNamesAllowedToBeAdded: string[] = ['All'];
   @Input()
   public disableAddingVariables: boolean = false;
   @Input()
-  public mapHeight: string = "500px";
+  public mapHeight: string = '500px';
   @Input()
   public layerControlOpen: boolean = false;
   @Input()
@@ -121,66 +121,66 @@ export class StationSelectCardComponent implements OnInit {
 
   public ngOnInit(): void {
     this.tileLayers = Object.assign({}, {
-      "Aerial": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+      'Aerial': L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Aerial',
         maxNativeZoom: 16,
         maxZoom: 22
       }),
-      "Street": L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+      'Street': L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Street',
         maxNativeZoom: 16,
         maxZoom: 22
       }),
-      "Terrain": L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+      'Terrain': L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Terrain',
         maxNativeZoom: 16,
         maxZoom: 22
       }),
-      "Hillshade": L.tileLayer('https://wtb.maptiles.arcgis.com/arcgis/rest/services/World_Topo_Base/MapServer/tile/{z}/{y}/{x}', {
+      'Hillshade': L.tileLayer('https://wtb.maptiles.arcgis.com/arcgis/rest/services/World_Topo_Base/MapServer/tile/{z}/{y}/{x}', {
         attribution: 'Hillshade',
         maxNativeZoom: 15,
         maxZoom: 22
       })
     }, this.tileLayers);
 
-    let backboneWMSOptions = ({
-      layers: "Nebula:Backbones",
+    const backboneWMSOptions = ({
+      layers: 'Nebula:Backbones',
       transparent: true,
-      format: "image/png",
+      format: 'image/png',
       tiled: true,
-      pane: "nebulaOverlayPane"
+      pane: 'nebulaOverlayPane'
     } as L.WMSOptions);
 
-    let watershedsWMSOptions = ({
-      layers: "Nebula:Watersheds",
+    const watershedsWMSOptions = ({
+      layers: 'Nebula:Watersheds',
       transparent: true,
-      format: "image/png",
+      format: 'image/png',
       tiled: true,
-      pane: "nebulaOverlayPane"
+      pane: 'nebulaOverlayPane'
     } as L.WMSOptions);
 
 
     this.overlayLayers = Object.assign({}, {
-      "<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", backboneWMSOptions),
-      "<span><img src='../../assets/data-dashboard/watershed.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>": L.tileLayer.wms(environment.geoserverMapServiceUrl + "/wms?", watershedsWMSOptions),
-      "<span>Stormwater Network <br/> <img src='../../assets/data-dashboard/stormwaterNetwork.png' height='50'/> </span>": esri.dynamicMapLayer({ url: "https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/" })
+      '<span><img src=\'../../assets/data-dashboard/backbone.png\' height=\'12px\' style=\'margin-bottom:3px;\' /> Streams</span>': L.tileLayer.wms(environment.geoserverMapServiceUrl + '/wms?', backboneWMSOptions),
+      '<span><img src=\'../../assets/data-dashboard/watershed.png\' height=\'12px\' style=\'margin-bottom:3px;\' /> Watersheds</span>': L.tileLayer.wms(environment.geoserverMapServiceUrl + '/wms?', watershedsWMSOptions),
+      '<span>Stormwater Network <br/> <img src=\'../../assets/data-dashboard/stormwaterNetwork.png\' height=\'50\'/> </span>': esri.dynamicMapLayer({ url: 'https://ocgis.com/arcpub/rest/services/Flood/Stormwater_Network/MapServer/' })
     })
 
     this.compileService.configure(this.appRef);
   }
 
   public externalAddSiteVariableReturnMessageIfFailed(station:string, variableName:string) : string {
-    let selectedStation = this.allStations.filter(x => x.properties.station == station)[0];
+    const selectedStation = this.allStations.filter(x => x.properties.station == station)[0];
     if (selectedStation == null || selectedStation == undefined) {
       return `Could not find station with ID:${station}`;
     }
 
-    let stationAvailableVariables = this.getAvailableVariables(selectedStation.properties);
+    const stationAvailableVariables = this.getAvailableVariables(selectedStation.properties);
     if (stationAvailableVariables == null || stationAvailableVariables == undefined || stationAvailableVariables.length == 0) {
       return `Station with ID:${station} has no available variables`
     }
 
-    let selectedVariable = stationAvailableVariables.filter(x => x.variable == variableName)[0];
+    const selectedVariable = stationAvailableVariables.filter(x => x.variable == variableName)[0];
     if (selectedVariable == null || selectedVariable == undefined) {
       return  `Station with ID:${station} does not have an available variable that is associated with the key:${variableName}`;
     }
@@ -199,8 +199,8 @@ export class StationSelectCardComponent implements OnInit {
   }
 
   public getAvailableVariables(featureProperties: any) : SiteVariable[] {
-    let availableVariables = [];
-    let baseSiteVariable = new SiteVariable(
+    const availableVariables = [];
+    const baseSiteVariable = new SiteVariable(
       {
         stationShortName: featureProperties.shortname,
         station: featureProperties.station,
@@ -214,9 +214,9 @@ export class StationSelectCardComponent implements OnInit {
       return availableVariables;
     }
 
-    for (let variableName of featureProperties[this.lyraStationAvailableVariablesKey]) {
-      let variableInfo = featureProperties[variableName];
-      let siteVariable = Object.assign(new SiteVariable({
+    for (const variableName of featureProperties[this.lyraStationAvailableVariablesKey]) {
+      const variableInfo = featureProperties[variableName];
+      const siteVariable = Object.assign(new SiteVariable({
         name: variableInfo.name,
         description: variableInfo.description,
         variable: variableInfo.variable,
@@ -228,9 +228,9 @@ export class StationSelectCardComponent implements OnInit {
     }
 
     if (!featureProperties.has_rainfall && featureProperties.nearest_rainfall_station != null) {
-      let rainfallStationProperties = featureProperties.nearest_rainfall_station_info;
-      let rainfallInfo = rainfallStationProperties.rainfall_info;
-      let rainfallSiteVariable = new SiteVariable({
+      const rainfallStationProperties = featureProperties.nearest_rainfall_station_info;
+      const rainfallInfo = rainfallStationProperties.rainfall_info;
+      const rainfallSiteVariable = new SiteVariable({
         name: rainfallInfo.name,
         description: rainfallInfo.description,
         variable: rainfallInfo.variable,
@@ -252,7 +252,7 @@ export class StationSelectCardComponent implements OnInit {
   }
 
   public variableNameCanBeAddedToSelection(variableName: string): boolean {
-    if (this.variableNamesAllowedToBeAdded.length == 1 && this.variableNamesAllowedToBeAdded[0] == "All") {
+    if (this.variableNamesAllowedToBeAdded.length == 1 && this.variableNamesAllowedToBeAdded[0] == 'All') {
       return true;
     }
 
@@ -293,9 +293,9 @@ export class StationSelectCardComponent implements OnInit {
       minZoom: 6,
       maxZoom: 22,
       layers: [
-        this.tileLayers["Street"],
-        this.overlayLayers["<span><img src='../../assets/data-dashboard/backbone.png' height='12px' style='margin-bottom:3px;' /> Streams</span>"],
-        this.overlayLayers["<span><img src='../../assets/data-dashboard/watershed.png' height='12px' style='margin-bottom:3px;' /> Watersheds</span>"],
+        this.tileLayers.Street,
+        this.overlayLayers['<span><img src=\'../../assets/data-dashboard/backbone.png\' height=\'12px\' style=\'margin-bottom:3px;\' /> Streams</span>'],
+        this.overlayLayers['<span><img src=\'../../assets/data-dashboard/watershed.png\' height=\'12px\' style=\'margin-bottom:3px;\' /> Watersheds</span>'],
       ],
       gestureHandling: true,
       loadingControl: true
@@ -307,7 +307,7 @@ export class StationSelectCardComponent implements OnInit {
     this.initializeMapEvents();
 
     forkJoin([
-      this.watershedService.watershedsWatershedNameGetWatershedMaskGet("Aliso Creek"),
+      this.watershedService.watershedsWatershedNameGetWatershedMaskGet('Aliso Creek'),
       this.lyraService.getRSBTopoJson(),
       this.lyraService.getSiteLocationGeoJson()
     ]).subscribe(([maskString, topoJSON, sites]) => {
@@ -316,59 +316,59 @@ export class StationSelectCardComponent implements OnInit {
         invert: true,
         style: function (feature) {
           return {
-            fillColor: "#323232",
+            fillColor: '#323232',
             fill: true,
             fillOpacity: 0.2,
-            color: "#3388ff",
+            color: '#3388ff',
             weight: 5,
             stroke: true
           };
         }
       });
 
-        L.Map.addInitHook("addHandler", "gestureHandling", GestureHandling);
+      L.Map.addInitHook('addHandler', 'gestureHandling', GestureHandling);
 
-        this.maskLayer.addTo(this.map);
-        this.defaultFitBounds();
+      this.maskLayer.addTo(this.map);
+      this.defaultFitBounds();
 
-        this.setupMarkers();
+      this.setupMarkers();
 
-        this.topoJSONrsbs = topoJSON;
+      this.topoJSONrsbs = topoJSON;
 
-        var topoJSONOverlay = L.topoJson(topoJSON, {
-          style: function (feature) {
-            return {
-              color: "#ff4500",
-              opacity: 1,
-              weight: 1,
-              fillColor: "#35495d",
-              fillOpacity: 0.0,
-            };
-          },
-          onEachFeature: function (feature, layer) {
-            layer.bindPopup(
-              "<p>" + `CatchIDN: ${feature.properties.CatchIDN}` + "</p>"
-            );
-          },
-        });
-
-        this.overlayLayers[
-          "<span><img src='../../assets/data-dashboard/regionalSubbasin.png' height='12px' style='margin-bottom:3px;' /> Regional Subbasins</span>"] = topoJSONOverlay;
-
-        this.setControl();
-
-        this.allStations = sites.features;
-        this.allStations.forEach(x => {
-          if (x.properties.nearest_rainfall_station != null) {
-            x.properties.nearest_rainfall_station_info = this.allStations.filter(y => y.properties.station === x.properties.nearest_rainfall_station)[0].properties;
-          }
-        });
-        this.setupStationFilterAndLayers();
-
-        this.selectedStationFilter = this.stationFilterTypes.filter(x => x.SiteFilterEnum == this.defaultSelectedMapFilter)[0];
-        this.updateMarkerDisplay();
-        this.mapAndStationsLoadedEvent.emit();
+      const topoJSONOverlay = L.topoJson(topoJSON, {
+        style: function (feature) {
+          return {
+            color: '#ff4500',
+            opacity: 1,
+            weight: 1,
+            fillColor: '#35495d',
+            fillOpacity: 0.0,
+          };
+        },
+        onEachFeature: function (feature, layer) {
+          layer.bindPopup(
+            '<p>' + `CatchIDN: ${feature.properties.CatchIDN}` + '</p>'
+          );
+        },
       });
+
+      this.overlayLayers[
+        '<span><img src=\'../../assets/data-dashboard/regionalSubbasin.png\' height=\'12px\' style=\'margin-bottom:3px;\' /> Regional Subbasins</span>'] = topoJSONOverlay;
+
+      this.setControl();
+
+      this.allStations = sites.features;
+      this.allStations.forEach(x => {
+        if (x.properties.nearest_rainfall_station != null) {
+          x.properties.nearest_rainfall_station_info = this.allStations.filter(y => y.properties.station === x.properties.nearest_rainfall_station)[0].properties;
+        }
+      });
+      this.setupStationFilterAndLayers();
+
+      this.selectedStationFilter = this.stationFilterTypes.filter(x => x.SiteFilterEnum == this.defaultSelectedMapFilter)[0];
+      this.updateMarkerDisplay();
+      this.mapAndStationsLoadedEvent.emit();
+    });
   }
 
   public selectFeature(feature) {
@@ -393,47 +393,47 @@ export class StationSelectCardComponent implements OnInit {
   public setupStationFilterAndLayers() {
     this.allStationsLayer = L.geoJSON(this.allStations);
 
-    let allSitesOption = new StationFilterSelect({ Display: "All Sites", SiteFilterEnum: SiteFilterEnum.AllSites, Layer: this.allStationsLayer, Stations: this.allStations });
+    const allSitesOption = new StationFilterSelect({ Display: 'All Sites', SiteFilterEnum: SiteFilterEnum.AllSites, Layer: this.allStationsLayer, Stations: this.allStations });
 
-    let rainfallOptions = this.allStations.filter(x => x.properties.has_rainfall);
+    const rainfallOptions = this.allStations.filter(x => x.properties.has_rainfall);
     this.hasRainfallLayer = L.geoJSON(rainfallOptions, {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, { icon: this.rainfallIconDefault });
       }.bind(this)
     });
 
-    let rainfallOption = new StationFilterSelect({ Display: "Has Rainfall Data", SiteFilterEnum: SiteFilterEnum.HasRainfall, Layer: this.hasRainfallLayer, Stations: rainfallOptions });
+    const rainfallOption = new StationFilterSelect({ Display: 'Has Rainfall Data', SiteFilterEnum: SiteFilterEnum.HasRainfall, Layer: this.hasRainfallLayer, Stations: rainfallOptions });
 
-    let dischargeOptions = this.allStations.filter(x => x.properties.has_discharge)
+    const dischargeOptions = this.allStations.filter(x => x.properties.has_discharge)
     this.hasDischargeLayer = L.geoJSON(dischargeOptions, {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, { icon: this.dischargeIconDefault });
       }.bind(this)
     });
 
-    let dischargeOption = new StationFilterSelect({ Display: "Has Discharge Data", SiteFilterEnum: SiteFilterEnum.HasDischarge, Layer: this.hasDischargeLayer, Stations: dischargeOptions });
+    const dischargeOption = new StationFilterSelect({ Display: 'Has Discharge Data', SiteFilterEnum: SiteFilterEnum.HasDischarge, Layer: this.hasDischargeLayer, Stations: dischargeOptions });
 
-    let conductivityOptions = this.allStations.filter(x => x.properties.has_conductivity)
+    const conductivityOptions = this.allStations.filter(x => x.properties.has_conductivity)
     this.hasConductivityLayer = L.geoJSON(conductivityOptions, {
       pointToLayer: function (feature, latlng) {
         return L.marker(latlng, { icon: this.conductivityIconDefault });
       }.bind(this)
     });
 
-    let conductivityOption = new StationFilterSelect({ Display: "Has Conductivity Data", SiteFilterEnum: SiteFilterEnum.HasConductivity, Layer: this.hasConductivityLayer, Stations: conductivityOptions });
+    const conductivityOption = new StationFilterSelect({ Display: 'Has Conductivity Data', SiteFilterEnum: SiteFilterEnum.HasConductivity, Layer: this.hasConductivityLayer, Stations: conductivityOptions });
 
     this.stationFilterTypes = [allSitesOption, rainfallOption, dischargeOption, conductivityOption];
   }
 
   public initializePanes(): void {
-    let nebulaOverlayPane = this.map.createPane("nebulaOverlayPane");
+    const nebulaOverlayPane = this.map.createPane('nebulaOverlayPane');
     nebulaOverlayPane.style.zIndex = 10000;
-    this.map.getPane("markerPane").style.zIndex = 10001;
-    this.map.getPane("popupPane").style.zIndex = 10002;
+    this.map.getPane('markerPane').style.zIndex = 10001;
+    this.map.getPane('popupPane').style.zIndex = 10002;
   }
 
   public setControl(): void {
-    var loadingControl = L.Control.loading({
+    const loadingControl = L.Control.loading({
       separate: true
     });
     this.map.addControl(loadingControl);
@@ -448,14 +448,14 @@ export class StationSelectCardComponent implements OnInit {
     this.map.on('load', (event: L.LeafletEvent) => {
       this.afterLoadMap.emit(event);
     });
-    this.map.on("moveend", (event: L.LeafletEvent) => {
+    this.map.on('moveend', (event: L.LeafletEvent) => {
       this.onMapMoveEnd.emit(event);
     });
 
     let dblClickTimer = null;
 
     //to handle click for select area vs double click for zoom
-    this.map.on("click", (event: L.LeafletEvent) => {
+    this.map.on('click', (event: L.LeafletEvent) => {
       this.layerControlOpen = false;
       if (dblClickTimer !== null) {
         return;
@@ -464,13 +464,13 @@ export class StationSelectCardComponent implements OnInit {
         //this.getNeighborhoodFromLatLong(event.latlng, true);
         dblClickTimer = null;
       }, 200);
-    }).on("dblclick", () => {
+    }).on('dblclick', () => {
       clearTimeout(dblClickTimer);
       dblClickTimer = null;
       this.map.zoomIn();
     })
 
-    $(".leaflet-control-layers").hover(
+    $('.leaflet-control-layers').hover(
       () => { this.layerControlOpen = true; },
       () => { this.layerControlOpen = false; }
     );
@@ -482,7 +482,7 @@ export class StationSelectCardComponent implements OnInit {
   //won't be honored because it's in the middle of a zoom. So we'll manipulate
   //it a bit.
   public defaultFitBounds(): void {
-    let target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
+    const target = this.map._getBoundsCenterZoom(this.maskLayer.getBounds(), null);
     this.map.setView(target.center, this.defaultMapZoom, null);
   }
 
@@ -524,23 +524,23 @@ export class StationSelectCardComponent implements OnInit {
       return;
     }
 
-    let upstreamCatchIDNs = this.selectedStationProperties.upstream;
-    let tempRSBs = Object.assign({}, this.topoJSONrsbs);
-    let topoJSONObjects = tempRSBs.objects.data.geometries.filter(x => upstreamCatchIDNs.includes(x.properties.CatchIDN));
+    const upstreamCatchIDNs = this.selectedStationProperties.upstream;
+    const tempRSBs = Object.assign({}, this.topoJSONrsbs);
+    const topoJSONObjects = tempRSBs.objects.data.geometries.filter(x => upstreamCatchIDNs.includes(x.properties.CatchIDN));
     tempRSBs.objects = topoJSONObjects;
     this.selectedStationTributaryAreaLayer = L.topoJson(tempRSBs, {
       style: function (feature) {
         return {
-          color: "#D55E00",
+          color: '#D55E00',
           opacity: 1,
           weight: 1,
-          fillColor: "#D55E00",
+          fillColor: '#D55E00',
           fillOpacity: 0.5,
         };
       },
       onEachFeature: function (feature, layer) {
         layer.bindPopup(
-          "<p>" + `CatchIDN: ${feature.properties.CatchIDN}` + "</p>"
+          '<p>' + `CatchIDN: ${feature.properties.CatchIDN}` + '</p>'
         );
       },
     });
@@ -576,7 +576,7 @@ export class StationSelectCardComponent implements OnInit {
     this.clearTributaryAreaLayer();
 
     this.siteLocationLayer = this.selectedStationFilter.Layer;
-    this.siteLocationLayer.on("click", (event: L.LeafletEvent) => {
+    this.siteLocationLayer.on('click', (event: L.LeafletEvent) => {
       this.selectFeature(event.propagatedFrom.feature);
     })
 
@@ -608,14 +608,14 @@ export class StationSelectCardComponent implements OnInit {
       return;
     }
 
-    let selectedOptions = this.allStations.filter(x => this.selectedVariables.some(y => y.station == x.properties.station));
+    const selectedOptions = this.allStations.filter(x => this.selectedVariables.some(y => y.station == x.properties.station));
     this.selectedDataStationsLayer = L.geoJSON(selectedOptions, {
       pointToLayer: (feature, latlng) => {
         return L.marker(latlng, { icon: this.selectedDataStationsIconDefault });
       }
     });
 
-    this.selectedDataStationsLayer.on("click", (event: L.LeafletEvent) => {
+    this.selectedDataStationsLayer.on('click', (event: L.LeafletEvent) => {
       this.selectFeature(event.propagatedFrom.feature);
     })
 
@@ -629,7 +629,7 @@ export class StationSelectCardComponent implements OnInit {
   }
 
   public selectStationByStation(station: string) {
-    let selectedFeature = this.availableSitesToSearchFrom.find(x => x.properties.station === station);
+    const selectedFeature = this.availableSitesToSearchFrom.find(x => x.properties.station === station);
     this.selectFeature(selectedFeature);
     this.map.setView(this.currentlySelectedLayer.getBounds().getCenter());
   }
@@ -648,7 +648,7 @@ export class StationSelectCardComponent implements OnInit {
 
     this.availableSitesToSearchFrom.forEach(x => {
       if (x.properties.station != null && x.properties.station != undefined && x.properties.station.toLowerCase().includes(searchText)) {
-        let obj = {
+        const obj = {
           StationProperty: 'StationID',
           StationPropertyValue: x.properties.station,
           StationID: x.properties.station
@@ -657,7 +657,7 @@ export class StationSelectCardComponent implements OnInit {
       }
 
       if (x.properties.shortname != null && x.properties.shortname != undefined && x.properties.shortname.toLowerCase().includes(searchText)) {
-        let obj = {
+        const obj = {
           StationProperty: 'Short Name',
           StationPropertyValue: x.properties.shortname,
           StationID: x.properties.station
@@ -666,7 +666,7 @@ export class StationSelectCardComponent implements OnInit {
       }
 
       if (x.properties.stname != null && x.properties.stname != undefined && x.properties.stname.toLowerCase().includes(searchText)) {
-        let obj = {
+        const obj = {
           StationProperty: 'Description',
           StationPropertyValue: x.properties.stname,
           StationID: x.properties.station

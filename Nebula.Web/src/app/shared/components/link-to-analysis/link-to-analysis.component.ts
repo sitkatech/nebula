@@ -38,8 +38,8 @@ export class LinkToAnalysisComponent implements OnInit {
     }
 
     this.elem.nativeElement.closest('body')
-                            .querySelector("#linkText")
-                            .select();
+      .querySelector('#linkText')
+      .select();
   }
 
 }

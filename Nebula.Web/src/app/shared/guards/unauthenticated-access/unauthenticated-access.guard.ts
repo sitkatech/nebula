@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CookieStorageService } from '../../services/cookies/cookie-storage.service';
 import { AuthenticationService } from 'src/app/services/authentication.service';
@@ -16,7 +16,7 @@ export class UnauthenticatedAccessGuard  {
     if (this.authenticationService.isAuthenticated()) {
       return !this.authenticationService.isCurrentUserDisabled();
     } else {
-      sessionStorage["authRedirectUrl"] = state.url;
+      sessionStorage.authRedirectUrl = state.url;
       this.authenticationService.login()
       return false;
     }

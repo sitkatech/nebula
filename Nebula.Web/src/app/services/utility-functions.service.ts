@@ -10,7 +10,7 @@ export class UtilityFunctionsService {
   constructor() { }
 
   public exportGridToCsv(grid: AgGridAngular, fileName: string, columnKeys: Array<string>) {
-    var params =
+    const params =
       {
         skipHeader: false,
         columnGroups: false,

@@ -32,7 +32,7 @@ export class WatershedDetailComponent implements OnInit, OnDestroy {
     this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
 
-      const id = parseInt(this.route.snapshot.paramMap.get("id"));
+      const id = parseInt(this.route.snapshot.paramMap.get('id'));
       if (id) {
         forkJoin(
           this.watershedService.watershedsWatershedIDGet(id),

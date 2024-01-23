@@ -80,7 +80,7 @@ export class CustomRichTextComponent implements OnInit, AfterViewChecked {
       this.isLoading = false;
     }, error => {
       this.isLoading = false;
-      this.alertService.pushAlert(new Alert("There was an error updating the rich text content", AlertContext.Danger, true));
+      this.alertService.pushAlert(new Alert('There was an error updating the rich text content', AlertContext.Danger, true));
     });
   }
 }

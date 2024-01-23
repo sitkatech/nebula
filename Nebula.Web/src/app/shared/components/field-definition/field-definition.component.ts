@@ -6,10 +6,8 @@ import { AlertContext } from '../../models/enums/alert-context.enum';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { FieldDefinitionTypeEnum } from '../../generated/enum/field-definition-type-enum';
 import { FieldDefinitionDto, FieldDefinitionService, UserDto } from '../../generated';
-import { EditorComponent } from "@tinymce/tinymce-angular";
-import TinyMCEHelpers from "../../helpers/tiny-mce-helpers";
 
-declare var $ : any
+declare let $ : any
 
 @Component({
   selector: 'field-definition',
@@ -54,7 +52,7 @@ export class FieldDefinitionComponent implements OnInit {
   }
 
   public enterEdit(): void {
-    this.editedContent = this.fieldDefinition.FieldDefinitionValue ?? "";
+    this.editedContent = this.fieldDefinition.FieldDefinitionValue ?? '';
     this.isEditing = true;
   }
 
@@ -71,7 +69,7 @@ export class FieldDefinitionComponent implements OnInit {
       this.loadFieldDefinition(x);
     }, error => {
       this.isLoading = false;
-      this.alertService.pushAlert(new Alert("There was an error updating the field definition", AlertContext.Danger, true));
+      this.alertService.pushAlert(new Alert('There was an error updating the field definition', AlertContext.Danger, true));
     });
   }
 
@@ -86,8 +84,8 @@ export class FieldDefinitionComponent implements OnInit {
     if (!this.isEditing) {
       this.popover.open();
       this.elem.nativeElement.closest('body')
-                             .querySelector(".popover")
-                             .addEventListener('mouseleave', this.mouseLeaveEvent.bind(this));
+        .querySelector('.popover')
+        .addEventListener('mouseleave', this.mouseLeaveEvent.bind(this));
     }
   }
 
@@ -98,12 +96,12 @@ export class FieldDefinitionComponent implements OnInit {
   }
 
   public notEditingMouseLeave() {
-      setTimeout( () => {
-        let hoveringPopover = this.elem.nativeElement.closest('body')
-                                                     .querySelector(".popover:hover")
-        if (!hoveringPopover && !this.isEditing) {
-            this.popover.close();
-        }
+    setTimeout( () => {
+      const hoveringPopover = this.elem.nativeElement.closest('body')
+        .querySelector('.popover:hover')
+      if (!hoveringPopover && !this.isEditing) {
+        this.popover.close();
+      }
     }, 50);
   }
 }

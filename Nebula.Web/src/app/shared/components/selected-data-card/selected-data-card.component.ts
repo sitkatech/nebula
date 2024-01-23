@@ -13,7 +13,7 @@ export class SelectedDataCardComponent implements OnInit {
   @Input()
   public disableActions: boolean  = false;
   @Input()
-  public headerText: string = "Selected Data";
+  public headerText: string = 'Selected Data';
   @Output()
   public selectedVariablesChange = new EventEmitter<SiteVariable[]>();
   @Output()

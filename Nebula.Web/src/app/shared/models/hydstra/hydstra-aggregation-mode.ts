@@ -1,33 +1,33 @@
 export class HydstraAggregationMethod {
-    static readonly Total = new HydstraAggregationMethod(
-        "Total",
-        "tot"
-    );
+  static readonly Total = new HydstraAggregationMethod(
+    'Total',
+    'tot'
+  );
 
-    static readonly Average = new HydstraAggregationMethod(
-        "Average",
-        "mean"
-    );
+  static readonly Average = new HydstraAggregationMethod(
+    'Average',
+    'mean'
+  );
 
-    static readonly Maximum = new HydstraAggregationMethod(
-        "Maximum",
-        "max"
-    );
+  static readonly Maximum = new HydstraAggregationMethod(
+    'Maximum',
+    'max'
+  );
 
-    static readonly Minimum = new HydstraAggregationMethod(
-        "Minimum",
-        "min"
-    );
+  static readonly Minimum = new HydstraAggregationMethod(
+    'Minimum',
+    'min'
+  );
 
-    private constructor(private readonly key: string,
-        public readonly value: string) { }
+  private constructor(private readonly key: string,
+                      public readonly value: string) { }
 
-    toString() {
-        return this.key;
-    }
+  toString() {
+    return this.key;
+  }
 
-    public static all(): HydstraAggregationMethod[] {
-        return Object.values(HydstraAggregationMethod);
-    }
+  public static all(): HydstraAggregationMethod[] {
+    return Object.values(HydstraAggregationMethod);
+  }
 }
 

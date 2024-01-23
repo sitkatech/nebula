@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
@@ -12,7 +12,7 @@ export class FontAwesomeIconLinkRendererComponent implements AgRendererComponent
   agInit(params: any): void {
     if(params.value === null)
     {
-      params = { value: "" }
+      params = { value: '' }
     }
     else
     {
@@ -21,6 +21,6 @@ export class FontAwesomeIconLinkRendererComponent implements AgRendererComponent
   }
 
   refresh(params: any): boolean {
-      return false;
+    return false;
   }    
 }

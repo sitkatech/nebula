@@ -1,0 +1,11 @@
+**/*.ts
+wwwroot
+.angular
+.vs
+.vscode
+bin
+docker-compose
+e2e
+obj
+Properties
+scematics

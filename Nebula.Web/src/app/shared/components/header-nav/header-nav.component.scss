@@ -2,55 +2,53 @@
 
 .navbarLogo {
     height: 80px;
-  }
-  
-  .footerLogo {
+}
+
+.footerLogo {
     height: 50px;
     float: right;
     margin: 5px 0;
-  }
-  
-  a.signOut {
+}
+
+a.signOut {
     cursor: pointer;
-  }
-  
-  .dropdown-menu {
+}
+
+.dropdown-menu {
     z-index: 1021;
-  }
+}
 
-  .navbar {
+.navbar {
     padding: 0.5rem 1rem;
-  }
-  
-  .navbar.navbar-nebula
-  {
+}
+
+.navbar.navbar-nebula {
     background-color: $header-background;
-  }
+}
 
-  .navbar.navbar-nebula a.nav-link,
-  .navbar.navbar-nebula a.nav-link::before,
-  .navbar.navbar-nebula a.nav-link::after {
-    transition: all .5s;
-  }
-  
-  .navbar.navbar-nebula a.nav-link:hover {
-    color:$select-and-nav-hover;
-  }
+.navbar.navbar-nebula a.nav-link,
+.navbar.navbar-nebula a.nav-link::before,
+.navbar.navbar-nebula a.nav-link::after {
+    transition: all 0.5s;
+}
 
-  nav .dropdown-item:hover {
+.navbar.navbar-nebula a.nav-link:hover {
+    color: $select-and-nav-hover;
+}
+
+nav .dropdown-item:hover {
     background-color: $select-and-nav-dropdown-hover;
-  }
+}
 
-  .navbar.navbar-nebula a.nav-link
-  {
+.navbar.navbar-nebula a.nav-link {
     color: $header-nav-link;
-  }
+}
 
-  .welcomeUser{
-    @media screen and (min-width: 991px){
-      text-align:right;
+.welcomeUser {
+    @media screen and (min-width: 991px) {
+        text-align: right;
     }
-    @media screen and (max-width: 990px){
-      text-align:left;
+    @media screen and (max-width: 990px) {
+        text-align: left;
     }
-  }
+}

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
@@ -13,7 +13,7 @@ export class LinkRendererComponent implements AgRendererComponent {
   agInit(params: any): void {
     if(params.value === null)
     {
-      params = { value: { LinkDisplay: "", LinkValue: ""}, inRouterLink: ""}
+      params = { value: { LinkDisplay: '', LinkValue: ''}, inRouterLink: ''}
     }
     else
     {
@@ -22,6 +22,6 @@ export class LinkRendererComponent implements AgRendererComponent {
   }
 
   refresh(params: any): boolean {
-      return false;
+    return false;
   }    
 }

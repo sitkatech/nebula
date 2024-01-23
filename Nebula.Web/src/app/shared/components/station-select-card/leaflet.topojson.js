@@ -1,7 +1,7 @@
-import * as topojson from 'topojson-client';
+import * as topojson from "topojson-client";
 
 //This is not an official leaflet plugin nor is it one that is actively maintained.
-//The code in defineTopoJSON came directly from Austin Orr, the rest is just boilerplate found in  other leaflet plugins 
+//The code in defineTopoJSON came directly from Austin Orr, the rest is just boilerplate found in  other leaflet plugins
 //to add it to the L namespace.
 (function () {
     function defineTopoJSON(L) {
@@ -28,15 +28,13 @@ import * as topojson from 'topojson-client';
         };
     }
 
-    if (typeof define === 'function' && define.amd) {
+    if (typeof define === "function" && define.amd) {
         // Try to add topojson to Leaflet using AMD
-        define(['leaflet'], function (L) {
+        define(["leaflet"], function (L) {
             defineTopoJSON(L);
         });
-    }
-    else {
+    } else {
         // Else use the global L
         defineTopoJSON(L);
     }
-
 })();

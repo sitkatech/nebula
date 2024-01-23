@@ -2,13 +2,14 @@
     <div class="container">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb breadcrumb-empty">
-                <li class="breadcrumb-item active" aria-current="page">Paired Regression Analysis</li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    Paired Regression Analysis
+                </li>
             </ol>
         </nav>
     </div>
 </div>
 <div class="container">
-
     <app-alert-display></app-alert-display>
 
     <div class="row">
@@ -18,27 +19,38 @@
     </div>
     <div class="row mt-1 mb-2">
         <div class="col">
-            <custom-rich-text [customRichTextTypeID]="richTextTypeID"></custom-rich-text>
+            <custom-rich-text
+                [customRichTextTypeID]="richTextTypeID"
+            ></custom-rich-text>
         </div>
     </div>
 </div>
 <div class="container">
     <div class="row mt-sm-4">
         <div class="col-sm-12">
-            <station-select-card #stationSelect [(selectedVariables)]="selectedVariables" [mapID]="mapID"
-                [disableAddingVariables]="!canSelectVariable()" 
+            <station-select-card
+                #stationSelect
+                [(selectedVariables)]="selectedVariables"
+                [mapID]="mapID"
+                [disableAddingVariables]="!canSelectVariable()"
                 [canAddDuplicateVariable]="true"
                 [lyraStationAvailableVariablesKey]="'variables_regression'"
                 (addingVariableEvent)="addVariableToSelection($event)"
-                (mapAndStationsLoadedEvent)="populateFormFromURL()">
+                (mapAndStationsLoadedEvent)="populateFormFromURL()"
+            >
             </station-select-card>
         </div>
     </div>
     <div class="row mt-sm-4">
         <div class="col-sm-12" #selectedDataCardRef>
-            <selected-data-card [(selectedVariables)]="selectedVariables" [disableActions]="isActionBeingPerformed()"
-                [headerText]="'Selected Data (x,y)'" (singleVariableRemoved)="removeVariableFromSelection($event)"
-                (allVariablesCleared)="clearAllVariables()" (selectStationOnMap)="showOnMapForStation($event)"></selected-data-card>
+            <selected-data-card
+                [(selectedVariables)]="selectedVariables"
+                [disableActions]="isActionBeingPerformed()"
+                [headerText]="'Selected Data (x,y)'"
+                (singleVariableRemoved)="removeVariableFromSelection($event)"
+                (allVariablesCleared)="clearAllVariables()"
+                (selectStationOnMap)="showOnMapForStation($event)"
+            ></selected-data-card>
         </div>
     </div>
     <div class="row mt-sm-4">
@@ -50,183 +62,434 @@
                 <div class="card-body table-responsive">
                     <div *ngIf="selectedVariables.length == 0" class="row">
                         <div class="col text-center">
-                            Select a station on the map and an applicable variable to get started!
+                            Select a station on the map and an applicable
+                            variable to get started!
                         </div>
                     </div>
                     <div *ngIf="selectedVariables.length > 0" class="row">
                         <ng-container *ngIf="lyraMessages.length > 0">
-                            <div class="col-12" *ngFor="let alert of lyraMessages; let i = index">
-                                <ngb-alert [type]="alert.context" [dismissible]="alert.dismissable"
-                                    (close)="closeAlert(i)">
+                            <div
+                                class="col-12"
+                                *ngFor="
+                                    let alert of lyraMessages;
+                                    let i = index
+                                "
+                            >
+                                <ngb-alert
+                                    [type]="alert.context"
+                                    [dismissible]="alert.dismissable"
+                                    (close)="closeAlert(i)"
+                                >
                                     <span [innerHTML]="alert.message"></span>
                                 </ngb-alert>
                             </div>
                         </ng-container>
                         <div class="col-lg-6">
-                            <form [formGroup]="timeSeriesForm" (ngSubmit)="onSubmit()" class="form-inline">
-                                <div *ngIf="errorMessage" class="alert alert-danger">
-                                    {{errorMessage}}
+                            <form
+                                [formGroup]="timeSeriesForm"
+                                (ngSubmit)="onSubmit()"
+                                class="form-inline"
+                            >
+                                <div
+                                    *ngIf="errorMessage"
+                                    class="alert alert-danger"
+                                >
+                                    {{ errorMessage }}
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="start_date"
-                                        class="col-sm-6 col-form-label justify-content-start">Start
-                                        Date</label>
+                                    <label
+                                        for="start_date"
+                                        class="col-sm-6 col-form-label justify-content-start"
+                                        >Start Date</label
+                                    >
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="start_date" id="start_date" type="text" ngbDatepicker
-                                            container="body" #start="ngbDatepicker" placeholder="yyyy-mm-dd"
-                                            (click)="start.toggle()" class="form-control">
+                                        <input
+                                            formControlName="start_date"
+                                            id="start_date"
+                                            type="text"
+                                            ngbDatepicker
+                                            container="body"
+                                            #start="ngbDatepicker"
+                                            placeholder="yyyy-mm-dd"
+                                            (click)="start.toggle()"
+                                            class="form-control"
+                                        />
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary calendar" (click)="start.toggle()"
-                                                type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+                                            <button
+                                                class="btn btn-outline-secondary calendar"
+                                                (click)="start.toggle()"
+                                                type="button"
+                                            >
+                                                <i
+                                                    class="fa fa-calendar"
+                                                    aria-hidden="true"
+                                                ></i>
+                                            </button>
                                         </div>
                                     </div>
 
-                                    <div *ngIf="f.start_date.touched && f.start_date.invalid"
-                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.start_date.errors.required">Date is required.</div>
-                                        <div *ngIf="f.start_date.errors.ngbDate?.invalid">Date must be in the format
-                                            'yyyy-mm-dd'</div>
+                                    <div
+                                        *ngIf="
+                                            f.start_date.touched &&
+                                            f.start_date.invalid
+                                        "
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1"
+                                    >
+                                        <div
+                                            *ngIf="f.start_date.errors.required"
+                                        >
+                                            Date is required.
+                                        </div>
+                                        <div
+                                            *ngIf="
+                                                f.start_date.errors.ngbDate
+                                                    ?.invalid
+                                            "
+                                        >
+                                            Date must be in the format
+                                            'yyyy-mm-dd'
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="end_date"
-                                        class="col-sm-6 col-form-label justify-content-start">End
-                                        Date</label>
+                                    <label
+                                        for="end_date"
+                                        class="col-sm-6 col-form-label justify-content-start"
+                                        >End Date</label
+                                    >
                                     <div class="input-group col-sm-6">
-                                        <input formControlName="end_date" id="end_date" type="text" ngbDatepicker
-                                            container="body" #end="ngbDatepicker" placeholder="yyyy-mm-dd"
-                                            (click)="end.toggle()" class="form-control">
+                                        <input
+                                            formControlName="end_date"
+                                            id="end_date"
+                                            type="text"
+                                            ngbDatepicker
+                                            container="body"
+                                            #end="ngbDatepicker"
+                                            placeholder="yyyy-mm-dd"
+                                            (click)="end.toggle()"
+                                            class="form-control"
+                                        />
                                         <div class="input-group-append">
-                                            <button class="btn btn-outline-secondary calendar" (click)="end.toggle()"
-                                                type="button"><i class="fa fa-calendar" aria-hidden="true"></i></button>
+                                            <button
+                                                class="btn btn-outline-secondary calendar"
+                                                (click)="end.toggle()"
+                                                type="button"
+                                            >
+                                                <i
+                                                    class="fa fa-calendar"
+                                                    aria-hidden="true"
+                                                ></i>
+                                            </button>
                                         </div>
                                     </div>
 
-                                    <div *ngIf="f.end_date.touched && f.end_date.invalid"
-                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.end_date.errors.required">Date is required.</div>
-                                        <div *ngIf="f.end_date.errors.ngbDate?.invalid">Date must be in the format
-                                            'yyyy-mm-dd'</div>
+                                    <div
+                                        *ngIf="
+                                            f.end_date.touched &&
+                                            f.end_date.invalid
+                                        "
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1"
+                                    >
+                                        <div *ngIf="f.end_date.errors.required">
+                                            Date is required.
+                                        </div>
+                                        <div
+                                            *ngIf="
+                                                f.end_date.errors.ngbDate
+                                                    ?.invalid
+                                            "
+                                        >
+                                            Date must be in the format
+                                            'yyyy-mm-dd'
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="interval"
-                                        class="col-sm-6 col-form-label justify-content-start d-flex">
-                                        <field-definition [fieldDefinitionType]="'TimeInterval'">
+                                    <label
+                                        for="interval"
+                                        class="col-sm-6 col-form-label justify-content-start d-flex"
+                                    >
+                                        <field-definition
+                                            [fieldDefinitionType]="
+                                                'TimeInterval'
+                                            "
+                                        >
                                         </field-definition>
                                     </label>
                                     <div class="col w-100">
-                                        <select formControlName="interval" id="interval" class="form-select">
-                                            <option *ngFor="let interval of hydstraIntervals" [value]="interval.value">
-                                                {{interval.key}}
+                                        <select
+                                            formControlName="interval"
+                                            id="interval"
+                                            class="form-select"
+                                        >
+                                            <option
+                                                *ngFor="
+                                                    let interval of hydstraIntervals
+                                                "
+                                                [value]="interval.value"
+                                            >
+                                                {{ interval.key }}
                                             </option>
                                         </select>
                                     </div>
-                                    <div *ngIf="f.interval.touched && f.interval.invalid"
-                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                    <div
+                                        *ngIf="
+                                            f.interval.touched &&
+                                            f.interval.invalid
+                                        "
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1"
+                                    >
                                         <div *ngIf="f.interval.errors.required">
-                                            Time Interval is required.</div>
+                                            Time Interval is required.
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="weather_condition"
-                                        class="col-sm-6 col-form-label justify-content-start d-flex">
-                                        <field-definition [fieldDefinitionType]="'WeatherCondition'"></field-definition>
+                                    <label
+                                        for="weather_condition"
+                                        class="col-sm-6 col-form-label justify-content-start d-flex"
+                                    >
+                                        <field-definition
+                                            [fieldDefinitionType]="
+                                                'WeatherCondition'
+                                            "
+                                        ></field-definition>
                                     </label>
                                     <div class="col w-100">
-                                        <select formControlName="weather_condition" id="weather_condition" class="form-select">
-                                            <option *ngFor="let weather_condition of hydstraWeatherConditions" [value]="weather_condition.value">
-                                                {{weather_condition.key}}
+                                        <select
+                                            formControlName="weather_condition"
+                                            id="weather_condition"
+                                            class="form-select"
+                                        >
+                                            <option
+                                                *ngFor="
+                                                    let weather_condition of hydstraWeatherConditions
+                                                "
+                                                [value]="
+                                                    weather_condition.value
+                                                "
+                                            >
+                                                {{ weather_condition.key }}
                                             </option>
                                         </select>
                                     </div>
-                                    <div *ngIf="f.weather_condition.touched && f.weather_condition.invalid"
-                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.weather_condition.errors.required">
-                                            Weather Condition is required.</div>
+                                    <div
+                                        *ngIf="
+                                            f.weather_condition.touched &&
+                                            f.weather_condition.invalid
+                                        "
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1"
+                                    >
+                                        <div
+                                            *ngIf="
+                                                f.weather_condition.errors
+                                                    .required
+                                            "
+                                        >
+                                            Weather Condition is required.
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-group w-100 mb-1">
-                                    <label for="regressionMethod"
-                                        class="col-sm-6 col-form-label justify-content-start d-flex">
-                                        <field-definition [fieldDefinitionType]="'RegressionMethod'">
+                                    <label
+                                        for="regressionMethod"
+                                        class="col-sm-6 col-form-label justify-content-start d-flex"
+                                    >
+                                        <field-definition
+                                            [fieldDefinitionType]="
+                                                'RegressionMethod'
+                                            "
+                                        >
                                         </field-definition>
                                     </label>
                                     <div class="col-sm-6 w-100">
-                                        <select formControlName="regression_method" id="regressionMethod"
-                                            class="form-select">
-                                            <option *ngFor="let mode of hydstraRegressionMethods" [value]="mode.value">
-                                                {{mode.key}}
+                                        <select
+                                            formControlName="regression_method"
+                                            id="regressionMethod"
+                                            class="form-select"
+                                        >
+                                            <option
+                                                *ngFor="
+                                                    let mode of hydstraRegressionMethods
+                                                "
+                                                [value]="mode.value"
+                                            >
+                                                {{ mode.key }}
                                             </option>
                                         </select>
                                     </div>
-                                    <div *ngIf="f.regression_method.touched && f.regression_method.invalid"
-                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
-                                        <div *ngIf="f.regression_method.errors.required">
-                                            Regression Method is required.</div>
+                                    <div
+                                        *ngIf="
+                                            f.regression_method.touched &&
+                                            f.regression_method.invalid
+                                        "
+                                        class="alert alert-danger col-sm-6 offset-sm-6 mt-1"
+                                    >
+                                        <div
+                                            *ngIf="
+                                                f.regression_method.errors
+                                                    .required
+                                            "
+                                        >
+                                            Regression Method is required.
+                                        </div>
                                     </div>
                                 </div>
-                                <ng-container formArrayName="timeseries" class="form-group w-100 mb-1">
-                                    <ng-container *ngFor="let control of timeseries().controls; let i=index"
-                                        class="form-group w-100 mb-1" [formGroupName]="i">
-                                        <div class="selected-variable mb-1 mt-1">
-                                            <span>{{control.value.variable.stationShortName}}</span> -
-                                            <span>{{control.value.variable.name}}</span>
+                                <ng-container
+                                    formArrayName="timeseries"
+                                    class="form-group w-100 mb-1"
+                                >
+                                    <ng-container
+                                        *ngFor="
+                                            let control of timeseries()
+                                                .controls;
+                                            let i = index
+                                        "
+                                        class="form-group w-100 mb-1"
+                                        [formGroupName]="i"
+                                    >
+                                        <div
+                                            class="selected-variable mb-1 mt-1"
+                                        >
+                                            <span>{{
+                                                control.value.variable
+                                                    .stationShortName
+                                            }}</span>
+                                            -
+                                            <span>{{
+                                                control.value.variable.name
+                                            }}</span>
                                         </div>
                                         <div class="form-group w-100 mb-1">
-                                            <label for="aggregation_method"
-                                                class="col-sm-6 col-form-label justify-content-start d-flex">
-                                                <field-definition [fieldDefinitionType]="'AggregationMethod'">
+                                            <label
+                                                for="aggregation_method"
+                                                class="col-sm-6 col-form-label justify-content-start d-flex"
+                                            >
+                                                <field-definition
+                                                    [fieldDefinitionType]="
+                                                        'AggregationMethod'
+                                                    "
+                                                >
                                                 </field-definition>
                                             </label>
                                             <div class="col-sm-6 w-100">
-                                                <select formControlName="aggregation_method" id="aggregation_method"
-                                                    class="form-select">
+                                                <select
+                                                    formControlName="aggregation_method"
+                                                    id="aggregation_method"
+                                                    class="form-select"
+                                                >
                                                     <option
-                                                        *ngFor="let mode of getAvailableAggregationMethods(control.value.variable)"
-                                                        [value]="mode.value">
-                                                        {{mode.key}}
+                                                        *ngFor="
+                                                            let mode of getAvailableAggregationMethods(
+                                                                control.value
+                                                                    .variable
+                                                            )
+                                                        "
+                                                        [value]="mode.value"
+                                                    >
+                                                        {{ mode.key }}
                                                     </option>
                                                 </select>
                                             </div>
-                                            <div *ngIf="timeseries().controls[i].get('aggregation_method').touched && timeseries().controls[i].get('aggregation_method').invalid"
-                                                class="alert alert-danger col-sm-6 offset-sm-6 mt-1">
+                                            <div
+                                                *ngIf="
+                                                    timeseries().controls[
+                                                        i
+                                                    ].get('aggregation_method')
+                                                        .touched &&
+                                                    timeseries().controls[
+                                                        i
+                                                    ].get('aggregation_method')
+                                                        .invalid
+                                                "
+                                                class="alert alert-danger col-sm-6 offset-sm-6 mt-1"
+                                            >
                                                 <div
-                                                    *ngIf="timeseries().controls[i].get('aggregation_method').errors.required">
-                                                    Aggregation Mode is required.</div>
+                                                    *ngIf="
+                                                        timeseries().controls[
+                                                            i
+                                                        ].get(
+                                                            'aggregation_method'
+                                                        ).errors.required
+                                                    "
+                                                >
+                                                    Aggregation Mode is
+                                                    required.
+                                                </div>
                                             </div>
                                         </div>
                                     </ng-container>
                                 </ng-container>
                                 <div class="ms-auto">
-                                    
-                                    <button type="submit" class="btn btn-nebula btn-sm mt-4 float-end"
-                                        [disabled]="isActionBeingPerformed()">
-                                        <span *ngIf="gettingTimeSeriesData"
-                                            class="fa fa-spinner loading-spinner"></span>
-                                        Submit</button>
+                                    <button
+                                        type="submit"
+                                        class="btn btn-nebula btn-sm mt-4 float-end"
+                                        [disabled]="isActionBeingPerformed()"
+                                    >
+                                        <span
+                                            *ngIf="gettingTimeSeriesData"
+                                            class="fa fa-spinner loading-spinner"
+                                        ></span>
+                                        Submit
+                                    </button>
                                 </div>
                             </form>
                         </div>
-                        <div *ngIf="selectedVariables != null  && selectedVariables.length > 0" class="col-lg-6">
+                        <div
+                            *ngIf="
+                                selectedVariables != null &&
+                                selectedVariables.length > 0
+                            "
+                            class="col-lg-6"
+                        >
                             <ng-container *ngIf="!vegaSpec && !errorOccurred">
-                                <span *ngIf="gettingTimeSeriesData">Loading chart values <span
-                                        class="fa fa-spinner loading-spinner"></span></span>
-                                <span *ngIf="!isActionBeingPerformed() && !gettingAvailableVariables">Complete and
-                                    submit the form to get started</span>
+                                <span *ngIf="gettingTimeSeriesData"
+                                    >Loading chart values
+                                    <span
+                                        class="fa fa-spinner loading-spinner"
+                                    ></span
+                                ></span>
+                                <span
+                                    *ngIf="
+                                        !isActionBeingPerformed() &&
+                                        !gettingAvailableVariables
+                                    "
+                                    >Complete and submit the form to get
+                                    started</span
+                                >
                             </ng-container>
-                            <span *ngIf="errorOccurred">Operation was unsuccessful. Please make another selection and
-                                try again.</span>
-                                <ng-container *ngIf="vegaSpec && currentlyDisplayingRequestDto">
-                                    <button  (click)="downloadChartData()"
+                            <span *ngIf="errorOccurred"
+                                >Operation was unsuccessful. Please make another
+                                selection and try again.</span
+                            >
+                            <ng-container
+                                *ngIf="
+                                    vegaSpec && currentlyDisplayingRequestDto
+                                "
+                            >
+                                <button
+                                    (click)="downloadChartData()"
                                     class="btn btn-sm btn-nebula mb-1 mt-1 mt-lg-0 float-end"
-                                    [disabled]="isActionBeingPerformed()">
-                                    <span *ngIf="downloadingChartData"
-                                        class="fa fa-spinner loading-spinner"></span>Download Data (.csv)</button>
-                                    <link-to-analysis [linkText]="currentlyDisplayingRequestLinkText" class="float-end me-1"></link-to-analysis>
-                                </ng-container>
-                            <div *ngIf="vegaSpec" id="vis" style="width:100%">
-                            </div>
+                                    [disabled]="isActionBeingPerformed()"
+                                >
+                                    <span
+                                        *ngIf="downloadingChartData"
+                                        class="fa fa-spinner loading-spinner"
+                                    ></span
+                                    >Download Data (.csv)
+                                </button>
+                                <link-to-analysis
+                                    [linkText]="
+                                        currentlyDisplayingRequestLinkText
+                                    "
+                                    class="float-end me-1"
+                                ></link-to-analysis>
+                            </ng-container>
+                            <div
+                                *ngIf="vegaSpec"
+                                id="vis"
+                                style="width: 100%"
+                            ></div>
                         </div>
                     </div>
                 </div>

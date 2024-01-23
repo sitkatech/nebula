@@ -28,7 +28,7 @@ $nebula-secondary: $secondary;
     text-align: center;
 }
 
-#filter-select-buttons label[for=select] {
+#filter-select-buttons label[for="select"] {
     border-right: 1px solid $border-gray;
 }
 
@@ -36,8 +36,8 @@ $nebula-secondary: $secondary;
     color: $nebula-secondary;
 }
 
-#filter-select-buttons input:checked+label {
-    background-color: $background-gray; 
+#filter-select-buttons input:checked + label {
+    background-color: $background-gray;
     color: #000;
     font-weight: bold;
 }
