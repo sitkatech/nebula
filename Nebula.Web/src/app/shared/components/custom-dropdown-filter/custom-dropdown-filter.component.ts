@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AgFilterComponent } from 'ag-grid-angular';
-import { IDoesFilterPassParams, RowNode } from 'ag-grid-community';
+import { IDoesFilterPassParams, IRowNode, RowNode } from 'ag-grid-community';
 
 @Component({
   selector: 'nebula-custom-dropdown-filter',
@@ -39,7 +39,7 @@ export class CustomDropdownFilterComponent implements AgFilterComponent {
   }
 
   doesFilterPass(filterParams: IDoesFilterPassParams): boolean {
-    let displayName = this.getDisplayNameForNode(filterParams.node);
+    let displayName = this.getDisplayNameForNode(filterParams.node as RowNode<any>);
     
     if (this.state[displayName] == null) {
       return false;

@@ -53,7 +53,7 @@ export class UserListComponent implements OnInit, OnDestroy {
           {
             headerName: 'Name', valueGetter: function (params: any) {
               return { LinkValue: params.data.UserID, LinkDisplay: params.data.FullName };
-            }, cellRendererFramework: LinkRendererComponent,
+            }, cellRenderer: LinkRendererComponent,
             cellRendererParams: { inRouterLink: "/users/" },
             filterValueGetter: function (params: any) {
               return params.data.FullName;
@@ -82,9 +82,6 @@ export class UserListComponent implements OnInit, OnDestroy {
     });
   }
 
-  private refreshView(){
-    this.unassignedUsersGrid.api.refreshView();
-  }
 
   ngOnDestroy() {
     

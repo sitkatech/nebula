@@ -63,7 +63,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
     this.columnDefs = [
       {
         width: 30,
-        cellRendererFramework: FontAwesomeIconLinkRendererComponent,
+        cellRenderer: FontAwesomeIconLinkRendererComponent,
         cellRendererParams: { isSpan: true, fontawesomeIconName: 'trash' }
       },
       {
@@ -71,7 +71,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
         valueGetter: function (params: any) {
           return params.data.CustomPageVanityUrl;
         },
-        cellRendererFramework: FontAwesomeIconLinkRendererComponent,
+        cellRenderer: FontAwesomeIconLinkRendererComponent,
         cellRendererParams: { 
           inRouterLink: "/custom-pages/edit-properties/",
           fontawesomeIconName: "edit"
@@ -81,7 +81,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
         headerName: 'Page Name', valueGetter: function (params: any) {
           return { LinkValue: params.data.CustomPageVanityUrl, LinkDisplay: params.data.CustomPageDisplayName };
         },
-        cellRendererFramework: LinkRendererComponent,
+        cellRenderer: LinkRendererComponent,
         cellRendererParams: { inRouterLink: "/custom-pages/" },
         comparator: function (id1: any, id2: any) {
           let link1 = id1.LinkDisplay;
@@ -101,7 +101,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
         sortable: true
       },
       { headerName: 'Menu', field: 'MenuItem.MenuItemDisplayName',
-        filterFramework: CustomDropdownFilterComponent,
+        filter: CustomDropdownFilterComponent,
         filterParams: {
           field: 'MenuItem.MenuItemDisplayName'
         },
@@ -109,7 +109,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
       },
       { headerName: 'Has Content', field: 'IsEmptyContent', valueGetter: function (params) {
         return params.data.IsEmptyContent ? 'No' : 'Yes'; },
-        filterFramework: CustomDropdownFilterComponent,
+        filter: CustomDropdownFilterComponent,
         filterParams: {
           field: 'IsEmptyContent'
         },
@@ -121,7 +121,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
               .map(x => x.RoleDisplayName)
               .join(', ');
         },
-        filterFramework: CustomDropdownFilterComponent,
+        filter: CustomDropdownFilterComponent,
         filterParams: {
           field: 'RoleDisplayName'
         },

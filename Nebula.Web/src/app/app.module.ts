@@ -87,7 +87,7 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
         FormsModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
-        AgGridModule.withComponents([]),
+        AgGridModule,
         SelectDropDownModule,
         NgSelectModule,
         ApiModule.forRoot(() => {
