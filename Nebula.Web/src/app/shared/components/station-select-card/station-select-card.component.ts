@@ -625,7 +625,7 @@ export class StationSelectCardComponent implements OnInit {
 
   public select(event) {
     this.searchText = event.StationPropertyValue;
-    this.selectStationByStation(event.StationID);
+    this.selectStationByStation(event.value.StationID);
   }
 
   public selectStationByStation(station: string) {
