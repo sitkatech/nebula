@@ -110,7 +110,7 @@
                                 <ng-container formArrayName="timeseries" class="form-group w-100 mb-1">
                                     <ng-container *ngFor="let control of timeseries().controls; let i=index"
                                         class="form-group w-100 mb-1" [formGroupName]="i">
-                                        <div class="selected-variable mb-1">
+                                        <div class="selected-variable mb-1 mt-1">
                                             <span>{{control.value.variable.stationShortName}}</span> -
                                             <span>{{control.value.variable.name}}</span>
                                         </div>
@@ -122,7 +122,7 @@
                                             </label>
                                             <div class="col w-100">
                                                 <select formControlName="interval" id="interval"
-                                                    class="form-control">
+                                                    class="form-select">
                                                     <option *ngFor="let interval of hydstraIntervals"
                                                         [value]="interval.value">
                                                         {{interval.key}}
@@ -142,7 +142,7 @@
                                                 <field-definition [fieldDefinitionType]="'WeatherCondition'"></field-definition>
                                             </label>
                                             <div class="col w-100">
-                                                <select formControlName="weather_condition" id="weather_condition" class="form-control">
+                                                <select formControlName="weather_condition" id="weather_condition" class="form-select">
                                                     <option *ngFor="let weather_condition of hydstraWeatherConditions"
                                                         [value]="weather_condition.value">
                                                         {{weather_condition.key}}
@@ -164,7 +164,7 @@
                                             </label>
                                             <div class="col-sm-6 w-100">
                                                 <select formControlName="aggregation_method" id="aggregation_method"
-                                                    class="form-control">
+                                                    class="form-select">
                                                     <option
                                                         *ngFor="let mode of getAvailableAggregationMethods(control.value.variable)"
                                                         [value]="mode.value">

@@ -285,7 +285,7 @@
                                     </label>
                                     <div class="col w-100">
                                         <select formControlName="nearest_rainfall_station" id="nearest_rainfall_station"
-                                            class="form-control">
+                                            class="form-select">
                                             <option *ngFor="let station of rainfallStations"
                                                 [value]="station.properties.station">
                                                 {{station.properties.stname}}

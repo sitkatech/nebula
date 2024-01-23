@@ -11,8 +11,7 @@
             ngbTooltip="Click to select this station on the map" [style.cursor]="'pointer'" class="selected-variable" (click)="emitSelectStationOnMap(variable)" *ngFor="let variable of selectedVariables; let i = index">
                 <span>{{variable.stationShortName}} - {{variable.name}}</span>
                 <button (click)="removeVariableFromSelection(i)" [disabled]="disableActions"
-                    type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
+                    type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
                 </button>
             </div>
         </ng-container>

@@ -10,7 +10,7 @@
                     Filter Sites By:
                 </label>
                 <div class="d-inline-block ms-2 ms-lg-1">
-                    <select [(ngModel)]="selectedStationFilter" id="filter" class="form-control" (change)="updateMarkerDisplay()" >
+                    <select [(ngModel)]="selectedStationFilter" id="filter" class="form-select" (change)="updateMarkerDisplay()" >
                         <option *ngFor="let type of stationFilterTypes" [ngValue]="type">
                             {{type.Display}}
                         </option>

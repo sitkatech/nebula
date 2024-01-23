@@ -28,7 +28,7 @@
                             <label class="required">Menu</label>
                         </div>
                         <div class="col-sm-10">
-                            <select name="MenuItem" class="form-control" [(ngModel)]="model.MenuItemID" required>
+                            <select name="MenuItem" class="form-select" [(ngModel)]="model.MenuItemID" required>
                                 <option selected disabled [value]="">Choose One</option>
                                 <option *ngFor="let menuItem of menuItems" [ngValue]="menuItem.MenuItemID">
                                     {{menuItem.MenuItemDisplayName}}
@@ -91,7 +91,6 @@
             </div>
         </div>
         <div class="row">
-            <hr />
             <div class="col-xs-12 col-sm-2">
                 <i class="fas fa-bolt"></i> Required field
             </div>

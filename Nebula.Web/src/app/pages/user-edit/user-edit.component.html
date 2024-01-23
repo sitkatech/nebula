@@ -28,7 +28,7 @@
           <label class="required">Role</label>
         </div>
         <div class="col-sm-10">
-          <select name="RoleID" class="form-control" [(ngModel)]="model.RoleID" (change)="checkReceiveSupportEmails()"
+          <select name="RoleID" class="form-select" [(ngModel)]="model.RoleID" (change)="checkReceiveSupportEmails()"
             required>
             <option value=""></option>
             <option *ngFor="let role of roles" [ngValue]="role.RoleID">
