@@ -5,15 +5,18 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
-ENV NODE_VERSION 14.17.6
-ENV NODE_DOWNLOAD_SHA 19e376214450e93e58687198070b4ab46e42357032ec65f23a7e35b0e86ad6e2
-
-RUN curl -SL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-linux-x64.tar.gz" --output nodejs.tar.gz \
-    && echo "$NODE_DOWNLOAD_SHA nodejs.tar.gz" | sha256sum -c - \
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+COPY Nebula.Web/.nvmrc                        ./Nebula.Web/.nvmrc
+RUN NODE_VERSION=$(cat Nebula.Web/.nvmrc) \
+    && echo "Installing Node Version: ${NODE_VERSION}" \
+    && curl -SL "https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}-linux-x64.tar.gz" --output nodejs.tar.gz \
+    && curl -SL "https://nodejs.org/dist/${NODE_VERSION}/SHASUMS256.txt" --output SHASUMS256.txt \
+    && grep "linux-x64.tar.gz" SHASUMS256.txt > sha-sum.txt \
+    && NODE_DOWNLOAD_SHA=$(awk '{print $1}' sha-sum.txt) \
+    && echo "${NODE_DOWNLOAD_SHA} nodejs.tar.gz" | sha256sum -c - \
     && tar -xzf "nodejs.tar.gz" -C /usr/local --strip-components=1 \
-    && rm nodejs.tar.gz \
+    && rm nodejs.tar.gz SHASUMS256.txt sha-sum.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-
     
 COPY Nebula.Web/                        ./Nebula.Web
 
