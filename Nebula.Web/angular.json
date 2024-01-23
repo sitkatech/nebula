@@ -111,20 +111,20 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "Nebula.Web:build",
-            "host" : "nebula.localhost.sitkatech.com",
-            "port" : 8123
+            "host": "nebula.localhost.sitkatech.com",
+            "port": 8123,
+            "buildTarget": "Nebula.Web:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "Nebula.Web:build:production"
+              "buildTarget": "Nebula.Web:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Nebula.Web:build"
+            "buildTarget": "Nebula.Web:build"
           }
         },
         "test": {
