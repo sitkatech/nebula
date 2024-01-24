@@ -1,5 +1,23 @@
-<button class="btn btn-sm btn-nebula" popoverClass="popover-fixed-width" [autoClose]="false" triggers="manual" #p="ngbPopover" [ngbPopover]="popContent" container="body" (click)="openPopoverAndSelectText()">Link to this analysis</button>
+<button
+    class="btn btn-sm btn-nebula"
+    popoverClass="popover-fixed-width"
+    [autoClose]="false"
+    triggers="manual"
+    #p="ngbPopover"
+    [ngbPopover]="popContent"
+    container="body"
+    (click)="openPopoverAndSelectText()"
+>
+    Link to this analysis
+</button>
 
 <ng-template #popContent>
-    <input id="linkText" style="width:100%" type="text" readonly [value]="linkText" (click)="selectPopoverText()">
+    <input
+        id="linkText"
+        style="width: 100%"
+        type="text"
+        readonly
+        [value]="linkText"
+        (click)="selectPopoverText()"
+    />
 </ng-template>

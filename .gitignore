@@ -16,7 +16,6 @@ Nebula.GeoServer/data_dir/geoserver-environment.properties
 Nebula.GeoServer/data_dir/.updatepassword.lock
 Nebula.GeoServer/data_dir/security/*
 Nebula.Web/.vscode
-Nebula.Web/package-lock.json
 
 /Build/secrets.ini
 /Build/temp/NebulaDB.bacpac

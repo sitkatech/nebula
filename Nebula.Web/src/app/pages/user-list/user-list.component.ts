@@ -8,7 +8,7 @@ import { UtilityFunctionsService } from 'src/app/services/utility-functions.serv
 import { RoleEnum } from 'src/app/shared/generated/enum/role-enum';
 import { UserDto, UserService } from 'src/app/shared/generated';
 
-declare var $:any;
+declare let $:any;
 
 @Component({
   selector: 'nebula-user-list',
@@ -47,44 +47,41 @@ export class UserListComponent implements OnInit, OnDestroy {
 
         this.cdr.detectChanges();
       });
-      let _decimalPipe = this.decimalPipe;
+      const _decimalPipe = this.decimalPipe;
 
-        this.columnDefs = [
-          {
-            headerName: 'Name', valueGetter: function (params: any) {
-              return { LinkValue: params.data.UserID, LinkDisplay: params.data.FullName };
-            }, cellRendererFramework: LinkRendererComponent,
-            cellRendererParams: { inRouterLink: "/users/" },
-            filterValueGetter: function (params: any) {
-              return params.data.FullName;
-            },
-            comparator: function (id1: any, id2: any) {
-              let link1 = id1.LinkDisplay;
-              let link2 = id2.LinkDisplay;
-              if (link1 < link2) {
-                return -1;
-              }
-              if (link1 > link2) {
-                return 1;
-              }
-              return 0;
-            },
-            sortable: true, filter: true, width: 170
+      this.columnDefs = [
+        {
+          headerName: 'Name', valueGetter: function (params: any) {
+            return { LinkValue: params.data.UserID, LinkDisplay: params.data.FullName };
+          }, cellRenderer: LinkRendererComponent,
+          cellRendererParams: { inRouterLink: '/users/' },
+          filterValueGetter: function (params: any) {
+            return params.data.FullName;
           },
-          { headerName: 'Email', field: 'Email', sortable: true, filter: true },
-          { headerName: 'Role', field: 'Role.RoleDisplayName', sortable: true, filter: true, width: 100 },
-          { headerName: 'Receives System Communications?', field: 'ReceiveSupportEmails', valueGetter: function (params) { return params.data.ReceiveSupportEmails ? "Yes" : "No";}, sortable: true, filter: true, width: 250 },
-        ];
+          comparator: function (id1: any, id2: any) {
+            const link1 = id1.LinkDisplay;
+            const link2 = id2.LinkDisplay;
+            if (link1 < link2) {
+              return -1;
+            }
+            if (link1 > link2) {
+              return 1;
+            }
+            return 0;
+          },
+          sortable: true, filter: true, width: 170
+        },
+        { headerName: 'Email', field: 'Email', sortable: true, filter: true },
+        { headerName: 'Role', field: 'Role.RoleDisplayName', sortable: true, filter: true, width: 100 },
+        { headerName: 'Receives System Communications?', field: 'ReceiveSupportEmails', valueGetter: function (params) { return params.data.ReceiveSupportEmails ? 'Yes' : 'No';}, sortable: true, filter: true, width: 250 },
+      ];
         
-        this.columnDefs.forEach(x => {
-          x.resizable = true;
-        });
+      this.columnDefs.forEach(x => {
+        x.resizable = true;
+      });
     });
   }
 
-  private refreshView(){
-    this.unassignedUsersGrid.api.refreshView();
-  }
 
   ngOnDestroy() {
     
@@ -94,13 +91,13 @@ export class UserListComponent implements OnInit, OnDestroy {
 
   public exportToCsv() {
     // we need to grab all columns except the first one (trash icon)
-    let columnsKeys = this.usersGrid.columnApi.getAllDisplayedColumns(); 
-    let columnIds: Array<any> = []; 
+    const columnsKeys = this.usersGrid.columnApi.getAllDisplayedColumns(); 
+    const columnIds: Array<any> = []; 
     columnsKeys.forEach(keys => 
-      { 
-        let columnName: string = keys.getColId(); 
-        columnIds.push(columnName); 
-      });
+    { 
+      const columnName: string = keys.getColId(); 
+      columnIds.push(columnName); 
+    });
     columnIds.splice(0, 1);
     this.utilityFunctionsService.exportGridToCsv(this.usersGrid, 'users.csv', columnIds);
   }  

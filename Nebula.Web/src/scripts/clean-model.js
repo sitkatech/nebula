@@ -1,6 +1,6 @@
 const fs = require("fs");
-const modelsPath = process.argv[2] + '/model';
-const apiPath = process.argv[2] + '/api';
+const modelsPath = process.argv[2] + "/model";
+const apiPath = process.argv[2] + "/api";
 
 // process.argv.forEach(function (val, index, array) {
 //     console.log(index + ': ' + val);

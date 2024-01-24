@@ -1,23 +1,31 @@
-@import "~ag-grid-community/src/styles/ag-grid.scss";
-@import "~ag-grid-community/src/styles/ag-theme-balham/sass/ag-theme-balham-mixin";
+@use "node_modules/ag-grid-community/styles" as ag;
 
 $grid-header-background: #0099ab;
 
+@include ag.grid-styles(
+    (
+        theme: balham,
+    )
+);
+
 .ag-theme-balham {
-  @include ag-theme-balham((
-      // use theme parameters where possible
-      balham-active-color: purple
-  ));
+    .ag-header {
+        background-color: $grid-header-background;
+    }
 
-  .ag-header {
-    background-color: $grid-header-background;
-  }
+    .ag-header-row {
+        color: #fff;
+    }
 
-  .ag-header-row {
-    color: #fff;
-  }
+    .ag-header-icon {
+        color: #fff;
+    }
 
-  .ag-header-icon {
-    color: #fff;
-  }
+    .ag-header-cell-menu-button {
+        opacity: 1 !important;
+    }
+
+    .ag-cell-value.context-menu-container {
+        overflow: visible;
+    }
 }

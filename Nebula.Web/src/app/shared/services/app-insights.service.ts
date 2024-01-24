@@ -19,7 +19,7 @@ export class AppInsightsService {
         enableCorsCorrelation: true,
         enableRequestHeaderTracking: true,
         enableResponseHeaderTracking: true,
-        correlationHeaderExcludedDomains: ['identity.sitkatech.com', 'identity-qa.sitkatech.com', new URL(environment.geoserverMapServiceUrl).hostname, "ocgis.com"],
+        correlationHeaderExcludedDomains: ['identity.sitkatech.com', 'identity-qa.sitkatech.com', new URL(environment.geoserverMapServiceUrl).hostname, 'ocgis.com'],
         instrumentationKey: environment.appInsightsInstrumentationKey,
         maxAjaxCallsPerView: -1,
       }
@@ -37,7 +37,7 @@ export class AppInsightsService {
       }
     }); 
     appInsights.addTelemetryInitializer((envelope) => {
-      envelope.tags["ai.cloud.role"] = environment.keystoneAuthConfiguration.clientId + ".Web";
+      envelope.tags['ai.cloud.role'] = environment.keystoneAuthConfiguration.clientId + '.Web';
     });
 
     (window as any).appInsights = appInsights;

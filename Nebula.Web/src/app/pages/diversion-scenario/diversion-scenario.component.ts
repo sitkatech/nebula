@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { LyraService } from 'src/app/services/lyra.service';
@@ -14,8 +14,8 @@ import { DateTime } from 'luxon';
 import { CustomRichTextTypeEnum } from 'src/app/shared/generated/enum/custom-rich-text-type-enum';
 import { UserDto } from 'src/app/shared/generated';
 
-declare var $: any;
-declare var vegaEmbed: any;
+declare let $: any;
+declare let vegaEmbed: any;
 
 @Component({
   selector: 'nebula-diversion-scenario',
@@ -26,8 +26,8 @@ export class DiversionScenarioComponent implements OnInit {
   public watchUserChangeSubscription: any;
   public currentUser: UserDto;
 
-  @ViewChild("selectedDataCardRef") selectedDataCardRef: ElementRef;
-  @ViewChild("stationSelect") stationSelect: StationSelectCardComponent;
+  @ViewChild('selectedDataCardRef') selectedDataCardRef: ElementRef;
+  @ViewChild('stationSelect') stationSelect: StationSelectCardComponent;
 
   public mapID: string = 'DiversionScenarioStationSelectMap';
 
@@ -52,7 +52,7 @@ export class DiversionScenarioComponent implements OnInit {
   public downloadingChartData: boolean;
   public lyraMessages: Alert[] = [];
 
-  public variableNamesAllowedToAddToScenario = ["Discharge"];
+  public variableNamesAllowedToAddToScenario = ['Discharge'];
 
   public monthData = [
     { id: 1, display: 'January' },
@@ -108,23 +108,23 @@ export class DiversionScenarioComponent implements OnInit {
 
   public currentDate = DateTime.utc();
   public startDate = this.currentDate.minus({months:3});
-  public timeSeriesForm = new FormGroup({
-    start_date: new FormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
-    end_date: new FormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
-    site: new FormControl(null, [Validators.required]),
-    diversion_rate_cfs: new FormControl(0, [Validators.required]),
-    storage_max_depth_ft: new FormControl(0, [Validators.required]),
-    storage_initial_depth_ft: new FormControl(0, [Validators.required]),
-    storage_area_sqft: new FormControl(0, [Validators.required]),
-    infiltration_rate_inhr: new FormControl(0, [Validators.required]),
-    rainfall_event_shutdown: new FormControl(true, [Validators.required]),
-    rainfall_event_depth_threshold: new FormControl(0.1, [Validators.required]),
-    event_seperation_hrs: new FormControl(6, [Validators.required]),
-    after_rain_delay_hrs: new FormControl(72, [Validators.required]),
-    nearest_rainfall_station: new FormControl(null, [Validators.required]),
-    diversion_months_active: new FormControl(this.monthData.map(x => x.id), [Validators.required]),
-    diversion_days_active: new FormControl(this.weekdayData.map(x => x.id), [Validators.required]),
-    diversion_hours_active: new FormControl(this.hourData.map(x => x.id), [Validators.required]),
+  public timeSeriesForm = new UntypedFormGroup({
+    start_date: new UntypedFormControl({ year: this.startDate.year, month: this.startDate.month, day: this.startDate.day }, [Validators.required]),
+    end_date: new UntypedFormControl({ year: this.currentDate.year, month: this.currentDate.month, day: this.currentDate.day }, [Validators.required]),
+    site: new UntypedFormControl(null, [Validators.required]),
+    diversion_rate_cfs: new UntypedFormControl(0, [Validators.required]),
+    storage_max_depth_ft: new UntypedFormControl(0, [Validators.required]),
+    storage_initial_depth_ft: new UntypedFormControl(0, [Validators.required]),
+    storage_area_sqft: new UntypedFormControl(0, [Validators.required]),
+    infiltration_rate_inhr: new UntypedFormControl(0, [Validators.required]),
+    rainfall_event_shutdown: new UntypedFormControl(true, [Validators.required]),
+    rainfall_event_depth_threshold: new UntypedFormControl(0.1, [Validators.required]),
+    event_seperation_hrs: new UntypedFormControl(6, [Validators.required]),
+    after_rain_delay_hrs: new UntypedFormControl(72, [Validators.required]),
+    nearest_rainfall_station: new UntypedFormControl(null, [Validators.required]),
+    diversion_months_active: new UntypedFormControl(this.monthData.map(x => x.id), [Validators.required]),
+    diversion_days_active: new UntypedFormControl(this.weekdayData.map(x => x.id), [Validators.required]),
+    diversion_hours_active: new UntypedFormControl(this.hourData.map(x => x.id), [Validators.required]),
   });
   public timeSeriesFormDefault = this.timeSeriesForm.value;
   currentlyDisplayingRequestLinkText: string;
@@ -182,7 +182,7 @@ export class DiversionScenarioComponent implements OnInit {
       });
       return;
     }
-    let swnTimeSeriesRequestDto =
+    const swnTimeSeriesRequestDto =
     {
       start_date: this.getDateFromTimeSeriesFormDateObject('start_date'),
       end_date: this.getDateFromTimeSeriesFormDateObject('end_date'),
@@ -210,14 +210,14 @@ export class DiversionScenarioComponent implements OnInit {
     this.lyraService.getDiversionScenarioPlot(swnTimeSeriesRequestDto).subscribe(result => {
       if (result.hasOwnProperty('data') && result.data.hasOwnProperty('spec')) {
         if (result.data.hasOwnProperty('messages') && result.data.messages.length > 0) {
-          this.lyraMessages.push(...result.data.messages.filter(x => x != "").map(x => new Alert(x, AlertContext.Warning, true)));
+          this.lyraMessages.push(...result.data.messages.filter(x => x != '').map(x => new Alert(x, AlertContext.Warning, true)));
         }
         this.vegaSpec = result.data.spec;
         vegaEmbed('#vis', this.vegaSpec);
         this.currentlyDisplayingRequestDto = swnTimeSeriesRequestDto;
         this.currentlyDisplayingRequestLinkText = `${window.location.origin}${window.location.pathname}?json=${JSON.stringify(this.currentlyDisplayingRequestDto)}`;
-        if (result.data.hasOwnProperty("table")) {
-          let tableSpec = result.data.table;
+        if (result.data.hasOwnProperty('table')) {
+          const tableSpec = result.data.table;
           this.summaryTableColumns = Object.keys(tableSpec.records[0]);
           this.summaryTableRows = tableSpec.records;
         }
@@ -232,18 +232,18 @@ export class DiversionScenarioComponent implements OnInit {
       this.timeSeriesForm.enable({emitEvent: false});
       this.cdr.detectChanges();
     },
-      error => {
-        if (error.hasOwnProperty('error') && error.error.hasOwnProperty('detail')) {
-          for (let details of error.error.detail) {
-            if (details.hasOwnProperty('msg')) {
-              this.lyraMessages.push(new Alert(`There was an error with the entered query. Message: ${details.msg}`, AlertContext.Danger, true));
-            }
+    error => {
+      if (error.hasOwnProperty('error') && error.error.hasOwnProperty('detail')) {
+        for (const details of error.error.detail) {
+          if (details.hasOwnProperty('msg')) {
+            this.lyraMessages.push(new Alert(`There was an error with the entered query. Message: ${details.msg}`, AlertContext.Danger, true));
           }
         }
-        this.errorOccurred = true;
-        this.gettingTimeSeriesData = false;
-        this.timeSeriesForm.enable({emitEvent: false});
-      });
+      }
+      this.errorOccurred = true;
+      this.gettingTimeSeriesData = false;
+      this.timeSeriesForm.enable({emitEvent: false});
+    });
   }
 
   public downloadChartData() {
@@ -254,21 +254,21 @@ export class DiversionScenarioComponent implements OnInit {
     this.downloadingChartData = true;
     this.timeSeriesForm.disable({emitEvent: false});
     this.lyraService.downloadDiversionScenarioData(this.currentlyDisplayingRequestDto).subscribe(result => {
-      let toAppendToResults = ""
+      let toAppendToResults = ''
       if (this.summaryTableColumns.length > 0 && this.summaryTableRows.length > 0) {
-        toAppendToResults = "Summary Table,\n";
-        toAppendToResults += this.summaryTableColumns.join(",") + "\n";
+        toAppendToResults = 'Summary Table,\n';
+        toAppendToResults += this.summaryTableColumns.join(',') + '\n';
         this.summaryTableRows.forEach(x => {
-            this.summaryTableColumns.forEach(y => {
-              let toAppend = x[y];
-              if (toAppend.includes(",")) {
-                toAppend = "\"" + toAppend + "\"";
-              }
-              toAppendToResults += toAppend + ",";
-            })
-            toAppendToResults += "\n";
+          this.summaryTableColumns.forEach(y => {
+            let toAppend = x[y];
+            if (toAppend.includes(',')) {
+              toAppend = '"' + toAppend + '"';
+            }
+            toAppendToResults += toAppend + ',';
+          })
+          toAppendToResults += '\n';
         });
-        toAppendToResults += "\nChart Data,\n";
+        toAppendToResults += '\nChart Data,\n';
       }
       const blob = new Blob([toAppendToResults, result], {
         type: 'text/csv'
@@ -281,7 +281,7 @@ export class DiversionScenarioComponent implements OnInit {
       a.style = 'display: none';
       const url = window.URL.createObjectURL(blob);
       a.href = url;
-      let date = new Date();
+      const date = new Date();
       a.download = `SWN_Diversion_Scenario_Data_Request_${date.getMonth() + 1}_${date.getDate()}_${date.getFullYear()}_${date.getHours()}_${date.getMinutes()}.csv`;
       a.click();
       window.URL.revokeObjectURL(url);
@@ -309,23 +309,23 @@ export class DiversionScenarioComponent implements OnInit {
   }
 
   public catchExtraSymbols(event: KeyboardEvent): void {
-    if (event.code === "KeyE" || event.code === "Equal" || event.code === "Minus" || event.code === "Plus") {
+    if (event.code === 'KeyE' || event.code === 'Equal' || event.code === 'Minus' || event.code === 'Plus') {
       event.preventDefault();
     }
   }
 
-//#region Supporting functions
+  //#region Supporting functions
 
   public catchPastedSymbols(event: any): void {
     let val = event.clipboardData.getData('text/plain');
-    if (val && (val.includes("+") || val.includes("-") || val.includes("e") || val.includes("E"))) {
+    if (val && (val.includes('+') || val.includes('-') || val.includes('e') || val.includes('E'))) {
       val = val.replace(/\+|\-|e|E/g, '');
       event.preventDefault();
     }
   }
 
   public formatDateForNgbDatepicker(date: Date): any {
-    let dateToChange = new Date(date);
+    const dateToChange = new Date(date);
     return { year: dateToChange.getUTCFullYear(), month: dateToChange.getUTCMonth() + 1, day: dateToChange.getUTCDate() };
   }
 
@@ -346,17 +346,17 @@ export class DiversionScenarioComponent implements OnInit {
     this.errorOccurred = false;
   }
 
-//#endregion
+  //#endregion
 
-//#region Form Functionality
+  //#region Form Functionality
 
   get f() {
     return this.timeSeriesForm.controls;
   }
 
   public getDateFromTimeSeriesFormDateObject(formFieldName: string): string {
-    let date = this.timeSeriesForm.get(formFieldName).value;
-    return `${date["year"]}-${date["month"].toString().padStart(2, '0')}-${date["day"].toString().padStart(2, '0')}`;
+    const date = this.timeSeriesForm.get(formFieldName).value;
+    return `${date.year}-${date.month.toString().padStart(2, '0')}-${date.day.toString().padStart(2, '0')}`;
   }
 
   public setupFormChangeListener() {
@@ -367,7 +367,7 @@ export class DiversionScenarioComponent implements OnInit {
 
   //#endregion
 
-//#region PopulateFromURL functionality
+  //#region PopulateFromURL functionality
 
   public setMapReadyToTrueAndCheckIfWeCanPopulateFormFromURL() {
     this.mapReady = true;
@@ -378,14 +378,14 @@ export class DiversionScenarioComponent implements OnInit {
 
   public populateFormFromURL() {
     this.route.queryParams.subscribe(params => {
-      if (params == null || params == undefined || !params.hasOwnProperty("json")) {
+      if (params == null || params == undefined || !params.hasOwnProperty('json')) {
         return;
       }
 
       let queriedParams;
 
       try {
-        queriedParams = JSON.parse(params["json"]);
+        queriedParams = JSON.parse(params.json);
       }
       catch (e) {
         this.alertService.pushAlert(new Alert(`There was an error parsing the URL. ${e}`, AlertContext.Danger, true));
@@ -394,41 +394,41 @@ export class DiversionScenarioComponent implements OnInit {
       
 
       //Don't bother if we don't have a site
-      if (!queriedParams.hasOwnProperty("site")) {
+      if (!queriedParams.hasOwnProperty('site')) {
         return;
       }
 
-      let message = this.stationSelect.externalAddSiteVariableReturnMessageIfFailed(queriedParams["site"], "discharge");
+      const message = this.stationSelect.externalAddSiteVariableReturnMessageIfFailed(queriedParams.site, 'discharge');
       if (message != null && message != undefined) {
         this.alertService.pushAlert(new Alert(message, AlertContext.Danger, true));
         return;
       }
 
-      if (queriedParams["start_date"] != null) {
-        let start_date = new Date(queriedParams["start_date"]);
+      if (queriedParams.start_date != null) {
+        const start_date = new Date(queriedParams.start_date);
         this.timeSeriesForm.patchValue({start_date : { year: start_date.getUTCFullYear(), month: start_date.getUTCMonth() + 1, day: start_date.getUTCDate() }});
       }
 
-      if (queriedParams["end_date"] != null) {
-        let end_date = new Date(queriedParams["end_date"]);
+      if (queriedParams.end_date != null) {
+        const end_date = new Date(queriedParams.end_date);
         this.timeSeriesForm.patchValue({end_date : { year: end_date.getUTCFullYear(), month: end_date.getUTCMonth() + 1, day: end_date.getUTCDate() }});
       }
 
-      let errorMessagesToDisplay = [];
+      const errorMessagesToDisplay = [];
 
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "diversion_rate_cfs", (x => typeof x === "number" && !isNaN(x)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "storage_max_depth_ft", (x => typeof x === "number" && !isNaN(x)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "storage_initial_depth_ft", (x => typeof x === "number" && !isNaN(x)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "storage_area_sqft", (x => typeof x === "number" && !isNaN(x)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "infiltration_rate_inhr", (x => typeof x === "number" && !isNaN(x)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "rainfall_event_shutdown", (x => typeof x === "boolean"), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "rainfall_event_depth_threshold", (x => typeof x === "number" && !isNaN(x)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "event_seperation_hrs", (x => typeof x === "number" && !isNaN(x)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "after_rain_delay_hrs", (x => typeof x === "number" && !isNaN(x)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, "nearest_rainfall_station", (x => this.rainfallStations.some(y => x == y.properties.station)), errorMessagesToDisplay)        
-      this.updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(queriedParams, "diversion_months_active", this.monthData, ((x, y) => x.some(z => z.id == y)), errorMessagesToDisplay);
-      this.updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(queriedParams, "diversion_days_active", this.weekdayData, ((x, y) => x.some(z => z.id == y)), errorMessagesToDisplay);
-      this.updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(queriedParams, "diversion_hours_active", this.hourData, ((x, y) => x.some(z => z.id == y)), errorMessagesToDisplay);
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'diversion_rate_cfs', (x => typeof x === 'number' && !isNaN(x)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'storage_max_depth_ft', (x => typeof x === 'number' && !isNaN(x)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'storage_initial_depth_ft', (x => typeof x === 'number' && !isNaN(x)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'storage_area_sqft', (x => typeof x === 'number' && !isNaN(x)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'infiltration_rate_inhr', (x => typeof x === 'number' && !isNaN(x)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'rainfall_event_shutdown', (x => typeof x === 'boolean'), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'rainfall_event_depth_threshold', (x => typeof x === 'number' && !isNaN(x)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'event_seperation_hrs', (x => typeof x === 'number' && !isNaN(x)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'after_rain_delay_hrs', (x => typeof x === 'number' && !isNaN(x)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(queriedParams, 'nearest_rainfall_station', (x => this.rainfallStations.some(y => x == y.properties.station)), errorMessagesToDisplay)        
+      this.updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(queriedParams, 'diversion_months_active', this.monthData, ((x, y) => x.some(z => z.id == y)), errorMessagesToDisplay);
+      this.updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(queriedParams, 'diversion_days_active', this.weekdayData, ((x, y) => x.some(z => z.id == y)), errorMessagesToDisplay);
+      this.updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(queriedParams, 'diversion_hours_active', this.hourData, ((x, y) => x.some(z => z.id == y)), errorMessagesToDisplay);
 
       this.lyraMessages = errorMessagesToDisplay;
       this.cdr.detectChanges();
@@ -437,8 +437,8 @@ export class DiversionScenarioComponent implements OnInit {
   }
 
   public updateFormWithValueIfProvidedAndPresentPopulateErrorIfNot(jsonObject : any, key : string, validityFunction : any, errors : any) {
-    let value = jsonObject[key];
-    let startOfString = jsonObject.hasOwnProperty("site") ? `Station with ID:${jsonObject["site"]}` : "Request";
+    const value = jsonObject[key];
+    const startOfString = jsonObject.hasOwnProperty('site') ? `Station with ID:${jsonObject.site}` : 'Request';
     if (value == null || value == undefined) {
       errors.push(new Alert(`${startOfString} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
       return;
@@ -453,21 +453,21 @@ export class DiversionScenarioComponent implements OnInit {
   }
 
   public updateFormWithValueIfProvidedAndSomePresentPopulateErrorIfNot(jsonObject : any, key : string, listToCompare: any, comparisonFunction: any, errors : any) {
-    let value = jsonObject[key];
-    let startOfString = jsonObject.hasOwnProperty("site") ? `Station with ID:${jsonObject["site"]}` : "Request";
+    const value = jsonObject[key];
+    const startOfString = jsonObject.hasOwnProperty('site') ? `Station with ID:${jsonObject.site}` : 'Request';
     if (value == null || value == undefined) {
       errors.push(new Alert(`${startOfString} did not provide key:${key}. Will use default.`, AlertContext.Warning, true));
       return;
     }
 
-    let presentValues = value.filter(x => comparisonFunction(listToCompare, x)).map(x => x);
+    const presentValues = value.filter(x => comparisonFunction(listToCompare, x)).map(x => x);
     
     if (presentValues.length != value.length) {
       if (presentValues.length == 0) {
-        errors.push(new Alert(`${startOfString} provided invalid values for key:${key}. Will use default. Invalid values were:${value.join(", ")}`, AlertContext.Warning, true));
+        errors.push(new Alert(`${startOfString} provided invalid values for key:${key}. Will use default. Invalid values were:${value.join(', ')}`, AlertContext.Warning, true));
         return;
       }
-      errors.push(new Alert(`${startOfString} provided some invalid values for key:${key}. Will use only valid values. Invalid values were:${value.filter(x => !comparisonFunction(listToCompare, x)).map(x => x).join(", ")}`, AlertContext.Warning, true));
+      errors.push(new Alert(`${startOfString} provided some invalid values for key:${key}. Will use only valid values. Invalid values were:${value.filter(x => !comparisonFunction(listToCompare, x)).map(x => x).join(', ')}`, AlertContext.Warning, true));
     }
 
     this.timeSeriesForm.patchValue({[key] : presentValues});
@@ -481,7 +481,7 @@ export class DiversionScenarioComponent implements OnInit {
 
   public getSummaryRowDataForColumn(row:any, column:string ): string {
     if (!row.hasOwnProperty(column)) {
-      return "";
+      return '';
     }
 
     return row[column];

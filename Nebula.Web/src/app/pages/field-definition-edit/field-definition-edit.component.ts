@@ -30,23 +30,23 @@ export class FieldDefinitionEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-      this.authenticationService.getCurrentUser().subscribe(currentUser => {
-          this.currentUser = currentUser;
-          const id = parseInt(this.route.snapshot.paramMap.get("id"));
-          if (id) {
-              this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDGet(id).subscribe(fieldDefinition => {
-                this.fieldDefinition = fieldDefinition;
-              })
-          }
-      });
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
+      this.currentUser = currentUser;
+      const id = parseInt(this.route.snapshot.paramMap.get('id'));
+      if (id) {
+        this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDGet(id).subscribe(fieldDefinition => {
+          this.fieldDefinition = fieldDefinition;
+        })
+      }
+    });
   }
 
   ngOnDestroy() {
-      this.cdr.detach();
+    this.cdr.detach();
   }
 
   public currentUserIsAdmin(): boolean {
-      return this.authenticationService.isUserAnAdministrator(this.currentUser);
+    return this.authenticationService.isUserAnAdministrator(this.currentUser);
   }
 
   saveDefinition(): void {
@@ -55,13 +55,13 @@ export class FieldDefinitionEditComponent implements OnInit {
     this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDPut(this.fieldDefinition.FieldDefinitionID, this.fieldDefinition)
       .subscribe(response => {
         this.isLoadingSubmit = false;
-        this.router.navigateByUrl("/labels-and-definitions").then(x => {
+        this.router.navigateByUrl('/labels-and-definitions').then(x => {
           this.alertService.pushAlert(new Alert(`The definition for ${this.fieldDefinition.FieldDefinitionType.FieldDefinitionTypeDisplayName} was successfully updated.`, AlertContext.Success));
         });
       }, error => {
-          this.isLoadingSubmit = false;
-          this.cdr.detectChanges();
-        }
+        this.isLoadingSubmit = false;
+        this.cdr.detectChanges();
+      }
       );
   }
 

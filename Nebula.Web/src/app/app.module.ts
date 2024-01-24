@@ -8,7 +8,7 @@ import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { CookieService } from 'ngx-cookie-service';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './shared/interceptors/auth-interceptor';
-import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { HomeIndexComponent } from './pages/home/home-index/home-index.component';
 import { UserListComponent } from './pages/user-list/user-list.component';
 import { RouterModule } from '@angular/router';
@@ -18,7 +18,6 @@ import { UserEditComponent } from './pages/user-edit/user-edit.component';
 import { WatershedDetailComponent } from './pages/watershed-detail/watershed-detail.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { DecimalPipe, CurrencyPipe, DatePipe } from '@angular/common';
-import { LinkRendererComponent } from './shared/components/ag-grid/link-renderer/link-renderer.component';
 
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -54,63 +53,63 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
 }
 
 @NgModule({
-    declarations: [
-        AppComponent,
-        HomeIndexComponent,
-        UserListComponent,
-        UserInviteComponent,
-        UserDetailComponent,
-        UserEditComponent,
-        WatershedDetailComponent,
-        LoginCallbackComponent,
-        HelpComponent,
-        CreateUserCallbackComponent,
-        DisclaimerComponent,
-        FieldDefinitionListComponent,
-        FieldDefinitionEditComponent,
-        TimeSeriesAnalysisComponent,
-        PairedRegressionAnalysisComponent,
-        DiversionScenarioComponent,
-        CustomPageListComponent,
-        CustomPageDetailComponent,
-        CustomPageCreateComponent,
-        CustomPageEditPropertiesComponent
-    ],
-    imports: [
-        AppRoutingModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        NgbModule,
-        RouterModule,
-        OAuthModule.forRoot(),
-        SharedModule.forRoot(),
-        FormsModule,
-        ReactiveFormsModule,
-        BrowserAnimationsModule,
-        AgGridModule.withComponents([]),
-        SelectDropDownModule,
-        NgSelectModule,
-        ApiModule.forRoot(() => {
-            return new Configuration({
-                basePath: `${environment.mainAppApiUrl}`,
-            });
-        })
-    ],
-    providers: [
-        CookieService,
-        AppInitService,
-        { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService, AppInsightsService], multi: true },
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-        {
-            provide: ErrorHandler,
-            useClass: GlobalErrorHandlerService
-        },
-        DecimalPipe, CurrencyPipe, DatePipe,
-        {
-            provide: OAuthStorage,
-            useClass: CookieStorageService
-        }
-    ],
-    bootstrap: [AppComponent]
+  declarations: [
+    AppComponent,
+    HomeIndexComponent,
+    UserListComponent,
+    UserInviteComponent,
+    UserDetailComponent,
+    UserEditComponent,
+    WatershedDetailComponent,
+    LoginCallbackComponent,
+    HelpComponent,
+    CreateUserCallbackComponent,
+    DisclaimerComponent,
+    FieldDefinitionListComponent,
+    FieldDefinitionEditComponent,
+    TimeSeriesAnalysisComponent,
+    PairedRegressionAnalysisComponent,
+    DiversionScenarioComponent,
+    CustomPageListComponent,
+    CustomPageDetailComponent,
+    CustomPageCreateComponent,
+    CustomPageEditPropertiesComponent
+  ],
+  imports: [
+    AppRoutingModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    NgbModule,
+    RouterModule,
+    OAuthModule.forRoot(),
+    SharedModule.forRoot(),
+    FormsModule,
+    ReactiveFormsModule,
+    BrowserAnimationsModule,
+    AgGridModule,
+    SelectDropDownModule,
+    NgSelectModule,
+    ApiModule.forRoot(() => {
+      return new Configuration({
+        basePath: `${environment.mainAppApiUrl}`,
+      });
+    })
+  ],
+  providers: [
+    CookieService,
+    AppInitService,
+    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService, AppInsightsService], multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    {
+      provide: ErrorHandler,
+      useClass: GlobalErrorHandlerService
+    },
+    DecimalPipe, CurrencyPipe, DatePipe,
+    {
+      provide: OAuthStorage,
+      useClass: CookieStorageService
+    }
+  ],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

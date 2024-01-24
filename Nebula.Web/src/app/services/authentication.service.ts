@@ -21,11 +21,11 @@ export class AuthenticationService {
   public currentUserSetObservable = this._currentUserSetSubject.asObservable();
 
   constructor(private router: Router,
-    private oauthService: OAuthService,
-    private cookieStorageService: CookieStorageService,
-    private userService: UserService,
-    private alertService: AlertService) {
-      this.oauthService.events
+              private oauthService: OAuthService,
+              private cookieStorageService: CookieStorageService,
+              private userService: UserService,
+              private alertService: AlertService) {
+    this.oauthService.events
       .pipe(filter(e => ['discovery_document_loaded'].includes(e.type)))
       .subscribe(e => { 
         this.checkAuthentication();
@@ -40,27 +40,27 @@ export class AuthenticationService {
 
     this.oauthService.events
       .pipe(filter(e => ['session_terminated', 'session_error'].includes(e.type)))
-      .subscribe(e => this.router.navigateByUrl("/"));
+      .subscribe(e => this.router.navigateByUrl('/'));
 
     this.oauthService.setupAutomaticSilentRefresh();
   }
 
   public initialLoginSequence() {
     this.oauthService.loadDiscoveryDocument()
-        .then(() => this.oauthService.tryLogin())
-        .then(() => Promise.resolve()).catch(() => {});
+      .then(() => this.oauthService.tryLogin())
+      .then(() => Promise.resolve()).catch(() => {});
   }
 
   public checkAuthentication() {
     if (this.isAuthenticated() && !this.currentUser) {
-      console.log("Authenticated but no user found...");
-      var claims = this.oauthService.getIdentityClaims();
+      console.log('Authenticated but no user found...');
+      const claims = this.oauthService.getIdentityClaims();
       this.getUser(claims);
     }
   }
   
   public getUser(claims: any) {
-    var globalID = claims["sub"];
+    const globalID = claims.sub;
 
     this.userService.userClaimsGlobalIDGet(globalID).subscribe(
       result => { this.updateUser(result); },
@@ -70,16 +70,16 @@ export class AuthenticationService {
 
   private onGetUserError(error: any, claims: any) {
     if (error.status !== 404) {
-      this.alertService.pushAlert(new Alert("There was an error logging into the application.", AlertContext.Danger));
+      this.alertService.pushAlert(new Alert('There was an error logging into the application.', AlertContext.Danger));
       this.router.navigate(['/']);
     } else {
       this.alertService.clearAlerts();
       const newUser = new UserCreateDto({
-        FirstName: claims["given_name"],
-        LastName: claims["family_name"],
-        Email: claims["email"],
-        LoginName: claims["login_name"],
-        UserGuid: claims["sub"],
+        FirstName: claims.given_name,
+        LastName: claims.family_name,
+        Email: claims.email,
+        LoginName: claims.login_name,
+        UserGuid: claims.sub,
       });
 
       this.userService.usersPost(newUser).subscribe(user => {
@@ -132,7 +132,7 @@ export class AuthenticationService {
   }
 
   public createAccount() {
-    localStorage.setItem("loginOnReturn", "true");
+    localStorage.setItem('loginOnReturn', 'true');
     window.location.href = `${environment.keystoneAuthConfiguration.issuer}/Account/Register?${this.getClientIDAndRedirectUrlForKeystone()}`;
   }
 
@@ -141,7 +141,7 @@ export class AuthenticationService {
   }
 
   public forcedLogout() {
-    sessionStorage["authRedirectUrl"] = window.location.href;
+    sessionStorage.authRedirectUrl = window.location.href;
     this.logout();
   }
 
@@ -215,14 +215,14 @@ export class AuthenticationService {
   }
 
   public getAuthRedirectUrl() {
-    return sessionStorage["authRedirectUrl"];
+    return sessionStorage.authRedirectUrl;
   }
 
   public setAuthRedirectUrl(url: string) {
-    sessionStorage["authRedirectUrl"] = url;
+    sessionStorage.authRedirectUrl = url;
   }
 
   public clearAuthRedirectUrl() {
-    this.setAuthRedirectUrl("");
+    this.setAuthRedirectUrl('');
   }
 }

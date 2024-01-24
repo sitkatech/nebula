@@ -10,7 +10,7 @@ export class UtilityFunctionsService {
   constructor() { }
 
   public exportGridToCsv(grid: AgGridAngular, fileName: string, columnKeys: Array<string>) {
-    var params =
+    const params =
       {
         skipHeader: false,
         columnGroups: false,
@@ -23,7 +23,7 @@ export class UtilityFunctionsService {
         suppressQuotes: false,
         fileName: fileName,
         processCellCallback: function (p) {
-          if (p.column.getColDef().cellRendererFramework) {
+          if (p.column.getColDef().cellRenderer) {
             if (p.value.DownloadDisplay) {
               return p.value.DownloadDisplay;
             } else {

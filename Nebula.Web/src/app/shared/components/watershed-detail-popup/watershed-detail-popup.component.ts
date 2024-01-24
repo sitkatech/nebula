@@ -1,4 +1,4 @@
-import { Component, OnInit, DoCheck, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'nebula-watershed-detail-popup',
