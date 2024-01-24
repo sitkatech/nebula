@@ -10,7 +10,7 @@ resources:
   
 variables:
   team: 'h2o'
-  projectNumber: 'SWN'
+  projectNumber: 'D020211956.00'
   JiraDomain: 'sitkatech.atlassian.net'
   AtlassianClientId: 'SFXizIb8oT24MJtrsNOauUUanCEuSqpR'
 
