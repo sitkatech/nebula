@@ -6,6 +6,8 @@ import { AlertContext } from '../../models/enums/alert-context.enum';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { FieldDefinitionTypeEnum } from '../../generated/enum/field-definition-type-enum';
 import { FieldDefinitionDto, FieldDefinitionService, UserDto } from '../../generated';
+import { EditorComponent } from '@tinymce/tinymce-angular';
+import TinyMCEHelpers from '../../helpers/tiny-mce-helpers';
 
 declare let $ : any
 
@@ -25,7 +27,8 @@ export class FieldDefinitionComponent implements OnInit {
   public emptyContent: boolean = false;
   public watchUserChangeSubscription: any;
   public editedContent: string;
-  public editor;
+  @ViewChild('tinyMceEditor') tinyMceEditor : EditorComponent;
+  public tinyMceConfig: object;
 
   currentUser: UserDto;
 
@@ -41,6 +44,12 @@ export class FieldDefinitionComponent implements OnInit {
     this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDGet(FieldDefinitionTypeEnum[this.fieldDefinitionType]).subscribe(x => {
       this.loadFieldDefinition(x);
     });
+  }
+
+  ngAfterViewInit(): void {
+    // We need to use ngAfterViewInit because the image upload needs a reference to the component
+    // to setup the blobCache for image base64 encoding
+    this.tinyMceConfig = TinyMCEHelpers.DefaultInitConfig(this.tinyMceEditor)
   }
 
   ngOnDestroy() {
