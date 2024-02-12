@@ -1,12 +1,11 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { FieldDefinitionDto, FieldDefinitionService, UserDto } from 'src/app/shared/generated';
-import { EditorComponent } from '@tinymce/tinymce-angular';
-import TinyMCEHelpers from 'src/app/shared/helpers/tiny-mce-helpers';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'nebula-field-definition-edit',
@@ -16,10 +15,9 @@ import TinyMCEHelpers from 'src/app/shared/helpers/tiny-mce-helpers';
 export class FieldDefinitionEditComponent implements OnInit {
   
   private currentUser: UserDto;
+  public currentUser$: Observable<UserDto>;
 
   public fieldDefinition: FieldDefinitionDto;
-  @ViewChild('tinyMceEditor') tinyMceEditor : EditorComponent;
-  public tinyMceConfig: object;
 
   public isLoadingSubmit: boolean;
 
@@ -47,13 +45,7 @@ export class FieldDefinitionEditComponent implements OnInit {
   ngOnDestroy() {
     this.cdr.detach();
   }
-
-  ngAfterViewInit(): void {
-    // We need to use ngAfterViewInit because the image upload needs a reference to the component
-    // to setup the blobCache for image base64 encoding
-    this.tinyMceConfig = TinyMCEHelpers.DefaultInitConfig(this.tinyMceEditor)
-  }
-
+  
   public currentUserIsAdmin(): boolean {
     return this.authenticationService.isUserAnAdministrator(this.currentUser);
   }

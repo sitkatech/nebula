@@ -163,7 +163,7 @@ export class AuthenticationService {
   public isCurrentUserAnAdministrator(): boolean {
     return this.isUserAnAdministrator(this.currentUser);
   }
-
+  
   public isUserUnassigned(user: UserDto): boolean {
     const role = user && user.Role
       ? user.Role.RoleID

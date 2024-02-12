@@ -5,7 +5,7 @@
 <div *ngIf="!isLoading">
     <ng-container *ngIf="!isEditing">
         <div
-            *ngIf="showEditButton()"
+            *ngIf="canEdit"
             class="customRichTextContent"
             style="position: relative; min-height: 60px"
         >
@@ -27,16 +27,13 @@
 
             <div *ngIf="emptyContent" class="hoverEmptySpace"></div>
         </div>
-        <div
-            *ngIf="!showEditButton()"
-            [innerHtml]="customRichTextContent"
-        ></div>
+        <div *ngIf="!canEdit" [innerHtml]="customRichTextContent"></div>
     </ng-container>
 
     <div *ngIf="isEditing">
         <editor
             #tinyMceEditor
-            [init]="tinyMceConfig"
+            [init]="tinyMceEditor | tinyMceConfig"
             [(ngModel)]="editedContent"
         >
         </editor>
