@@ -37,10 +37,7 @@
     </ng-template>
     <ng-template #popContent>
         <ng-container *ngIf="!isEditing">
-            <div
-                *ngIf="showEditButton()"
-                style="position: relative; min-height: 30px"
-            >
+            <div *ngIf="canEdit" style="position: relative; min-height: 30px">
                 <div
                     *ngIf="!emptyContent"
                     [innerHtml]="fieldDefinition.FieldDefinitionValue"
@@ -48,7 +45,7 @@
                 <div *ngIf="emptyContent" class="hoverEmptySpace"></div>
             </div>
             <div
-                *ngIf="!showEditButton()"
+                *ngIf="!canEdit"
                 [innerHtml]="fieldDefinition.FieldDefinitionValue"
             ></div>
         </ng-container>
@@ -56,16 +53,9 @@
         <div *ngIf="isEditing">
             <editor
                 #tinyMceEditor
-                [init]="{
-                    toolbar: false,
-                    menubar: false,
-                    height: 200,
-                    width: 250,
-                    plugins: 'quickbars'
-                }"
+                [init]="tinyMceEditor | tinyMceConfig"
                 [(ngModel)]="editedContent"
-            >
-            </editor>
+            ></editor>
             <div style="float: right">
                 <button
                     type="button"
@@ -84,7 +74,7 @@
             </div>
         </div>
     </ng-template>
-    <ng-container *ngIf="showEditButton()">
+    <ng-container *ngIf="canEdit">
         <div
             class="d-inline-block"
             (mouseenter)="notEditingMouseEnter()"
@@ -111,7 +101,7 @@
             </span>
         </div>
     </ng-container>
-    <ng-container *ngIf="!showEditButton()">
+    <ng-container *ngIf="!canEdit">
         <span>
             {{
                 fieldDefinition.FieldDefinitionType

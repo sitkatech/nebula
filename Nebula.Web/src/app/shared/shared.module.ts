@@ -28,6 +28,7 @@ import { CustomDropdownFilterComponent } from './components/custom-dropdown-filt
 import { CsvDownloadButtonComponent } from './components/csv-download-button/csv-download-button.component';
 import { ClearGridFiltersButtonComponent } from './components/clear-grid-filters-button/clear-grid-filters-button.component';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+import { TinyMceConfigPipe } from './pipes/tiny-mce-config.pipe';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
     LinkToAnalysisComponent,
     CustomDropdownFilterComponent,
     CsvDownloadButtonComponent,
-    ClearGridFiltersButtonComponent
+    ClearGridFiltersButtonComponent,
+    TinyMceConfigPipe
   ],
   imports: [
     CommonModule,
@@ -80,7 +82,8 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
     LinkToAnalysisComponent,
     CsvDownloadButtonComponent,
     ClearGridFiltersButtonComponent,
-    EditorModule
+    EditorModule,
+    TinyMceConfigPipe
   ],
   providers:[
     { provide: TINYMCE_SCRIPT_SRC, useValue: 'assets/tinymce/tinymce.min.js' }

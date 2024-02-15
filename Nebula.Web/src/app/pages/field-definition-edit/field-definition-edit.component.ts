@@ -5,6 +5,7 @@ import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { FieldDefinitionDto, FieldDefinitionService, UserDto } from 'src/app/shared/generated';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'nebula-field-definition-edit',
@@ -14,9 +15,9 @@ import { FieldDefinitionDto, FieldDefinitionService, UserDto } from 'src/app/sha
 export class FieldDefinitionEditComponent implements OnInit {
   
   private currentUser: UserDto;
+  public currentUser$: Observable<UserDto>;
 
   public fieldDefinition: FieldDefinitionDto;
-  public editor;
 
   public isLoadingSubmit: boolean;
 
@@ -44,7 +45,7 @@ export class FieldDefinitionEditComponent implements OnInit {
   ngOnDestroy() {
     this.cdr.detach();
   }
-
+  
   public currentUserIsAdmin(): boolean {
     return this.authenticationService.isUserAnAdministrator(this.currentUser);
   }

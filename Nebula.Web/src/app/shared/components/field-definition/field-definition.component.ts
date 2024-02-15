@@ -25,8 +25,7 @@ export class FieldDefinitionComponent implements OnInit {
   public emptyContent: boolean = false;
   public watchUserChangeSubscription: any;
   public editedContent: string;
-  public editor;
-
+  public canEdit: boolean;
   currentUser: UserDto;
 
   constructor(
@@ -38,6 +37,7 @@ export class FieldDefinitionComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.canEdit = this.authenticationService.isCurrentUserAnAdministrator();
     this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDGet(FieldDefinitionTypeEnum[this.fieldDefinitionType]).subscribe(x => {
       this.loadFieldDefinition(x);
     });
@@ -45,10 +45,6 @@ export class FieldDefinitionComponent implements OnInit {
 
   ngOnDestroy() {
     this.cdr.detach();
-  }
-
-  public showEditButton(): boolean {
-    return this.authenticationService.isCurrentUserAnAdministrator();
   }
 
   public enterEdit(): void {

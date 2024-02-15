@@ -9,7 +9,10 @@ export default class TinyMCEHelpers {
      */
   public static DefaultInitConfig(editorComponent : EditorComponent = null, overrideConfig : object = null) : object {
     const config = { 
-      plugins: 'lists link image table code help wordcount', 
+      plugins: 'lists link image media table code help wordcount', 
+      menubar: false,
+      toolbar: 'undo redo | styleselect | bold italic | bullist numlist | alignleft aligncenter alignright alignjustify | outdent indent | blockquote table | image media link unlink | styles | code',
+      selector: 'textarea',
       file_picker_types: 'image',
       images_file_types: 'jpg,svg,webp,gif',
       image_title: true,
