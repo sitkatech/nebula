@@ -1,8 +1,11 @@
 <dl class="row mb-0">
-    <dt class="col-5 text-right">Name</dt>
+    <dt class="col-5 text-end">Name</dt>
     <dd class="col-7">
-        <a routerLink="/watersheds/{{feature.properties.WatershedID}}" (click)="detectChanges()">
-            {{feature.properties.WatershedName}}
+        <a
+            routerLink="/watersheds/{{ feature.properties.WatershedID }}"
+            (click)="detectChanges()"
+        >
+            {{ feature.properties.WatershedName }}
         </a>
     </dd>
 </dl>

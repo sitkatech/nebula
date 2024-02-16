@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AgRendererComponent } from 'ag-grid-angular';
 
 @Component({
@@ -13,8 +13,8 @@ export class MultiLinkRendererComponent implements AgRendererComponent {
   agInit(params: any): void {
     if (params.value === null) {
       params = {
-        links: [{ value: { LinkDisplay: "", LinkValue: "" } }]
-        , inRouterLink: ""
+        links: [{ value: { LinkDisplay: '', LinkValue: '' } }]
+        , inRouterLink: ''
       }
     }
     else {

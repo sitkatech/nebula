@@ -1,181 +1,173 @@
 // Navbar link contrast increase
 .navbar-dark .navbar-nav .nav-link {
-  color: #e1e1e1;
+    color: #e1e1e1;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
-  color: #ffffff
+    color: #ffffff;
 }
 
 .nav-link {
-  font-weight: $header-nav-link-font-weight;
+    font-weight: $header-nav-link-font-weight;
 }
 
 // Add Abbr color
 abbr[title],
 abbr[data-original-title] {
-  text-decoration-color: $info;
+    text-decoration-color: $info;
 }
 
-.breadcrumb
-{
-  border-style: none;
-  background-color: transparent;
-  margin-bottom:0;
-  padding-left:0;
-  padding-right:0;
+.breadcrumb {
+    border-style: none;
+    background-color: transparent;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
 }
 
-.breadcrumb-empty
-{
-  border-style: none;
-  background-color: transparent;
-  margin-bottom:0;
-  padding-left:0;
-  padding-right:0;
-  display: $breadcrumb-empty-display-type;
+.breadcrumb-empty {
+    border-style: none;
+    background-color: transparent;
+    margin-bottom: 0;
+    padding-left: 0;
+    padding-right: 0;
+    display: $breadcrumb-empty-display-type;
 }
 
 .breadcrumb-empty li {
-  color: $breadcrumb-background-color !important;
+    color: $breadcrumb-background-color !important;
 }
 
 .breadcrumb-container {
-  background-color: $breadcrumb-background-color;
-  border-width: 1px 0px 1px 0px;
-  border-style: $breadcrumb-border-style;
-  border-color: #e9eeef;
-  min-height: $breadcrumb-empty-display-height;
-  margin-bottom:0.5rem;
+    background-color: $breadcrumb-background-color;
+    border-width: 1px 0px 1px 0px;
+    border-style: $breadcrumb-border-style;
+    border-color: #e9eeef;
+    min-height: $breadcrumb-empty-display-height;
+    margin-bottom: 0.5rem;
 }
 
 // Breadcrumb active text contrast increase
 .breadcrumb-item.active {
-  color: $breadcrumb-item-active-color;
+    color: $breadcrumb-item-active-color;
 }
 
 .breadcrumb-item a,
 .breadcrumb-item span,
-.breadcrumb-item + .breadcrumb-item:before
-{
-  color: $breadcrumb-item-color;
+.breadcrumb-item + .breadcrumb-item:before {
+    color: $breadcrumb-item-color;
 }
 
 // Maintain link color on hover
 a:hover {
-  color: #205c90;
+    color: #205c90;
 }
 
 // Spinner for loading
 .loading-spinner {
-  -webkit-animation-name: loading-spinner;
-  -webkit-animation-duration: 2s;
-  -webkit-animation-iteration-count: infinite;
-  animation-name: loading-spinner;
-  animation-duration: 2s;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
+    -webkit-animation-name: loading-spinner;
+    -webkit-animation-duration: 2s;
+    -webkit-animation-iteration-count: infinite;
+    animation-name: loading-spinner;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
 }
 
 @keyframes loading-spinner {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .intro-text {
-  margin-bottom: 0;
-  padding-top: 8px;
-  padding-bottom: 8px;
+    margin-bottom: 0;
+    padding-top: 8px;
+    padding-bottom: 8px;
 }
 
 .fa-info-circle {
-  cursor: pointer;
+    cursor: pointer;
 }
 
-.nav-item, .navbar-text {
-  white-space: nowrap;
+.nav-item,
+.navbar-text {
+    white-space: nowrap;
 }
 
 .leaflet-draw-section a {
-  &:hover {
-    color: white;
-    text-decoration: none;
-  }
+    &:hover {
+        color: white;
+        text-decoration: none;
+    }
 }
 
 .table-max-height {
-  max-height: 500px;
+    max-height: 500px;
 }
 
-.systemText
-{
-  font-style: italic;
+.systemText {
+    font-style: italic;
 }
 
 .footer {
-  background-color: $footer;
-  font-size: 12px; 
-  color: white;
+    background-color: $footer;
+    font-size: 12px;
+    color: white;
 }
 
 .footer a {
-  color: white;
+    color: white;
 }
 
-.card-header
-{
-  font-weight: bold;
+.card-header {
+    font-weight: bold;
 }
 
-.btn-nebula
-{
-  background-color: $button-border-and-background;
-  border-color: $button-border-and-background;
-  color: $button-text-color;
+.btn-nebula {
+    background-color: $button-border-and-background;
+    border-color: $button-border-and-background;
+    color: $button-text-color;
 }
 
 .btn-nebula:hover {
-  color: $button-hover-text-color;
-  background: $button-hover-background;
+    color: $button-hover-text-color;
+    background: $button-hover-background;
 }
 
 .btn-toggle {
-  color: #212529;
-  background-color: #ababab;
-  border-color: #a4a4a4;
+    color: #212529;
+    background-color: #ababab;
+    border-color: #a4a4a4;
 }
 
 .btn-toggle:not(:disabled):not(.disabled):active,
 .btn-toggle:not(:disabled):not(.disabled).active,
 .show > .btn-toggle.dropdown-toggle {
-  background-color: $button-border-and-background;
-  border-color: $button-border-and-background;
-  color: #fff;
+    background-color: $button-border-and-background;
+    border-color: $button-border-and-background;
+    color: #fff;
 }
 
 .btn-toggle:hover {
-  cursor: pointer;
-  color: #fff;
-  background-color: $button-toggle-hover;
-  border-color: $button-toggle-hover;
+    cursor: pointer;
+    color: #fff;
+    background-color: $button-toggle-hover;
+    border-color: $button-toggle-hover;
 }
 
-.modal-header
-{
-  background-color: $modal-header-background;
-  padding: .5rem 1rem;
+.modal-header {
+    background-color: $modal-header-background;
+    padding: 0.5rem 1rem;
 }
 
-.modal-header .close
-{
-  line-height: inherit;
+.modal-header .close {
+    line-height: inherit;
 }
 
-.modal-content
-{
-  top:150px;
+.modal-content {
+    top: 150px;
 }

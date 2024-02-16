@@ -26,6 +26,9 @@ api:
   nameOverride: ""
   fullnameOverride: ""
   namespace: h2o
+  resources: 
+    requests:
+      memory: "512Mi"
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
@@ -57,6 +60,8 @@ api:
       appgw.ingress.kubernetes.io/ssl-redirect: "true"
       appgw.ingress.kubernetes.io/request-timeout: "300"
       cert-manager.io/issue-temporary-certificate: "true"
+      appgw.ingress.kubernetes.io/connection-draining: "true"
+      appgw.ingress.kubernetes.io/connection-draining-timeout: "30"
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -76,6 +81,9 @@ web:
   nameOverride: ""
   fullnameOverride: ""
   namespace: h2o
+  resources: 
+    requests:
+      memory: "256Mi"
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
@@ -107,6 +115,8 @@ web:
       appgw.ingress.kubernetes.io/ssl-redirect: "true"
       appgw.ingress.kubernetes.io/request-timeout: "300"
       cert-manager.io/issue-temporary-certificate: "true"
+      appgw.ingress.kubernetes.io/connection-draining: "true"
+      appgw.ingress.kubernetes.io/connection-draining-timeout: "30"
   autoscaling:
     enabled: false
     minReplicas: 1
@@ -128,6 +138,9 @@ geoserver:
   nameOverride: ""
   fullnameOverride: ""
   namespace: h2o
+  resources: 
+    requests:
+      memory: "1G"
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
@@ -158,6 +171,8 @@ geoserver:
       acme.cert-manager.io/http01-edit-in-place: "true"
       appgw.ingress.kubernetes.io/ssl-redirect: "true"
       cert-manager.io/issue-temporary-certificate: "true"
+      appgw.ingress.kubernetes.io/connection-draining: "true"
+      appgw.ingress.kubernetes.io/connection-draining-timeout: "30"
   autoscaling:
     enabled: false
     minReplicas: 1

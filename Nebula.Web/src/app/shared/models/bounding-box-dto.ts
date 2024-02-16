@@ -1,10 +1,10 @@
 export class BoundingBoxDto {
-    Left : number;
-    Bottom : number;
-    Right : number;
-    Top : number;
+  Left : number;
+  Bottom : number;
+  Right : number;
+  Top : number;
 
-    constructor(obj?: any) {
-        Object.assign(this, obj);
-    }
+  constructor(obj?: any) {
+    Object.assign(this, obj);
+  }
 }

@@ -12,7 +12,7 @@ export class CookieStorageService extends OAuthStorage {
   }
 
   getItem(key: string): string | null {
-      return this.cookieService.get(key);
+    return this.cookieService.get(key);
   }
 
   removeItem(key: string): void {
@@ -26,6 +26,6 @@ export class CookieStorageService extends OAuthStorage {
   }
 
   setItem(key: string, data: string, expires: number | Date = 1): void {
-    this.cookieService.set(key, data, expires, "/");
+    this.cookieService.set(key, data, expires, '/');
   }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -42,7 +42,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
     private customPageService: CustomPageService,
     private modalService: NgbModal,
     private router: Router
-    ) {}
+  ) {}
 
   ngOnInit(): void {
     this.initializeGrid();
@@ -63,7 +63,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
     this.columnDefs = [
       {
         width: 30,
-        cellRendererFramework: FontAwesomeIconLinkRendererComponent,
+        cellRenderer: FontAwesomeIconLinkRendererComponent,
         cellRendererParams: { isSpan: true, fontawesomeIconName: 'trash' }
       },
       {
@@ -71,21 +71,21 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
         valueGetter: function (params: any) {
           return params.data.CustomPageVanityUrl;
         },
-        cellRendererFramework: FontAwesomeIconLinkRendererComponent,
+        cellRenderer: FontAwesomeIconLinkRendererComponent,
         cellRendererParams: { 
-          inRouterLink: "/custom-pages/edit-properties/",
-          fontawesomeIconName: "edit"
+          inRouterLink: '/custom-pages/edit-properties/',
+          fontawesomeIconName: 'edit'
         }
       },
       {
         headerName: 'Page Name', valueGetter: function (params: any) {
           return { LinkValue: params.data.CustomPageVanityUrl, LinkDisplay: params.data.CustomPageDisplayName };
         },
-        cellRendererFramework: LinkRendererComponent,
-        cellRendererParams: { inRouterLink: "/custom-pages/" },
+        cellRenderer: LinkRendererComponent,
+        cellRendererParams: { inRouterLink: '/custom-pages/' },
         comparator: function (id1: any, id2: any) {
-          let link1 = id1.LinkDisplay;
-          let link2 = id2.LinkDisplay;
+          const link1 = id1.LinkDisplay;
+          const link2 = id2.LinkDisplay;
           if (link1 < link2) {
             return -1;
           }
@@ -101,7 +101,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
         sortable: true
       },
       { headerName: 'Menu', field: 'MenuItem.MenuItemDisplayName',
-        filterFramework: CustomDropdownFilterComponent,
+        filter: CustomDropdownFilterComponent,
         filterParams: {
           field: 'MenuItem.MenuItemDisplayName'
         },
@@ -109,19 +109,19 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
       },
       { headerName: 'Has Content', field: 'IsEmptyContent', valueGetter: function (params) {
         return params.data.IsEmptyContent ? 'No' : 'Yes'; },
-        filterFramework: CustomDropdownFilterComponent,
-        filterParams: {
-          field: 'IsEmptyContent'
-        },
-        sortable: true
+      filter: CustomDropdownFilterComponent,
+      filterParams: {
+        field: 'IsEmptyContent'
+      },
+      sortable: true
       },
       { 
         headerName: 'Viewable By', field: 'ViewableRoles', valueGetter: function (params) {
-        return params.data.ViewableRoles
-              .map(x => x.RoleDisplayName)
-              .join(', ');
+          return params.data.ViewableRoles
+            .map(x => x.RoleDisplayName)
+            .join(', ');
         },
-        filterFramework: CustomDropdownFilterComponent,
+        filter: CustomDropdownFilterComponent,
         filterParams: {
           field: 'RoleDisplayName'
         },
@@ -149,7 +149,7 @@ export class CustomPageListComponent implements OnInit, OnDestroy {
   }
 
   public onCellClicked(event: any): void {
-    if (event.column.colId == "0") {
+    if (event.column.colId == '0') {
       this.customPageIDToRemove = event.data.CustomPageID;
       this.launchModal(this.deleteEntity, 'deleteAnnouncementEntity')
     }

@@ -3,8 +3,17 @@ resources:
   - repository: self
     type: git
     ref: develop
+  - repository: BuildTemplates
+    type: github
+    name: sitkatech/BuildTemplates
+    endpoint: "sitkatech"
+  
+variables:
+  team: 'h2o'
+  projectNumber: 'D020211956.00'
+  JiraDomain: 'sitkatech.atlassian.net'
+  AtlassianClientId: 'SFXizIb8oT24MJtrsNOauUUanCEuSqpR'
 
-    
 stages:
 - stage: Test
   displayName: Test All
@@ -179,7 +188,7 @@ stages:
       inputs:
         command: 'plan'
         environmentServiceName: '$(azureSubscription)'
-        commandOptions: '-var "appInsightsName=$(appInsightsName)" -var "keyVaultName=$(keyVaultName)" -var "storageAccountName=$(storageAccountApplicationName)" -var "resourceGroupName=$(resourceGroupName)" -var "dbServerName=$(dbServerName)" -var "aspNetEnvironment=$(aspNetEnvironment)" -var "databaseName=$(databaseName)" -var "databaseEdition=$(databaseEdition)" -var "databaseTier=$(databaseTier)" -var "sqlPassword=$(sqlPassword)" -var "sqlUsername=$(sqlUsername)" -var "azureClusterResourceGroup=$(azureClusterResourceGroup)" -var "sqlApiUsername=$(sqlApiUsername)" -var "sqlGeoserverUsername=$(sqlGeoserverUsername)"'
+        commandOptions: '-var "appInsightsName=$(appInsightsName)" -var "keyVaultName=$(keyVaultName)" -var "storageAccountName=$(storageAccountApplicationName)" -var "resourceGroupName=$(resourceGroupName)" -var "dbServerName=$(dbServerName)" -var "aspNetEnvironment=$(aspNetEnvironment)" -var "databaseName=$(databaseName)" -var "databaseEdition=$(databaseEdition)" -var "databaseTier=$(databaseTier)" -var "sqlPassword=$(sqlPassword)" -var "sqlUsername=$(sqlUsername)" -var "azureClusterResourceGroup=$(azureClusterResourceGroup)" -var "sqlApiUsername=$(sqlApiUsername)" -var "sqlGeoserverUsername=$(sqlGeoserverUsername)" -var "team=$(team)" -var "projectNumber=$(projectNumber)"'
         allowTelemetryCollection: true
         publishPlanResults: 'tfplan'
         
@@ -277,7 +286,7 @@ stages:
               command: 'apply'
               workingDirectory: '$(Pipeline.Workspace)/terraform'
               environmentServiceName: '$(azureSubscription)'
-              commandOptions: '-var "appInsightsName=$(appInsightsName)" -var "keyVaultName=$(keyVaultName)" -var "storageAccountName=$(storageAccountApplicationName)" -var "resourceGroupName=$(resourceGroupName)" -var "dbServerName=$(dbServerName)" -var "aspNetEnvironment=$(aspNetEnvironment)" -var "databaseName=$(databaseName)" -var "databaseEdition=$(databaseEdition)" -var "databaseTier=$(databaseTier)" -var "sqlPassword=$(sqlPassword)" -var "sqlUsername=$(sqlUsername)" -var "azureClusterResourceGroup=$(azureClusterResourceGroup)"  -var "sqlApiUsername=$(sqlApiUsername)" -var "sqlGeoserverUsername=$(sqlGeoserverUsername)"'
+              commandOptions: '-var "appInsightsName=$(appInsightsName)" -var "keyVaultName=$(keyVaultName)" -var "storageAccountName=$(storageAccountApplicationName)" -var "resourceGroupName=$(resourceGroupName)" -var "dbServerName=$(dbServerName)" -var "aspNetEnvironment=$(aspNetEnvironment)" -var "databaseName=$(databaseName)" -var "databaseEdition=$(databaseEdition)" -var "databaseTier=$(databaseTier)" -var "sqlPassword=$(sqlPassword)" -var "sqlUsername=$(sqlUsername)" -var "azureClusterResourceGroup=$(azureClusterResourceGroup)"  -var "sqlApiUsername=$(sqlApiUsername)" -var "sqlGeoserverUsername=$(sqlGeoserverUsername)" -var "team=$(team)" -var "projectNumber=$(projectNumber)"'
               allowTelemetryCollection: true
 
           - task: TerraformCLI@0
@@ -499,8 +508,21 @@ stages:
     strategy:
       # default deployment strategy, more coming...
       runOnce:
+        preDeploy:
+          steps:
+            - {template: azure-pipelines/templates/azure-jira-update/update-jira.yml@BuildTemplates , parameters: { JiraState: "Pending", JiraEnvironment: "$(JiraEnvironment)"}}
+        on:
+          failure:
+            steps:
+              - {template: azure-pipelines/templates/azure-jira-update/update-jira.yml@BuildTemplates, parameters: { JiraState: "Failed", JiraEnvironment: "$(JiraEnvironment)" }}
+          success: 
+            steps:
+              - {template: azure-pipelines/templates/azure-jira-update/update-jira.yml@BuildTemplates, parameters: { JiraState: "Successful", JiraEnvironment: "$(JiraEnvironment)" }}
+        
         deploy:
           steps:
+          - {template: azure-pipelines/templates/azure-jira-update/update-jira.yml@BuildTemplates, parameters: { JiraState: "InProgress", JiraEnvironment: "$(JiraEnvironment)" }}
+          
           - download: current
             artifact: ChartArtifacts
                         

@@ -23,7 +23,7 @@ export class CustomDropdownFilterComponent implements AgFilterComponent {
     this.field = params.colDef.filterParams.field;
 
     this.params.api.forEachNode((rowNode, i) => {
-      let value = this.getDisplayNameForNode(rowNode);
+      const value = this.getDisplayNameForNode(rowNode);
       if (!this.dropdownValues.includes(value)) {
         this.dropdownValues.push(value);
       }
@@ -39,7 +39,7 @@ export class CustomDropdownFilterComponent implements AgFilterComponent {
   }
 
   doesFilterPass(filterParams: IDoesFilterPassParams): boolean {
-    let displayName = this.getDisplayNameForNode(filterParams.node);
+    const displayName = this.getDisplayNameForNode(filterParams.node as RowNode<any>);
     
     if (this.state[displayName] == null) {
       return false;
@@ -54,7 +54,7 @@ export class CustomDropdownFilterComponent implements AgFilterComponent {
     }
 
     return this.getPropertyValue(rowNode.data, this.field, '');
-   }
+  }
 
    
   private getPropertyValue(object, path, defaultValue) {
@@ -85,7 +85,7 @@ export class CustomDropdownFilterComponent implements AgFilterComponent {
     this.state.selectAll = true;
     this.state.deselectAll = true;
 
-    for (let element of this.dropdownValues) {
+    for (const element of this.dropdownValues) {
       if (this.state[element]) {
         this.state.deselectAll = false;
       } else {
@@ -95,7 +95,7 @@ export class CustomDropdownFilterComponent implements AgFilterComponent {
       if (!this.state.selectAll && !this.state.deselectAll) {
         break;
       }
-    };
+    }
 
     this.params.filterChangedCallback();
   }

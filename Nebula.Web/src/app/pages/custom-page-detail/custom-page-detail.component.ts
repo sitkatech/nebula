@@ -41,16 +41,16 @@ export class CustomPageDetailComponent implements OnInit, AfterViewChecked {
     private authenticationService: AuthenticationService,
     private cdr: ChangeDetectorRef,
     private sanitizer: DomSanitizer) {
-      // force route reload whenever params change
-      this.router.routeReuseStrategy.shouldReuseRoute = () => false;
-    }
+    // force route reload whenever params change
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   ngOnInit() {
     this.watchUserChangeSubscription = this.authenticationService.getCurrentUser().subscribe(currentUser => {
       this.currentUser = currentUser;
     });
 
-    const vanityUrl = this.route.snapshot.paramMap.get("vanity-url");
+    const vanityUrl = this.route.snapshot.paramMap.get('vanity-url');
 
     if (vanityUrl) {
       this.customPageService.customPagesGetByURLCustomPageVanityURLGet(vanityUrl).subscribe(customPage => {
@@ -107,7 +107,7 @@ export class CustomPageDetailComponent implements OnInit, AfterViewChecked {
       CustomPageContent: this.editedContent,
       MenuItemID: this.customPage.MenuItem.MenuItemID,
       ViewableRoleIDs: this.viewableRoleIDs
-     });
+    });
 
     this.customPageService.customPagesCustomPageIDPut(this.customPage.CustomPageID, updateDto).subscribe(x => {
       this.customPageContent = this.sanitizer.bypassSecurityTrustHtml(x.CustomPageContent);
@@ -115,7 +115,7 @@ export class CustomPageDetailComponent implements OnInit, AfterViewChecked {
       this.isLoading = false;
     }, error => {
       this.isLoading = false;
-      this.alertService.pushAlert(new Alert("There was an error updating the rich text content", AlertContext.Danger, true));
+      this.alertService.pushAlert(new Alert('There was an error updating the rich text content', AlertContext.Danger, true));
     });
   }
 

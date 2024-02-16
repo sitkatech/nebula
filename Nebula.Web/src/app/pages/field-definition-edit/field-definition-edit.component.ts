@@ -5,6 +5,7 @@ import { Alert } from 'src/app/shared/models/alert';
 import { AlertContext } from 'src/app/shared/models/enums/alert-context.enum';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { FieldDefinitionDto, FieldDefinitionService, UserDto } from 'src/app/shared/generated';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'nebula-field-definition-edit',
@@ -14,9 +15,9 @@ import { FieldDefinitionDto, FieldDefinitionService, UserDto } from 'src/app/sha
 export class FieldDefinitionEditComponent implements OnInit {
   
   private currentUser: UserDto;
+  public currentUser$: Observable<UserDto>;
 
   public fieldDefinition: FieldDefinitionDto;
-  public editor;
 
   public isLoadingSubmit: boolean;
 
@@ -30,23 +31,23 @@ export class FieldDefinitionEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-      this.authenticationService.getCurrentUser().subscribe(currentUser => {
-          this.currentUser = currentUser;
-          const id = parseInt(this.route.snapshot.paramMap.get("id"));
-          if (id) {
-              this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDGet(id).subscribe(fieldDefinition => {
-                this.fieldDefinition = fieldDefinition;
-              })
-          }
-      });
+    this.authenticationService.getCurrentUser().subscribe(currentUser => {
+      this.currentUser = currentUser;
+      const id = parseInt(this.route.snapshot.paramMap.get('id'));
+      if (id) {
+        this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDGet(id).subscribe(fieldDefinition => {
+          this.fieldDefinition = fieldDefinition;
+        })
+      }
+    });
   }
 
   ngOnDestroy() {
-      this.cdr.detach();
+    this.cdr.detach();
   }
-
+  
   public currentUserIsAdmin(): boolean {
-      return this.authenticationService.isUserAnAdministrator(this.currentUser);
+    return this.authenticationService.isUserAnAdministrator(this.currentUser);
   }
 
   saveDefinition(): void {
@@ -55,13 +56,13 @@ export class FieldDefinitionEditComponent implements OnInit {
     this.fieldDefinitionService.fieldDefinitionsFieldDefinitionTypeIDPut(this.fieldDefinition.FieldDefinitionID, this.fieldDefinition)
       .subscribe(response => {
         this.isLoadingSubmit = false;
-        this.router.navigateByUrl("/labels-and-definitions").then(x => {
+        this.router.navigateByUrl('/labels-and-definitions').then(x => {
           this.alertService.pushAlert(new Alert(`The definition for ${this.fieldDefinition.FieldDefinitionType.FieldDefinitionTypeDisplayName} was successfully updated.`, AlertContext.Success));
         });
       }, error => {
-          this.isLoadingSubmit = false;
-          this.cdr.detectChanges();
-        }
+        this.isLoadingSubmit = false;
+        this.cdr.detectChanges();
+      }
       );
   }
 

@@ -4,27 +4,52 @@
 
 <div *ngIf="!isLoading">
     <ng-container *ngIf="!isEditing">
-        <div *ngIf="showEditButton()" class="customRichTextContent" style="position: relative; min-height: 60px;">
+        <div
+            *ngIf="canEdit"
+            class="customRichTextContent"
+            style="position: relative; min-height: 60px"
+        >
             <div class="hoverEditButton">
                 <div style="margin-top: 10px">
-                    <button type="button" class="btn btn-nebula" (click)="enterEdit()">
+                    <button
+                        type="button"
+                        class="btn btn-nebula"
+                        (click)="enterEdit()"
+                    >
                         Edit
                     </button>
                 </div>
             </div>
-            <div *ngIf="!emptyContent" [innerHtml]="customRichTextContent"></div>
+            <div
+                *ngIf="!emptyContent"
+                [innerHtml]="customRichTextContent"
+            ></div>
 
             <div *ngIf="emptyContent" class="hoverEmptySpace"></div>
         </div>
-        <div *ngIf="!showEditButton()" [innerHtml]="customRichTextContent"></div>
+        <div *ngIf="!canEdit" [innerHtml]="customRichTextContent"></div>
     </ng-container>
-    
+
     <div *ngIf="isEditing">
-        <editor #tinyMceEditor
-            [init]="tinyMceConfig"
-            [(ngModel)]="editedContent">
+        <editor
+            #tinyMceEditor
+            [init]="tinyMceEditor | tinyMceConfig"
+            [(ngModel)]="editedContent"
+        >
         </editor>
-        <button type="button" class="btn btn-primary mt-1 mr-1" (click)="saveEdit()">Save</button>
-        <button type="button" class="btn btn-secondary mt-1" (click)="cancelEdit()">Cancel</button>
+        <button
+            type="button"
+            class="btn btn-primary mt-1 me-1"
+            (click)="saveEdit()"
+        >
+            Save
+        </button>
+        <button
+            type="button"
+            class="btn btn-secondary mt-1"
+            (click)="cancelEdit()"
+        >
+            Cancel
+        </button>
     </div>
 </div>

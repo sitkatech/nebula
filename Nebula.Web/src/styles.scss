@@ -1,7 +1,7 @@
 @import "scss/_variables.scss";
 
 // import Bootstrap AFTER variables
-@import "~bootstrap/scss/bootstrap";
+@import "/node_modules/bootstrap/scss/bootstrap";
 @import "~font-awesome/css/font-awesome.css";
 
 @import "scss/_grids.scss";
@@ -15,159 +15,159 @@
 //ckeditor css
 
 .image {
-  display: table;
-  clear: both;
-  text-align: center;
-  margin: 1em auto;
+    display: table;
+    clear: both;
+    text-align: center;
+    margin: 1em auto;
 }
 
 .image > img {
-  display: block;
-  margin: 0 auto;
-  max-width: 100%;
-  min-width: 50px;
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    min-width: 50px;
 }
 
 .image-style-side,
 .image-style-align-left,
 .image-style-align-center,
 .image-style-align-right {
-  max-width: 50%;
+    max-width: 50%;
 }
 
 .image-style-side {
-  float: right;
-  margin-left: var(--ck-image-style-spacing);
+    float: right;
+    margin-left: var(--ck-image-style-spacing);
 }
 
 .image-style-align-left {
-  float: left;
-  margin-right: var(--ck-image-style-spacing);
+    float: left;
+    margin-right: var(--ck-image-style-spacing);
 }
 
 .image-style-align-center {
-  margin-left: auto;
-  margin-right: auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .image-style-align-right {
-  float: right;
-  margin-left: var(--ck-image-style-spacing);
+    float: right;
+    margin-left: var(--ck-image-style-spacing);
 }
 
 blockquote {
-  overflow: hidden;
-  padding-right: 1.5em;
-  padding-left: 1.5em;
-  margin-left: 0;
-  margin-right: 0;
-  font-style: italic;
-  border-left: 5px solid #ccc;
+    overflow: hidden;
+    padding-right: 1.5em;
+    padding-left: 1.5em;
+    margin-left: 0;
+    margin-right: 0;
+    font-style: italic;
+    border-left: 5px solid #ccc;
 }
 
 .ck.ck-balloon-panel.ck-balloon-panel_visible {
-  //to account for in popover case
-  z-index: 1061;
+    //to account for in popover case
+    z-index: 1061;
 }
 //end ckeditor css
 
 .switch {
-  position: relative;
-  display: inline-block;
-  width: 98px;
-  height: 21px;
-  padding: 0;
-  margin: 0;
+    position: relative;
+    display: inline-block;
+    width: 98px;
+    height: 21px;
+    padding: 0;
+    margin: 0;
 }
 
 .switch input {
-  display: none;
+    display: none;
 }
 
 .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #6b6b6b;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #6b6b6b;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 .slider:before {
-  position: absolute;
-  content: "";
-  height: 17px;
-  width: 17px;
-  left: 2px;
-  bottom: 2px;
-  background-color: white;
-  -webkit-transition: 0.4s;
-  transition: 0.4s;
+    position: absolute;
+    content: "";
+    height: 17px;
+    width: 17px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    -webkit-transition: 0.4s;
+    transition: 0.4s;
 }
 
 input:checked + .slider {
-  background-color: $button-border-and-background;
+    background-color: $button-border-and-background;
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px $button-border-and-background;
+    box-shadow: 0 0 1px $button-border-and-background;
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(77px);
-  -ms-transform: translateX(7px);
-  transform: translateX(77px);
+    -webkit-transform: translateX(77px);
+    -ms-transform: translateX(7px);
+    transform: translateX(77px);
 }
 
 /*------ ADDED CSS ---------*/
 
 .on,
 .off {
-  color: white;
-  position: absolute;
-  transform: translate(-50%, -50%);
-  top: 50%;
-  left: 50%;
-  font-size: 10px;
+    color: white;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    top: 50%;
+    left: 50%;
+    font-size: 10px;
 }
 
 .on {
-  display: none;
-  color: $button-text-color;
+    display: none;
+    color: $button-text-color;
 }
 
 input:checked + .slider .on {
-  display: block;
+    display: block;
 }
 
 input:checked + .slider .off {
-  display: none;
+    display: none;
 }
 
 /*--------- END --------*/
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+    border-radius: 34px;
 }
 
 .slider.round:before {
-  border-radius: 50%;
+    border-radius: 50%;
 }
 
 //Added leaflet css
 .leaflet-control-layers-close {
-  color: #0078a8 !important;
-  cursor: pointer;
-  float: right;
-  display: none;
+    color: #0078a8 !important;
+    cursor: pointer;
+    float: right;
+    display: none;
 }
 
 .leaflet-control-layers-expanded .leaflet-control-layers-close {
-  display: block;
+    display: block;
 }
 
 //End of added leaflet css
@@ -175,69 +175,81 @@ input:checked + .slider .off {
 //NGB Popover
 
 .popover {
-  max-width: 400px;
+    max-width: 400px;
 }
 
 .popover-fixed-width {
-  width: 400px;
+    width: 400px;
 }
 
 .popover-override {
-  font-size: 0.75em;
+    font-size: 0.75em;
 }
 
 .popover-override h3.popover-header {
-  background-color: #dfdfdf;
-  padding: 0.25em 0.5em;
+    background-color: #dfdfdf;
+    padding: 0.25em 0.5em;
 }
 
 .popover-override h3.popover-header .btn {
-  line-height: 1;
+    line-height: 1;
 }
 
 .popover-override .popover-body {
-  padding: 0.25em 0.5em;
+    padding: 0.25em 0.5em;
 }
 
 nebula-field-definition-grid-header {
-  width: 100%;
+    width: 100%;
 }
 
 //End of NGB Popover
 
 station-select-card {
-  .leaflet-top.leaflet-left {
-    left: 50%;
-    top: 51%;
-    transform: translate(-75%, 0%);
-  }
+    .leaflet-top.leaflet-left {
+        left: 50%;
+        top: 51%;
+        transform: translate(-75%, 0%);
+    }
 
-  .leaflet-popup-content p {
-    font-size: 0.875rem;
-  }
+    .leaflet-popup-content p {
+        font-size: 0.875rem;
+    }
 
-  .leaflet-popup-content button {
-    font-size:0.75rem;
-  }
+    .leaflet-popup-content button {
+        font-size: 0.75rem;
+    }
 }
 
 .selected-variable {
-  display: inline-block;
-  background-color: #b0d2a1;
-  color: white;
-  border: 2px solid green;
-  border-radius: 50px;
-  padding:7px;
+    display: inline-block;
+    background-color: #b0d2a1;
+    color: white;
+    border: 2px solid green;
+    border-radius: 50px;
+    padding: 7px;
 
-  > .close {
-      font-size:1.4rem;
-      padding-left:5px;
-  }
+    > .close {
+        font-size: 1.4rem;
+        padding-left: 5px;
+    }
 }
 
 ng-select-custom {
-  .ng-select.ng-select-focused:not(.ng-select-opened)>.ng-select-container {
-    border-color: $input-focus-border-color;
-    box-shadow: $input-focus-box-shadow;
-  }
+    .ng-select.ng-select-focused:not(.ng-select-opened) > .ng-select-container {
+        border-color: $input-focus-border-color;
+        box-shadow: $input-focus-box-shadow;
+    }
+}
+
+a {
+    text-decoration: none;
+}
+
+.breadcrumb {
+    padding: 0.75rem 1rem 0 0;
+}
+
+.flex {
+    display: flex;
 }

@@ -30,14 +30,14 @@ export class DisclaimerComponent implements OnInit {
       this.currentUser = currentUser;
     });
     this.route.queryParams.subscribe(params => {
-      this.returnRoute =  params['route'] || '/';
-      this.returnQueryParams = params['queryParams'] || null;
+      this.returnRoute =  params.route || '/';
+      this.returnQueryParams = params.queryParams || null;
     });
-    this.forced = this.route.snapshot.paramMap.get("forced") === "true";
+    this.forced = this.route.snapshot.paramMap.get('forced') === 'true';
   }
 
   public checkDisclaimerAcknowledged(): boolean {
-      return !this.currentUser || (!this.forced && this.currentUser.DisclaimerAcknowledgedDate != null) ? false : true;
+    return !this.currentUser || (!this.forced && this.currentUser.DisclaimerAcknowledgedDate != null) ? false : true;
   }
 
   public setDisclaimerAcknowledged(): void {

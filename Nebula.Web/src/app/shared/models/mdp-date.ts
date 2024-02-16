@@ -1,8 +1,8 @@
 export class MdpDate {
-    date: {
-        year: number;
-        month: number;
-        day: number;
-    };
-    jsdate: Date;
+  date: {
+    year: number;
+    month: number;
+    day: number;
+  };
+  jsdate: Date;
 }

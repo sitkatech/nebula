@@ -13,7 +13,7 @@ import { FieldDefinitionDto, FieldDefinitionService, UserDto } from 'src/app/sha
 })
 export class FieldDefinitionListComponent implements OnInit {
 
-  @ViewChild("fieldDefinitionsGrid") fieldDefinitionsGrid: AgGridAngular;
+  @ViewChild('fieldDefinitionsGrid') fieldDefinitionsGrid: AgGridAngular;
   
   private currentUser: UserDto;
 
@@ -42,14 +42,14 @@ export class FieldDefinitionListComponent implements OnInit {
         {
           headerName: 'Label', valueGetter: function (params: any) {
             return { LinkValue: params.data.FieldDefinitionType.FieldDefinitionTypeID, LinkDisplay: params.data.FieldDefinitionType.FieldDefinitionTypeDisplayName };
-          }, cellRendererFramework: LinkRendererComponent,
-          cellRendererParams: { inRouterLink: "/labels-and-definitions/" },
+          }, cellRenderer: LinkRendererComponent,
+          cellRendererParams: { inRouterLink: '/labels-and-definitions/' },
           filterValueGetter: function (params: any) {
             return params.data.FieldDefinitionType.FieldDefinitionDisplayName;
           },
           comparator: function (id1: any, id2: any) {
-            let link1 = id1.LinkDisplay;
-            let link2 = id2.LinkDisplay;
+            const link1 = id1.LinkDisplay;
+            const link2 = id2.LinkDisplay;
             if (link1 < link2) {
               return -1;
             }
@@ -64,7 +64,7 @@ export class FieldDefinitionListComponent implements OnInit {
           cellRenderer:function (params: any) { 
             return params.data.FieldDefinitionValue ? params.data.FieldDefinitionValue : ''
           },
-           autoHeight:true, sortable: true, filter: true, width:900, cellStyle: {'white-space': 'normal'}},
+          autoHeight:true, sortable: true, filter: true, width:900, cellStyle: {'white-space': 'normal'}},
       ];
 
       this.columnDefs.forEach(x => {

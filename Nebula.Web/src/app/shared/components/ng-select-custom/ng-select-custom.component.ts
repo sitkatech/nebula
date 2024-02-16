@@ -1,5 +1,5 @@
-import { Component, forwardRef, ViewChild, ElementRef,Injector,OnInit,Host,Attribute,Directive,HostBinding,ViewEncapsulation,Input, Output, EventEmitter } from '@angular/core';
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl, FormControl, NgModel } from '@angular/forms';
+import { Component, forwardRef,ViewEncapsulation,Input } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'ng-select-custom',
