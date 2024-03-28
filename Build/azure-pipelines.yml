@@ -190,7 +190,7 @@ stages:
           -var "azureClusterResourceGroup=$(azureClusterResourceGroup)" 
           -var "databaseResourceGroup=$(databaseResourceGroup)" 
           -var "sqlApiUsername=$(sqlApiUsername)" 
-	      -var "sqlGeoserverUsername=$(sqlGeoserverUsername)" 
+          -var "sqlGeoserverUsername=$(sqlGeoserverUsername)" 
           -var "team=$(team)" 
           -var "projectNumber=$(projectNumber)" 
           -var "elasticPoolName=$(elasticPoolName)" 
