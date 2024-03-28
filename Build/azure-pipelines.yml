@@ -420,7 +420,7 @@ stages:
               scriptType: 'ps'
               scriptLocation: 'inlineScript'
               inlineScript: |
-                azcopy copy "$(Pipeline.Workspace)\GeoServerArtifacts\*" "https://$(storageAccountApplicationName).file.core.windows.net/geoserver/data_dir/$(STORAGE_ACCOUNT_SAS_KEY)" --from-to=LocalFile --recursive
+                azcopy copy "$(Pipeline.Workspace)\GeoServerArtifacts\*" "https://$(storageAccountName).file.core.windows.net/geoserver/data_dir/$(STORAGE_ACCOUNT_SAS_KEY)" --from-to=LocalFile --recursive
 
 
 - stage: DeployHelm
@@ -556,7 +556,7 @@ stages:
                 global.env.name="$(Environment)"
                 global.secrets.geoserverSqlServerPassword="$(SQL_GEOSERVER_PASSWORD)"
                 global.secrets.geoserverAdminPassword="$(GEOSERVER_ADMIN_PASSWORD)"
-                global.secrets.applicationStorageAccountName="$(storageAccountApplicationName)"
+                global.secrets.applicationStorageAccountName="$(storageAccountName)"
                 global.secrets.applicationStorageAccountKey="$(APPLICATION_STORAGE_ACCOUNT_KEY)"
                 global.env.dbServer=$(dbServerName).database.windows.net
                 global.env.databaseName=$(databaseName)
