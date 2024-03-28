@@ -193,8 +193,7 @@ resource "datadog_synthetics_test" "api_test" {
   #email subject, attach url in place of var.domainApi
   name    = "${var.aspNetEnvironment} - https://${var.domainApi}/healthz API test"
   #email body
-  #message = "Notify @pvonhagen@esassoc.com @CGheen@esassoc.com @MSpelman@esassoc.com"
-  message = "Notify @pvonhagen@esassoc.com"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com"
   tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
@@ -228,7 +227,7 @@ resource "datadog_synthetics_test" "web_test" {
       renotify_interval = 120
     }
   }
-  #email subject, attach url in place of var.domainApi
+  #email subject, attach url in place of var.domainWeb
   name    = "${var.aspNetEnvironment} - https://${var.domainWeb} Web test"
   #email body
   message = "Notify @rlee@esassoc.com @sgordon@esassoc.com"
@@ -236,6 +235,44 @@ resource "datadog_synthetics_test" "web_test" {
 
   status = "live"
 }
+
+resource "datadog_synthetics_test" "geoserver_test" {
+  type    = "api"
+  subtype = "http"
+  request_definition {
+    method = "GET"
+    url    = "https://${var.domainGeoserver}/geoserver"
+  }
+  request_headers = {
+    Content-Type   = "application/json"
+  }
+  assertion {
+    type     = "statusCode"
+    operator = "is"
+    target   = "200"
+  }
+  locations = ["aws:us-west-1","aws:us-east-1"]
+  options_list {
+    tick_every = 900
+
+    retry {
+      count    = 2
+      interval = 30000
+    }
+
+    monitor_options {
+      renotify_interval = 120
+    }
+  }
+  #email subject, attach url in place of var.domainGeoserver
+  name    = "${var.aspNetEnvironment} - https://${var.domainWeb} Geoserver test"
+  #email body
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com"
+  tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
+
+  status = "live"
+}
+
 # outputs like this will be set as pipeline variables
 # in this case the pipeline will have access to "$(TF_OUT_APPLICATiON_STORAGE_ACCOUNT_KEY)"
 # to make this happen, you can do this with your pipeline:
