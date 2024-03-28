@@ -22,6 +22,7 @@ variables:
   databaseEdition: 'Standard'
   databaseTier: 'ElasticPool'
   sqlApiUsername: 'NebulaWeb'
+  sqlGeoserverUsername: 'NebulaGeo'
 
   domainApi: 'nebula-api.esa-$(Environment).sitkatech.com'
   domainWeb: 'nebula.esa-$(Environment).sitkatech.com'
@@ -207,7 +208,7 @@ stages:
         artifactName: GeoServerArtifacts
         pathtoPublish: 'Nebula.GeoServer/data_dir'
       condition: and(succeeded(), eq(variables['deploy'], 'true'))
-      
+
     - task: PublishBuildArtifacts@1
       inputs:
         artifactName: ChartArtifacts
