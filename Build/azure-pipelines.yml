@@ -24,9 +24,9 @@ variables:
   sqlApiUsername: 'NebulaWeb'
   sqlGeoserverUsername: 'NebulaGeo'
 
-  domainApi: 'nebula-api.esa-$(Environment).sitkatech.com'
+  domainApi: 'api-nebula.esa-$(Environment).sitkatech.com'
   domainWeb: 'nebula.esa-$(Environment).sitkatech.com'
-  domainGeoserver: 'nebula-geoserver.esa-$(Environment).sitkatech.com'
+  domainGeoserver: 'geoserver-nebula.esa-$(Environment).sitkatech.com'
 
 resources:
   repositories:
