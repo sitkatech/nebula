@@ -273,13 +273,6 @@ resource "datadog_synthetics_test" "geoserver_test" {
   status = "live"
 }
 
-# outputs like this will be set as pipeline variables
-# in this case the pipeline will have access to "$(TF_OUT_APPLICATiON_STORAGE_ACCOUNT_KEY)"
-# to make this happen, you can do this with your pipeline:
-# - task: TerraformCLI@0
-#   displayName: 'terraform output'
-#   inputs:
-#     command: output
 output "application_storage_account_key" {
   sensitive = true
   value = azurerm_storage_account.web.primary_access_key
@@ -290,11 +283,44 @@ output "application_storage_account_connection_string" {
   value = azurerm_storage_account.web.primary_connection_string
 }
 
+# the SAS token which is needed for the geoserver file transfer
+data "azurerm_storage_account_sas" "web" {
+  connection_string = azurerm_storage_account.web.primary_connection_string
+  https_only        = true
+
+  resource_types {
+    service   = true
+    container = true
+    object    = true
+  }
+
+  services {
+    blob  = true
+    queue = false
+    table = false
+    file  = true
+  }
+
+  start  = timestamp()
+  expiry = timeadd(timestamp(), "24h")
+
+  permissions {
+    read    = true
+    write   = true
+    delete  = true
+    list    = true
+    add     = true
+    create  = true
+    update  = true
+    process = true
+  }
+}
+
 # can be used in pipeline like $(TF_OUT_STORAGE_ACCOUNT_SAS_KEY)
-# output "storage_account_sas_key" {
-#   sensitive = true
-#   value = data.azurerm_storage_account_sas.web.sas
-# }
+output "storage_account_sas_key" {
+  sensitive = true
+  value = data.azurerm_storage_account_sas.web.sas
+}
 
 resource "azurerm_storage_share" "web" {
   name                 = "geoserver"

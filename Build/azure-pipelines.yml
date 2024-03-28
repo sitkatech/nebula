@@ -255,8 +255,8 @@ stages:
               TerraformCommand: apply
 
           - bash: |
-              echo "##vso[task.setvariable variable=STORAGE_ACCOUNT_SAS_KEY;isOutput=true]$(TF_OUT_STORAGE_ACCOUNT_SAS_KEY)"
-              echo "##vso[task.setvariable variable=APPLICATION_STORAGE_ACCOUNT_KEY;isOutput=true]$(TF_OUT_APPLICATION_STORAGE_ACCOUNT_KEY)"
+              echo "##vso[task.setvariable variable=STORAGE_ACCOUNT_SAS_KEY;isOutput=true;issecret=true]$(TF_OUT_STORAGE_ACCOUNT_SAS_KEY)"
+              echo "##vso[task.setvariable variable=APPLICATION_STORAGE_ACCOUNT_KEY;isOutput=true;issecret=true]$(TF_OUT_APPLICATION_STORAGE_ACCOUNT_KEY)"
               echo "##vso[task.setvariable variable=APPLICATION_STORAGE_ACCOUNT_CONNECTION_STRING;isOutput=true]$(TF_OUT_APPLICATION_STORAGE_ACCOUNT_CONNECTION_STRING)"
               echo "##vso[task.setvariable variable=INSTRUMENTATION_KEY;isOutput=true]$(TF_OUT_INSTRUMENTATION_KEY)"
               echo "##vso[task.setvariable variable=SQL_API_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_SQL_API_PASSWORD)"
@@ -411,8 +411,6 @@ stages:
           steps:        
           - download: current
             artifact: GeoServerArtifacts
-          - bash: |
-              echo "variable value is $(STORAGE_ACCOUNT_SAS_KEY)"
              
           - task: AzureCLI@2
             inputs:
