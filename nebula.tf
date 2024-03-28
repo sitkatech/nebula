@@ -313,6 +313,8 @@ data "azurerm_storage_account_sas" "web" {
     create  = true
     update  = true
     process = true
+    tag     = false
+    filter  = false
   }
 }
 
