@@ -265,44 +265,6 @@ stages:
               echo "##vso[task.setvariable variable=GEOSERVER_ADMIN_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_GEOSERVER_ADMIN_PASSWORD)"
           - bash: 'env | sort'
 
-
-- stage: RestoreFiles
-  displayName: Restore Files
-  dependsOn: DeployTerraform
-  condition: | 
-    and
-    (
-      in(dependencies.DeployTerraform.result, 'Succeeded', 'SucceededWithIssues'),
-      eq(variables['restoreFiles'], 'true')
-    )
-  jobs:  
-    - job: BuildFileRestoreProject
-      displayName: Build File Restore Project 
-      pool:
-        vmImage: ubuntu-latest
-      steps:
-      - checkout: self
-        fetchDepth: 0
-
-      - task: UseDotNet@2
-        inputs:
-          version: '6.0.x'
-
-      - task: DotNetCoreCLI@2
-        displayName: Building File Restore Project 
-        inputs:
-          command: 'build'
-          projects: 'Tools/AzureFileRestore/*.csproj'
-          arguments: '--configuration debug'
-
-      - task: PowerShell@2
-        inputs:
-          targetType: 'inline'
-          script: |
-            cd "Tools/AzureFileRestore/bin/debug/net6.0"
-            ./AzureFileRestore -m ServiceSideAsyncCopy -s ${ProdBlobCS} -d ${QABlobCS}
-
-
 - stage: DeployDB
   displayName: Deploy Database 
   dependsOn: DeployTerraform
@@ -550,7 +512,6 @@ stages:
                 global.domains.api="$(domainApi)"
                 global.domains.web="$(domainWeb)"
                 global.domains.geoserver="$(domainGeoserver)"
-                global.domains.vegarenderservice="$(domainVegarenderservice)"
                 global.env.name="$(Environment)"
                 global.secrets.geoserverSqlServerPassword="$(SQL_GEOSERVER_PASSWORD)"
                 global.secrets.geoserverAdminPassword="$(GEOSERVER_ADMIN_PASSWORD)"
