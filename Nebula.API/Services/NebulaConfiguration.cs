@@ -10,5 +10,6 @@
         public string LeadOrganizationEmail { get; set; }
         public string APPINSIGHTS_INSTRUMENTATIONKEY { get; set; }
         public string SendGridApiKey { get; set; }
+        public string HostName { get; set; }
     }
 }
