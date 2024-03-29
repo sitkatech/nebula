@@ -138,7 +138,7 @@ namespace Nebula.API
             });
             #endregion
 
-            services.AddHealthChecks();
+            services.AddHealthChecks().AddDbContextCheck<NebulaDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -176,7 +176,7 @@ namespace Nebula.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHealthChecks("/");
+                endpoints.MapHealthChecks("/healthz");
             });
 
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
