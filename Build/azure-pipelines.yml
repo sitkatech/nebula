@@ -107,7 +107,7 @@ stages:
       parameters:
         displayName: 'API'
         subscription: '$(azureSubscription)'
-        containerRegistry: '$(kv_containerRegistry)'
+        containerRegistry: '$(kv-containerRegistry)'
         dockerComposeFile: 'docker-compose/docker-compose.yml'
         dockerComposeFileArgs: 'env=$(environment)'
         additionalImageTags: |
@@ -135,7 +135,7 @@ stages:
       parameters:
         displayName: 'Web'
         subscription: '$(azureSubscription)'
-        containerRegistry: '$(kv_containerRegistry)'
+        containerRegistry: '$(kv-containerRegistry)'
         dockerComposeFile: 'Nebula.Web/docker-compose/docker-compose.yml'
         dockerComposeFileArgs: 'env=$(environment)'
         additionalImageTags: |
@@ -177,25 +177,25 @@ stages:
           -var "keyVaultName=$(keyVaultName)" 
           -var "storageAccountName=$(storageAccountName)" 
           -var "resourceGroupName=$(resourceGroupName)" 
-          -var "dbServerName=$(kv_dbServerName)" 
+          -var "dbServerName=$(kv-dbServerName)" 
           -var "aspNetEnvironment=$(aspNetEnvironment)" 
-          -var "datadogApiKey=$(kv_datadogApiKey)" 
-          -var "datadogAppKey=$(kv_datadogAppKey)" 
+          -var "datadogApiKey=$(kv-datadogApiKey)" 
+          -var "datadogAppKey=$(kv-datadogAppKey)" 
           -var "domainApi=$(domainApi)" 
           -var "domainWeb=$(domainWeb)" 
           -var "domainGeoserver=$(domainGeoserver)" 
           -var "databaseName=$(databaseName)" 
           -var "databaseEdition=$(databaseEdition)" 
           -var "databaseTier=$(databaseTier)" 
-          -var "sqlPassword=$(kv_sqlAdministratorPassword)" 
-          -var "sqlUsername=$(kv_sqlAdministratorUsername)" 
-          -var "azureClusterResourceGroup=$(kv_azureClusterResourceGroup)" 
-          -var "databaseResourceGroup=$(kv_databaseResourceGroup)" 
+          -var "sqlPassword=$(kv-sqlAdministratorPassword)" 
+          -var "sqlUsername=$(kv-sqlAdministratorUsername)" 
+          -var "azureClusterResourceGroup=$(kv-azureClusterResourceGroup)" 
+          -var "databaseResourceGroup=$(kv-databaseResourceGroup)" 
           -var "sqlApiUsername=$(sqlApiUsername)" 
           -var "sqlGeoserverUsername=$(sqlGeoserverUsername)" 
           -var "team=$(team)" 
           -var "projectNumber=$(projectNumber)" 
-          -var "elasticPoolName=$(kv_elasticPoolName)" 
+          -var "elasticPoolName=$(kv-elasticPoolName)" 
 
     - task: CopyFiles@2
       inputs:
@@ -313,12 +313,12 @@ stages:
           - template: azure-pipelines/templates/database/db-deploy-template.yml@BuildTemplates 
             parameters:
               subscription: '$(azureSubscription)'
-              serverName: '$(kv_dbServerName).database.windows.net'
+              serverName: '$(kv-dbServerName).database.windows.net'
               databaseName: '$(databaseName)'
               databaseEdition: '$(databaseEdition)'
-              elasticPoolName: '$(kv_elasticPoolName)'
-              sqlAdministratorUsername: '$(kv_sqlAdministratorUsername)'
-              sqlAdministratorPassword: '$(kv_sqlAdministratorPassword)'
+              elasticPoolName: '$(kv-elasticPoolName)'
+              sqlAdministratorUsername: '$(kv-sqlAdministratorUsername)'
+              sqlAdministratorPassword: '$(kv-sqlAdministratorPassword)'
               sqlApiUsername: '$(sqlApiUsername)'
               bacpacFile: '$(Pipeline.Workspace)/bacpac/$(databaseName).bacpac'
               dacpacFile: '$(Pipeline.Workspace)/Database/Nebula.Database.dacpac'
@@ -328,10 +328,10 @@ stages:
           - template: azure-pipelines/templates/database/db-user.yml@BuildTemplates 
             parameters:
               subscription: '$(azureSubscription)'
-              serverName: '$(kv_dbServerName).database.windows.net'
+              serverName: '$(kv-dbServerName).database.windows.net'
               databaseName: '$(databaseName)'
-              sqlAdministratorUsername: '$(kv_sqlAdministratorUsername)'
-              sqlAdministratorPassword: '$(kv_sqlAdministratorPassword)'
+              sqlAdministratorUsername: '$(kv-sqlAdministratorUsername)'
+              sqlAdministratorPassword: '$(kv-sqlAdministratorPassword)'
               desiredSqlUsername: '$(sqlApiUsername)'
               desiredSqlPassword: '$(SQL_API_PASSWORD)'
               roles: 'db_datawriter,db_datareader'
@@ -339,10 +339,10 @@ stages:
           - template: azure-pipelines/templates/database/db-user.yml@BuildTemplates 
             parameters:
               subscription: '$(azureSubscription)'
-              serverName: '$(kv_dbServerName).database.windows.net'
+              serverName: '$(kv-dbServerName).database.windows.net'
               databaseName: '$(databaseName)'
-              sqlAdministratorUsername: '$(kv_sqlAdministratorUsername)'
-              sqlAdministratorPassword: '$(kv_sqlAdministratorPassword)'
+              sqlAdministratorUsername: '$(kv-sqlAdministratorUsername)'
+              sqlAdministratorPassword: '$(kv-sqlAdministratorPassword)'
               desiredSqlUsername: '$(sqlGeoserverUsername)'
               desiredSqlPassword: '$(SQL_GEOSERVER_PASSWORD)'
               roles: 'db_datareader'
@@ -418,7 +418,7 @@ stages:
               inputs:
                 azureSubscription: "$(azureSubscription)"
                 KeyVaultName: '$(spokeKeyVaultName)'
-                SecretsFilter: 'kv_AtlassianClientSecret'
+                SecretsFilter: 'kv-AtlassianClientSecret'
                 RunAsPreJob: true
 
             - template: azure-pipelines/templates/azure-jira-update/update-jira.yml@BuildTemplates 
@@ -432,7 +432,7 @@ stages:
               inputs:
                 azureSubscription: "$(azureSubscription)"
                 KeyVaultName: '$(spokeKeyVaultName)'
-                SecretsFilter: 'kv_AtlassianClientSecret'
+                SecretsFilter: 'kv-AtlassianClientSecret'
                 RunAsPreJob: true
 
             - template: azure-pipelines/templates/azure-jira-update/update-jira.yml@BuildTemplates 
@@ -445,7 +445,7 @@ stages:
               inputs:
                 azureSubscription: "$(azureSubscription)"
                 KeyVaultName: '$(spokeKeyVaultName)'
-                SecretsFilter: 'kv_AtlassianClientSecret'
+                SecretsFilter: 'kv-AtlassianClientSecret'
                 RunAsPreJob: true
 
             - template: azure-pipelines/templates/azure-jira-update/update-jira.yml@BuildTemplates 
@@ -480,8 +480,8 @@ stages:
             inputs:
               connectionType: Azure Resource Manager
               azureSubscriptionEndpoint: '$(azureSubscription)'
-              azureResourceGroup: '$(kv_azureClusterResourceGroup)'
-              kubernetesCluster: '$(kv_kubernetesCluster)'
+              azureResourceGroup: '$(kv-azureClusterResourceGroup)'
+              kubernetesCluster: '$(kv-kubernetesCluster)'
               command: login
 
           - task: HelmDeploy@0
@@ -489,8 +489,8 @@ stages:
             inputs:
               connectionType: Azure Resource Manager
               azureSubscription: '$(azureSubscription)'
-              azureResourceGroup: '$(kv_azureClusterResourceGroup)'
-              kubernetesCluster: '$(kv_kubernetesCluster)'
+              azureResourceGroup: '$(kv-azureClusterResourceGroup)'
+              kubernetesCluster: '$(kv-kubernetesCluster)'
               command: 'dependency'
               arguments: 'update $(Pipeline.Workspace)/ChartArtifacts/chart'
 
@@ -499,8 +499,8 @@ stages:
             inputs:
               connectionType: Azure Resource Manager
               azureSubscription: '$(azureSubscription)'
-              azureResourceGroup: '$(kv_azureClusterResourceGroup)'
-              kubernetesCluster: '$(kv_kubernetesCluster)'
+              azureResourceGroup: '$(kv-azureClusterResourceGroup)'
+              kubernetesCluster: '$(kv-kubernetesCluster)'
               namespace: '$(team)'
               arguments: '--create-namespace'
               command: upgrade
@@ -517,14 +517,14 @@ stages:
                 global.secrets.geoserverAdminPassword="$(GEOSERVER_ADMIN_PASSWORD)"
                 global.secrets.applicationStorageAccountName="$(storageAccountName)"
                 global.secrets.applicationStorageAccountKey="$(APPLICATION_STORAGE_ACCOUNT_KEY)"
-                global.env.dbServer=$(kv_dbServerName).database.windows.net
+                global.env.dbServer=$(kv-dbServerName).database.windows.net
                 global.env.databaseName=$(databaseName)
                 global.env.sqlUsername=$(sqlApiUsername)
                 global.env.sqlGeoserverUsername=$(sqlGeoserverUsername)
                 global.secrets.apiSqlPassword=$(SQL_API_PASSWORD)
-                global.secrets.sendGridApiKey="$(kv_sendGridApiKey)"
+                global.secrets.sendGridApiKey="$(kv-sendGridApiKey)"
                 api.image.tag="$(Build.BuildNumber)-$(environment)"
                 web.image.tag="$(Build.BuildNumber)-$(environment)"
-                api.image.repository="$(kv_containerRegistry)/nebula/api"
-                web.image.repository="$(kv_containerRegistry)/nebula/web"
+                api.image.repository="$(kv-containerRegistry)/nebula/api"
+                web.image.repository="$(kv-containerRegistry)/nebula/web"
               force: false
