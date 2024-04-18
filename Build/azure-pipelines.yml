@@ -2,9 +2,6 @@
 trigger: none
 
 variables:
-  JiraDomain: 'sitkatech.atlassian.net'
-  AtlassianClientId: 'SFXizIb8oT24MJtrsNOauUUanCEuSqpR'
-
   team: 'h2o'
   projectNumber: 'D020211956.00'
 
@@ -425,6 +422,7 @@ stages:
               parameters: 
                 JiraState: "Pending"
                 JiraEnvironment: "$(aspNetEnvironment)"
+                AtlassianClientSecret: $(kv-AtlassianClientSecret)
         on:
           failure:
             steps:
@@ -439,6 +437,7 @@ stages:
               parameters: 
                 JiraState: "Failed"
                 JiraEnvironment: "$(aspNetEnvironment)"
+                AtlassianClientSecret: $(kv-AtlassianClientSecret)
           success: 
             steps:
             - task: AzureKeyVault@2
@@ -452,6 +451,7 @@ stages:
               parameters: 
                 JiraState: "Successful"
                 JiraEnvironment: "$(aspNetEnvironment)"
+                AtlassianClientSecret: $(kv-AtlassianClientSecret)
         deploy:
           steps:
           - task: AzureKeyVault@2
@@ -465,6 +465,7 @@ stages:
             parameters: 
               JiraState: "InProgress"
               JiraEnvironment: "$(aspNetEnvironment)"
+              AtlassianClientSecret: $(kv-AtlassianClientSecret)
 
           - download: current
             artifact: ChartArtifacts

@@ -193,7 +193,7 @@ resource "datadog_synthetics_test" "api_test" {
   #email subject, attach url in place of var.domainApi
   name    = "${var.aspNetEnvironment} - https://${var.domainApi}/healthz API test"
   #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
   tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
@@ -230,7 +230,7 @@ resource "datadog_synthetics_test" "web_test" {
   #email subject, attach url in place of var.domainWeb
   name    = "${var.aspNetEnvironment} - https://${var.domainWeb} Web test"
   #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
   tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
@@ -241,7 +241,7 @@ resource "datadog_synthetics_test" "geoserver_test" {
   subtype = "http"
   request_definition {
     method = "GET"
-    url    = "https://${var.domainGeoserver}/geoserver"
+    url    = "https://${var.domainGeoserver}/geoserver/web"
   }
   request_headers = {
     Content-Type   = "application/json"
@@ -267,7 +267,7 @@ resource "datadog_synthetics_test" "geoserver_test" {
   #email subject, attach url in place of var.domainGeoserver
   name    = "${var.aspNetEnvironment} - https://${var.domainWeb} Geoserver test"
   #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
   tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
