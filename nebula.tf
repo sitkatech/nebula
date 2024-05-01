@@ -93,6 +93,11 @@ variable "elasticPoolName" {
   type = string
 }
 
+variable "environment" {
+  type = string
+  default = "qa"
+}
+
 // this variable is used for the keepers for the random resources https://registry.terraform.io/providers/hashicorp/random/latest/docs
 variable "amd_id" {
   type = string
@@ -191,10 +196,10 @@ resource "datadog_synthetics_test" "api_test" {
     }
   }
   #email subject, attach url in place of var.domainApi
-  name    = "${var.aspNetEnvironment} - https://${var.domainApi}/healthz API test"
+  name    = "${var.environment} - https://${var.domainApi}/healthz API test"
   #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
-  tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
 }
@@ -228,10 +233,10 @@ resource "datadog_synthetics_test" "web_test" {
     }
   }
   #email subject, attach url in place of var.domainWeb
-  name    = "${var.aspNetEnvironment} - https://${var.domainWeb} Web test"
+  name    = "${var.environment} - https://${var.domainWeb} Web test"
   #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
-  tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
 }
@@ -265,10 +270,10 @@ resource "datadog_synthetics_test" "geoserver_test" {
     }
   }
   #email subject, attach url in place of var.domainGeoserver
-  name    = "${var.aspNetEnvironment} - https://${var.domainWeb} Geoserver test"
+  name    = "${var.environment} - https://${var.domainWeb} Geoserver test"
   #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}"
-  tags    = ["env:${var.aspNetEnvironment}", "managed:terraformed", "team:${var.team}"]
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
 
   status = "live"
 }
