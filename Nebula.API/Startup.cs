@@ -1,12 +1,4 @@
-﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Http;
-using System.Threading;
-using IdentityServer4.AccessTokenValidation;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DependencyCollector;
-using Microsoft.ApplicationInsights.Extensibility;
+﻿using IdentityServer4.AccessTokenValidation;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -15,43 +7,29 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Serilog;
-using Nebula.API.Services;
-using Nebula.API.Services.Telemetry;
-using Nebula.EFModels.Entities;
-using Serilog.Sinks.ApplicationInsights.TelemetryConverters;
-using ILogger = Serilog.ILogger;
-using System.Text.Json.Serialization;
 using Nebula.API.Converters;
+using Nebula.API.Logging;
+using Nebula.API.Services;
+using Nebula.EFModels.Entities;
 using NetTopologySuite.IO.Converters;
 using SendGrid.Extensions.DependencyInjection;
+using Serilog;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
+using System.Text.Json.Serialization;
+using ILogger = Serilog.ILogger;
 
 namespace Nebula.API
 {
     public class Startup
     {
-        private readonly TelemetryClient _telemetryClient;
         private readonly IWebHostEnvironment _environment;
-        private string _instrumentationKey;
 
         public Startup(IWebHostEnvironment environment, IConfiguration configuration)
         {
             Configuration = configuration;
             _environment = environment;
-
-            _instrumentationKey = Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"];
-
-            if (!string.IsNullOrWhiteSpace(_instrumentationKey))
-            {
-                _telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault())
-                {
-                    InstrumentationKey = _instrumentationKey
-                };
-            }
-            else
-            {
-                _telemetryClient = new TelemetryClient(TelemetryConfiguration.CreateDefault());
-            }
         }
 
         public IConfiguration Configuration { get; }
@@ -59,8 +37,6 @@ namespace Nebula.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddApplicationInsightsTelemetry(_instrumentationKey);
-
             services.AddControllers().AddJsonOptions(opt =>
             {
                 opt.JsonSerializerOptions.Converters.Add(new GeoJsonConverterFactory());
@@ -115,11 +91,7 @@ namespace Nebula.API
             });
 
             services.AddSingleton(Configuration);
-            services.AddSingleton<ITelemetryInitializer, CloudRoleNameTelemetryInitializer>();
-            services.AddSingleton<ITelemetryInitializer, UserInfoTelemetryInitializer>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            var logger = GetSerilogLogger();
-            services.AddSingleton(logger);
 
             services.AddTransient(s => new KeystoneService(s.GetService<IHttpContextAccessor>(), keystoneHost));
 
@@ -143,9 +115,13 @@ namespace Nebula.API
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
-            IHostApplicationLifetime applicationLifetime, ILoggerFactory loggerFactory, ILogger logger)
+             ILoggerFactory loggerFactory, ILogger logger)
         {
-            loggerFactory.AddSerilog(logger);
+            app.UseSerilogRequestLogging(opts =>
+            {
+                opts.EnrichDiagnosticContext = LogHelper.EnrichFromRequest;
+                opts.GetLevel = LogHelper.CustomGetLevel;
+            });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -170,48 +146,15 @@ namespace Nebula.API
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.Use(TelemetryHelper.PostBodyTelemetryMiddleware);
+            app.UseMiddleware<LogHelper>();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHealthChecks("/healthz");
             });
-
-            applicationLifetime.ApplicationStopping.Register(OnShutdown);
-
-            var modules = app.ApplicationServices.GetServices<ITelemetryModule>();
-            var dependencyModule = modules.OfType<DependencyTrackingTelemetryModule>().FirstOrDefault();
-
-            if (dependencyModule != null)
-            {
-                var domains = dependencyModule.ExcludeComponentCorrelationHttpHeadersOnDomains;
-                domains.Add("core.windows.net");
-                domains.Add("10.0.75.1");
-            }
+            
         }
-
-        private void OnShutdown()
-        {
-            _telemetryClient.Flush();
-            Thread.Sleep(1000);
-        }
-
-        private ILogger GetSerilogLogger()
-        {
-            var outputTemplate =
-                $"[{_environment.EnvironmentName}] {{Timestamp:yyyy-MM-dd HH:mm:ss zzz}} {{Level}} | {{RequestId}}-{{SourceContext}}: {{Message}}{{NewLine}}{{Exception}}";
-            var serilogLogger = new LoggerConfiguration()
-                .ReadFrom.Configuration(Configuration)
-                .WriteTo.Console(outputTemplate: outputTemplate);
-
-            if (!_environment.IsDevelopment())
-            {
-                serilogLogger.WriteTo.ApplicationInsights(_telemetryClient, new TraceTelemetryConverter());
-            }
-
-            return serilogLogger.CreateLogger();
-        }
+       
     }
 }
