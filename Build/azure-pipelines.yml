@@ -21,9 +21,9 @@ variables:
   sqlApiUsername: 'NebulaWeb'
   sqlGeoserverUsername: 'NebulaGeo'
 
-  domainApi: 'api-nebula.esa-$(Environment).sitkatech.com'
-  domainWeb: 'nebula.esa-$(Environment).sitkatech.com'
-  domainGeoserver: 'geoserver-nebula.esa-$(Environment).sitkatech.com'
+  # domainApi: 'api-nebula.esa-$(Environment).sitkatech.com' # this is now in a pipeline variable
+  # domainWeb: 'nebula.esa-$(Environment).sitkatech.com' # this is now in a pipeline variable
+  # domainGeoserver: 'geoserver-nebula.esa-$(Environment).sitkatech.com' # this is now in a pipeline variable
 
 resources:
   repositories:
