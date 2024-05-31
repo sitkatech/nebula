@@ -8,7 +8,7 @@
         public string WEB_URL { get; set; }
         public string KEYSTONE_REDIRECT_URL { get; set; }
         public string LeadOrganizationEmail { get; set; }
-        public string APPINSIGHTS_INSTRUMENTATIONKEY { get; set; }
         public string SendGridApiKey { get; set; }
+        public string HostName { get; set; }
     }
 }
