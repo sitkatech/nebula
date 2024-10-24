@@ -21,12 +21,14 @@ global:
 api:
   replicaCount: 1
   image:
-    repository: esacontainers.azurecr.io/nebula/api
+    repository: containersesaqa.azurecr.io/nebula/api
     pullPolicy: Always
   nameOverride: ""
   fullnameOverride: ""
   namespace: h2o
   resources: 
+    limits:
+      memory: "512Mi"
     requests:
       memory: "512Mi"
   serviceAccount:
@@ -75,12 +77,14 @@ api:
 web:
   replicaCount: 1
   image:
-    repository: esacontainers.azurecr.io/nebula/web
+    repository: containersesaqa.azurecr.io/nebula/web
     pullPolicy: Always
   nameOverride: ""
   fullnameOverride: ""
   namespace: h2o
   resources: 
+    limits:
+      memory: "256Mi"
     requests:
       memory: "256Mi"
   serviceAccount:
@@ -131,12 +135,14 @@ geoserver:
   image:
     repository: kartoza/geoserver
     pullPolicy: Always
-    tag: "2.16.2"
+    tag: "2.25.2"
     # Overrides the image tag whose default is the chart appVersion.
   nameOverride: ""
   fullnameOverride: ""
   namespace: h2o
   resources: 
+    limits:
+      memory: "1G"
     requests:
       memory: "1G"
   serviceAccount:
