@@ -19,3 +19,4 @@ Nebula.Web/.vscode
 
 /Build/secrets.ini
 /Build/temp/NebulaDB.bacpac
+/Nebula.GeoServer/data_dir/gwc/diskquota_page_store_hsql
