@@ -94,7 +94,6 @@ namespace Nebula.Web
             CreateAccountRedirectUrl = configuration["CreateAccountRedirectUrl"];
             GeoserverMapServiceUrl = configuration["GeoserverMapServiceUrl"];
             KeystoneAuthConfiguration = new KeystoneAuthConfigurationDto(configuration);
-            AppInsightsInstrumentationKey =  configuration["AppInsightsInstrumentationKey"];
             LyraBaseURL = configuration["LyraBaseURL"];
         }
 
@@ -112,8 +111,6 @@ namespace Nebula.Web
         public string GeoserverMapServiceUrl { get; set; }
         [JsonPropertyName("keystoneAuthConfiguration")]
         public KeystoneAuthConfigurationDto KeystoneAuthConfiguration { get; set; }
-         [JsonPropertyName("appInsightsInstrumentationKey")]
-        public string AppInsightsInstrumentationKey {get; set;}
         [JsonPropertyName("lyraBaseURL")]
         public string LyraBaseURL {get; set;}
     }

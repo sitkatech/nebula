@@ -11,7 +11,6 @@ variables:
   spokeKeyVaultName: 'aks-spoke-kv-esa-$(Environment)'
 
   resourceGroupName: 'nebula-$(Environment)'
-  appInsightsName: 'nebula-$(Environment)-insights'
   keyVaultName: 'nebula-keyvault-$(Environment)'
   storageAccountName: 'nebulaapp$(Environment)'
 
@@ -25,6 +24,7 @@ variables:
   # domainWeb: 'nebula.esa-$(Environment).sitkatech.com' # this is now in a pipeline variable
   # domainGeoserver: 'geoserver-nebula.esa-$(Environment).sitkatech.com' # this is now in a pipeline variable
 
+
 resources:
   repositories:
   - repository: self
@@ -35,7 +35,7 @@ resources:
     name: sitkatech/BuildTemplates
     endpoint: "sitkatech"
 
-
+    
 stages:
 - stage: BuildDB
   displayName: Build DB
@@ -48,6 +48,8 @@ stages:
       additionalArgs: '/p:DSP=Microsoft.Data.Tools.Schema.Sql.SqlAzureV12DatabaseSchemaProvider'
       publishPath: 'Nebula.Database/bin/Debug/Nebula.Database.dacpac'
       artifactName: 'Database'
+
+
 
 
 - stage: Test
@@ -92,7 +94,7 @@ stages:
     steps:
     - checkout: self
       fetchDepth: 0
-
+    
     - task: AzureKeyVault@2
       inputs:
         azureSubscription: "$(azureSubscription)"
@@ -110,6 +112,7 @@ stages:
         additionalImageTags: |
           $(Build.BuildNumber)-$(environment)
         includeLatestTag: true
+    
 
 
   - job: BuildWeb
@@ -138,7 +141,7 @@ stages:
         additionalImageTags: |
           $(Build.BuildNumber)-$(environment)
         includeLatestTag: true
-
+    
 
 - stage: BuildTerraform
   displayName: Terraform Plan
@@ -160,7 +163,7 @@ stages:
         KeyVaultName: '$(spokeKeyVaultName)'
         SecretsFilter: '*'
         RunAsPreJob: true
-
+    
     - template: azure-pipelines/templates/terraform/terraform.yml@BuildTemplates 
       parameters: 
         ServiceConnectionName: "$(azureSubscription)"
@@ -170,7 +173,6 @@ stages:
         WorkingDirectory: './'
         TerraformCommand: plan
         TerraformCommandOptions: |
-          -var "appInsightsName=$(appInsightsName)" 
           -var "keyVaultName=$(keyVaultName)" 
           -var "storageAccountName=$(storageAccountName)" 
           -var "resourceGroupName=$(resourceGroupName)" 
@@ -180,6 +182,7 @@ stages:
           -var "datadogAppKey=$(kv-datadogAppKey)" 
           -var "domainApi=$(domainApi)" 
           -var "domainWeb=$(domainWeb)" 
+          -var "environment=$(Environment)" 
           -var "domainGeoserver=$(domainGeoserver)" 
           -var "databaseName=$(databaseName)" 
           -var "databaseEdition=$(databaseEdition)" 
@@ -193,7 +196,6 @@ stages:
           -var "team=$(team)" 
           -var "projectNumber=$(projectNumber)" 
           -var "elasticPoolName=$(kv-elasticPoolName)" 
-          -var "environment=$(Environment)"
 
     - task: CopyFiles@2
       inputs:
@@ -201,18 +203,20 @@ stages:
         contents: '**'
         targetFolder: $(Build.ArtifactStagingDirectory)/chart
       condition: and(succeeded(), eq(variables['deploy'], 'true'))
-    
-    - task: PublishBuildArtifacts@1
-      inputs:
-        artifactName: GeoServerArtifacts
-        pathtoPublish: 'Nebula.GeoServer/data_dir'
-      condition: and(succeeded(), eq(variables['deploy'], 'true'))
 
     - task: PublishBuildArtifacts@1
       inputs:
         artifactName: ChartArtifacts
         pathtoPublish: $(Build.ArtifactStagingDirectory)
       condition: and(succeeded(), eq(variables['deploy'], 'true'))
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        artifactName: GeoServerArtifacts
+        pathtoPublish: 'Nebula.GeoServer/data_dir'
+      condition: and(succeeded(), eq(variables['deploy'], 'true'))
+
+
 - stage: DeployTerraform
   displayName: Deploy Terraform (with Approval)
   dependsOn: 
@@ -241,8 +245,8 @@ stages:
           steps:
           - checkout: self
             fetchDepth: 0
-                  
-          # new
+
+
           - template: azure-pipelines/templates/terraform/terraform.yml@BuildTemplates 
             parameters: 
               ServiceConnectionName: "$(azureSubscription)"
@@ -251,16 +255,15 @@ stages:
               TfStateStorageAccountResourceGroup: "$(azureApplicationTfStateResourceGroup)"
               WorkingDirectory: './'
               TerraformCommand: apply
-
+          
           - bash: |
               echo "##vso[task.setvariable variable=STORAGE_ACCOUNT_SAS_KEY;isOutput=true;issecret=true]$(TF_OUT_STORAGE_ACCOUNT_SAS_KEY)"
               echo "##vso[task.setvariable variable=APPLICATION_STORAGE_ACCOUNT_KEY;isOutput=true;issecret=true]$(TF_OUT_APPLICATION_STORAGE_ACCOUNT_KEY)"
-              echo "##vso[task.setvariable variable=APPLICATION_STORAGE_ACCOUNT_CONNECTION_STRING;isOutput=true]$(TF_OUT_APPLICATION_STORAGE_ACCOUNT_CONNECTION_STRING)"
               echo "##vso[task.setvariable variable=INSTRUMENTATION_KEY;isOutput=true]$(TF_OUT_INSTRUMENTATION_KEY)"
               echo "##vso[task.setvariable variable=SQL_API_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_SQL_API_PASSWORD)"
               echo "##vso[task.setvariable variable=SQL_GEOSERVER_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_SQL_GEOSERVER_PASSWORD)"
-              echo "##vso[task.setvariable variable=DATABASE_ID;isOutput=true;issecret=true]$(TF_OUT_DATABASE_ID)"
               echo "##vso[task.setvariable variable=GEOSERVER_ADMIN_PASSWORD;isOutput=true;issecret=true]$(TF_OUT_GEOSERVER_ADMIN_PASSWORD)"
+              echo "##vso[task.setvariable variable=DATABASE_ID;isOutput=true;issecret=true]$(TF_OUT_DATABASE_ID)"
           - bash: 'env | sort'
 
 - stage: DeployDB
@@ -345,8 +348,6 @@ stages:
               desiredSqlPassword: '$(SQL_GEOSERVER_PASSWORD)'
               roles: 'db_datareader'
 
-
-
 - stage: DeployGeoServer
   displayName: Deploy GeoServer
   dependsOn: DeployTerraform
@@ -371,7 +372,7 @@ stages:
           steps:        
           - download: current
             artifact: GeoServerArtifacts
-             
+
           - task: AzureCLI@2
             inputs:
               azureSubscription: '$(azureSubscription)'
@@ -401,7 +402,6 @@ stages:
       vmImage: 'ubuntu-latest'
     variables: 
       APPLICATION_STORAGE_ACCOUNT_KEY: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.APPLICATION_STORAGE_ACCOUNT_KEY'] ]
-      APPLICATION_STORAGE_ACCOUNT_CONNECTION_STRING: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.APPLICATION_STORAGE_ACCOUNT_CONNECTION_STRING'] ]
       INSTRUMENTATION_KEY: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.INSTRUMENTATION_KEY'] ]
       SQL_API_PASSWORD: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.SQL_API_PASSWORD'] ]
       SQL_GEOSERVER_PASSWORD: $[ stageDependencies.DeployTerraform.Terraform.outputs['Terraform.Bash.SQL_GEOSERVER_PASSWORD'] ]
@@ -423,7 +423,7 @@ stages:
               parameters: 
                 JiraState: "Pending"
                 JiraEnvironment: "$(aspNetEnvironment)"
-                AtlassianClientSecret: $(kv-AtlassianClientSecret)
+                AtlassianClientSecret: "$(kv-AtlassianClientSecret)"
         on:
           failure:
             steps:
@@ -438,7 +438,7 @@ stages:
               parameters: 
                 JiraState: "Failed"
                 JiraEnvironment: "$(aspNetEnvironment)"
-                AtlassianClientSecret: $(kv-AtlassianClientSecret)
+                AtlassianClientSecret: "$(kv-AtlassianClientSecret)"
           success: 
             steps:
             - task: AzureKeyVault@2
@@ -452,7 +452,7 @@ stages:
               parameters: 
                 JiraState: "Successful"
                 JiraEnvironment: "$(aspNetEnvironment)"
-                AtlassianClientSecret: $(kv-AtlassianClientSecret)
+                AtlassianClientSecret: "$(kv-AtlassianClientSecret)"
         deploy:
           steps:
           - task: AzureKeyVault@2
@@ -466,11 +466,10 @@ stages:
             parameters: 
               JiraState: "InProgress"
               JiraEnvironment: "$(aspNetEnvironment)"
-              AtlassianClientSecret: $(kv-AtlassianClientSecret)
-
+              AtlassianClientSecret: "$(kv-AtlassianClientSecret)"
           - download: current
             artifact: ChartArtifacts
-
+                        
           - task: HelmInstaller@0
             displayName: 'Install Helm 3.8.0'
             inputs:
@@ -510,7 +509,6 @@ stages:
               chartPath: '$(Pipeline.Workspace)/ChartArtifacts/chart'
               releaseName: 'nebula'
               overrideValues: |
-                global.env.appInsightsInstrumentationKey="$(INSTRUMENTATION_KEY)"
                 global.domains.api="$(domainApi)"
                 global.domains.web="$(domainWeb)"
                 global.domains.geoserver="$(domainGeoserver)"

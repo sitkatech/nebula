@@ -1,8 +1,3 @@
-
-variable "appInsightsName" {
-  type = string
-}
-
 variable "keyVaultName" {
   type = string
 }
@@ -40,6 +35,10 @@ variable "databaseTier" {
 }
 
 variable "aspNetEnvironment" {
+	type = string
+}
+
+variable "environment" {
   type = string
 }
 
@@ -52,18 +51,6 @@ variable "databaseResourceGroup" {
 }
 
 variable "sqlApiUsername" {
-  type = string
-}
-
-variable "sqlGeoserverUsername" {
-  type = string
-}
-
-variable "projectNumber" {
-  type = string
-}
-
-variable "team" {
   type = string
 }
 
@@ -93,9 +80,16 @@ variable "elasticPoolName" {
   type = string
 }
 
-variable "environment" {
+variable "sqlGeoserverUsername" {
   type = string
-  default = "qa"
+}
+
+variable "team" {
+  type = string
+}
+
+variable "projectNumber" {
+  type = string
 }
 
 // this variable is used for the keepers for the random resources https://registry.terraform.io/providers/hashicorp/random/latest/docs
@@ -143,7 +137,7 @@ data "azurerm_client_config" "current" {}
 locals {
   tags = {
     "managed"     = "terraformed"
-    "environment" = var.aspNetEnvironment
+    "environment" = var.environment
     "team" = var.team
     "projectNumber" = var.projectNumber
   }
@@ -167,125 +161,9 @@ resource "azurerm_storage_account" "web" {
   tags                         = local.tags
 }
 
-resource "datadog_synthetics_test" "api_test" {
-  type    = "api"
-  subtype = "http"
-  request_definition {
-    method = "GET"
-    url    = "https://${var.domainApi}/healthz"
-  }
-  request_headers = {
-    Content-Type   = "application/json"
-  }
-  assertion {
-    type     = "statusCode"
-    operator = "is"
-    target   = "200"
-  }
-  locations = ["aws:us-west-1","aws:us-east-1"]
-  options_list {
-    tick_every = 900
-
-    retry {
-      count    = 2
-      interval = 30000
-    }
-
-    monitor_options {
-      renotify_interval = 120
-    }
-  }
-  #email subject, attach url in place of var.domainApi
-  name    = "${var.environment} - https://${var.domainApi}/healthz API test"
-  #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
-  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
-
-  status = "live"
-}
-
-resource "datadog_synthetics_test" "web_test" {
-  type    = "api"
-  subtype = "http"
-  request_definition {
-    method = "GET"
-    url    = "https://${var.domainWeb}"
-  }
-  request_headers = {
-    Content-Type   = "application/json"
-  }
-  assertion {
-    type     = "statusCode"
-    operator = "is"
-    target   = "200"
-  }
-  locations = ["aws:us-west-1","aws:us-east-1"]
-  options_list {
-    tick_every = 900
-
-    retry {
-      count    = 2
-      interval = 30000
-    }
-
-    monitor_options {
-      renotify_interval = 120
-    }
-  }
-  #email subject, attach url in place of var.domainWeb
-  name    = "${var.environment} - https://${var.domainWeb} Web test"
-  #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
-  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
-
-  status = "live"
-}
-
-resource "datadog_synthetics_test" "geoserver_test" {
-  type    = "api"
-  subtype = "http"
-  request_definition {
-    method = "GET"
-    url    = "https://${var.domainGeoserver}/geoserver/web/"
-  }
-  request_headers = {
-    Content-Type   = "application/json"
-  }
-  assertion {
-    type     = "statusCode"
-    operator = "is"
-    target   = "200"
-  }
-  locations = ["aws:us-west-1","aws:us-east-1"]
-  options_list {
-    tick_every = 900
-
-    retry {
-      count    = 2
-      interval = 30000
-    }
-
-    monitor_options {
-      renotify_interval = 120
-    }
-  }
-  #email subject, attach url in place of var.domainGeoserver
-  name    = "${var.environment} - https://${var.domainWeb} Geoserver test"
-  #email body
-  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
-  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
-
-  status = "live"
-}
-
 output "application_storage_account_key" {
   sensitive = true
   value = azurerm_storage_account.web.primary_access_key
-}
-
-output "application_storage_account_connection_string" {
-  sensitive = true
-  value = azurerm_storage_account.web.primary_connection_string
 }
 
 # the SAS token which is needed for the geoserver file transfer
@@ -357,7 +235,8 @@ resource "azurerm_mssql_database" "database" {
   sku_name        = var.databaseTier
   zone_redundant  = false
   elastic_pool_id = data.azurerm_mssql_elasticpool.spoke.id
-  
+  enclave_type = "VBS"
+
   long_term_retention_policy {
     weekly_retention  = "P3M"
     monthly_retention = "P1Y"
@@ -448,29 +327,6 @@ output "sql_geoserver_password" {
 
 ### END Geoserver Sql user/login ###
 
-resource "azurerm_log_analytics_workspace" "web" {
-  name                = "${var.appInsightsName}-workspace"
-  location            = azurerm_resource_group.web.location
-  resource_group_name = azurerm_resource_group.web.name
-  sku                 = "PerGB2018"
-  retention_in_days   = 30
-  tags                = local.tags
-}
-
-resource "azurerm_application_insights" "web" {
-  name                         = var.appInsightsName
-  resource_group_name          = azurerm_resource_group.web.name
-  location                     = azurerm_resource_group.web.location
-  workspace_id                 = azurerm_log_analytics_workspace.web.id
-  application_type             = "web"
-  tags                         = local.tags
-}
-
-output "instrumentation_key" {
-  sensitive = true
-  value = azurerm_application_insights.web.instrumentation_key
-}
-
 #key vault was created prior to terraform run
 resource "azurerm_key_vault" "web" {
   name                         = var.keyVaultName
@@ -524,18 +380,8 @@ resource "azurerm_key_vault_secret" "sqlAdminUser" {
     azurerm_key_vault_access_policy.thisPipeline
   ]
 }
-  
-resource "azurerm_key_vault_secret" "appInsightsInstrumentationKey" {
-  name                         = "appInsightsInstrumentationKey"
-  value                        = azurerm_application_insights.web.instrumentation_key
-  key_vault_id                 = azurerm_key_vault.web.id
 
-  tags                         = local.tags
-  depends_on = [
-    azurerm_key_vault_access_policy.thisPipeline
-  ]
-}
- resource "azurerm_key_vault_secret" "sqlApiUsername" {
+resource "azurerm_key_vault_secret" "sqlApiUsername" {
   name                         = "sqlApiUsername"
   value                        = var.sqlApiUsername
   key_vault_id                 = azurerm_key_vault.web.id
@@ -610,4 +456,109 @@ resource "azurerm_key_vault_secret" "geoserverAdminPassword" {
   depends_on = [
     azurerm_key_vault_access_policy.thisPipeline
   ]
+}
+
+resource "datadog_synthetics_test" "api_test" {
+  type    = "api"
+  subtype = "http"
+  request_definition {
+    method = "GET"
+    url    = "https://${var.domainApi}/healthz"
+  }
+  request_headers = {
+    Content-Type   = "application/json"
+  }
+  assertion {
+    type     = "statusCode"
+    operator = "is"
+    target   = "200"
+  }
+  locations = ["aws:us-west-1","aws:us-east-1"]
+  options_list {
+    tick_every = 900
+
+    retry {
+      count    = 2
+      interval = 30000
+    }
+
+    monitor_options {
+      renotify_interval = 120
+    }
+  }
+  name    = "${var.environment} - https://${var.domainApi} API test"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
+
+  status = "live"
+}
+
+resource "datadog_synthetics_test" "web_test" {
+  type    = "api"
+  subtype = "http"
+  request_definition {
+    method = "GET"
+    url    = "https://${var.domainWeb}"
+  }
+  request_headers = {
+    Content-Type   = "application/json"
+  }
+  assertion {
+    type     = "statusCode"
+    operator = "is"
+    target   = "200"
+  }
+  locations = ["aws:us-west-1","aws:us-east-1"]
+  options_list {
+    tick_every = 900
+
+    retry {
+      count    = 2
+      interval = 30000
+    }
+
+    monitor_options {
+      renotify_interval = 120
+    }
+  }
+  name    = "${var.environment} - https://${var.domainWeb} Web test"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
+
+  status = "live"
+}
+
+resource "datadog_synthetics_test" "geoserver_test" {
+  type    = "api"
+  subtype = "http"
+  request_definition {
+    method = "GET"
+    url    = "https://${var.domainGeoserver}/geoserver/web/"
+  }
+  request_headers = {
+    Content-Type   = "application/json"
+  }
+  assertion {
+    type     = "statusCode"
+    operator = "is"
+    target   = "200"
+  }
+  locations = ["aws:us-west-1","aws:us-east-1"]
+  options_list {
+    tick_every = 900
+
+    retry {
+      count    = 2
+      interval = 30000
+    }
+
+    monitor_options {
+      renotify_interval = 120
+    }
+  }
+  name    = "${var.environment} - https://${var.domainGeoserver} Geoserver test"
+  message = "Notify @rlee@esassoc.com @sgordon@esassoc.com @team-${var.team}${var.environment == "qa" ? "-qa" : ""}"
+  tags    = ["env:${var.environment}", "managed:terraformed", "team:${var.team}"]
+
+  status = "live"
 }

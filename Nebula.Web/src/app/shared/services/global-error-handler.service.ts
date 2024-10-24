@@ -37,11 +37,6 @@ export class GlobalErrorHandlerService {
       }
 
       console.error(error);
-      if ((window as any).appInsights) {
-        (window as any).appInsights.trackException({
-          exception: error.originalError || error
-        });
-      }
     } else if (error) {
       console.warn(error);
       this.busyService.setBusy(false);

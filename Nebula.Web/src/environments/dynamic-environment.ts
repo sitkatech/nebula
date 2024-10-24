@@ -45,10 +45,6 @@ export class DynamicEnvironment {
     return window.config.keystoneAuthConfiguration;
   }
 
-  public get appInsightsInstrumentationKey() {
-    return window.config.appInsightsInstrumentationKey;
-  }
-
   public get lyraBaseURL() {
     return window.config.lyraBaseURL;
   }
