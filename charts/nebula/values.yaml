@@ -141,7 +141,7 @@ geoserver:
   namespace: h2o
   resources: 
     limits:
-      memory: "1G"
+      memory: "2G"
     requests:
       memory: "1G"
   serviceAccount:
