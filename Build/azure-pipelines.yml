@@ -527,4 +527,5 @@ stages:
                 web.image.tag="$(Build.BuildNumber)-$(environment)"
                 api.image.repository="$(kv-containerRegistry)/nebula/api"
                 web.image.repository="$(kv-containerRegistry)/nebula/web"
+                geoserver.image.repository="$(kv-containerRegistry)/kartoza/geoserver"
               force: false
