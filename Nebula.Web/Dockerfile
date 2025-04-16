@@ -1,8 +1,9 @@
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 80
+EXPOSE 8080
+EXPOSE 8081
 
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -17,7 +18,7 @@ RUN NODE_VERSION=$(cat Nebula.Web/.nvmrc) \
     && tar -xzf "nodejs.tar.gz" -C /usr/local --strip-components=1 \
     && rm nodejs.tar.gz SHASUMS256.txt sha-sum.txt \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
-
+    
 COPY Nebula.Web/                        ./Nebula.Web
 
 RUN dotnet restore Nebula.Web/Nebula.Web.csproj

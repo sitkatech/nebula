@@ -1,6 +1,5 @@
 ﻿using Nebula.Models.DataTransferObjects;
 using System.Linq;
-using Microsoft.EntityFrameworkCore;
 
 namespace Nebula.EFModels.Entities
 {

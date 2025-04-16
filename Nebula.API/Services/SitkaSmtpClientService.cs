@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
-using Nebula.Models.DataTransferObjects.User;
 using SendGrid.Helpers.Mail;
 using SendGrid;
 
@@ -162,24 +161,6 @@ namespace Nebula.API.Services
             addresses.Clear();
         }
 
-        private static string FlattenMailAddresses(IEnumerable<MailAddress> addresses)
-        {
-            return String.Join("; ", addresses.Select(x => x.ToString()));
-        }
-
-        public string GetDefaultEmailSignature()
-        {
-            string defaultEmailSignature = $@"<br /><br />
-Respectfully, the Smart Watershed Network Platform team
-<br /><br />
-***
-<br /><br />
-You have received this email because you are a registered user of the Smart Watershed Network Platform. 
-<br /><br />
-<a href=""mailto:{_nebulaConfiguration.LeadOrganizationEmail}"">{_nebulaConfiguration.LeadOrganizationEmail}</a>";
-            return defaultEmailSignature;
-        }
-
         public string GetSupportNotificationEmailSignature()
         {
             string supportNotificationEmailSignature = $@"<br /><br />
@@ -196,14 +177,6 @@ You have received this email because you are assigned to receive support notific
         public MailAddress GetDefaultEmailFrom()
         {
             return new MailAddress("donotreply@sitkatech.net", $"Smart Watershed Network Platform");
-        }
-
-        public static void AddBccRecipientsToEmail(MailMessage mailMessage, IEnumerable<string> recipients)
-        {
-            foreach (var recipient in recipients)
-            {
-                mailMessage.Bcc.Add(recipient);
-            }
         }
 
         public static void AddCcRecipientsToEmail(MailMessage mailMessage, IEnumerable<string> recipients)

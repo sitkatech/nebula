@@ -2,13 +2,43 @@ version: '3.5'
 
 services:
   nebula.api:
+    image: nebula/api
+    build:
+      args:
+        source: .
+    ports:
+      - "8121:8080"
+      - "8122:8081"
     environment:
-      - ASPNETCORE_ENVIRONMENT=${ASPNETCORE_ENVIRONMENT}
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - Kestrel__Certificates__Default__Path=/https/host.docker.internal.pfx
+      - Kestrel__Certificates__Default__Password=password#1
       - KEYSTONE_HOST=${KEYSTONE_HOST}
-      - SMTP_HOST=${SMTP_HOST}
-      - SMTP_PORT=${SMTP_PORT}
       - SITKA_EMAIL_REDIRECT=${SITKA_EMAIL_REDIRECT}
       - WEB_URL=${WEB_URL}
       - SECRET_PATH=${SECRET_PATH}
       - KEYSTONE_REDIRECT_URL=${KEYSTONE_REDIRECT_URL}
       - LeadOrganizationEmail=${LeadOrganizationEmail}
+    volumes:
+      - ~/.aspnet/https:/https:ro 
+
+  geoserver:
+    container_name: nebula_geoserver
+    image: kartoza/geoserver:2.25.2
+    environment:
+      - ENABLE_JSONP=true
+      - CATALINA_OPTS=-DALLOW_ENV_PARAMETRIZATION=true
+      - ENV_PROPERTIES=/opt/geoserver/geoserver-environment.properties
+      - STABLE_EXTENSIONS=sqlserver-plugin
+      - TOMCAT_EXTRAS=false
+      - ROOT_WEBAPP_REDIRECT=true
+      - SAMPLE_DATA=false
+      - GEOSERVER_ADMIN_USER=admin
+      - GEOSERVER_ADMIN_PASSWORD=${GeoserverAdminPassword}
+    ports:
+      - 127.0.0.1:8125:8080
+    volumes:
+      - c:/git/sitkatech/nebula/Nebula.GeoServer/data_dir:/opt/geoserver/data_dir
+      - c:/sitka/Nebula/GeoServer/geoserver-environment.properties:/opt/geoserver/geoserver-environment.properties

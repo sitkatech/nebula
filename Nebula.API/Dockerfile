@@ -1,14 +1,30 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build-env
-WORKDIR /src
+#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-COPY ./Nebula.Models ./Nebula.Models
-COPY ./Nebula.EFModels ./Nebula.EFModels
-COPY ./Nebula.API ./Nebula.API
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 
-RUN dotnet publish ./Nebula.API/Nebula.API.csproj -c Release -o /app
-
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+USER app
 WORKDIR /app
-COPY --from=build-env /app /app
-EXPOSE 80
-ENTRYPOINT ["dotnet", "Nebula.API.dll"]
+EXPOSE 8080
+EXPOSE 8081
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["Nebula.API/Nebula.API.csproj" , "Nebula.API/"]
+
+RUN dotnet restore "./Nebula.API/./Nebula.API.csproj"
+COPY . .
+WORKDIR "/src/Nebula.API"
+RUN dotnet build "./Nebula.API.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "./Nebula.API.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+
+
+
+ENTRYPOINT ["dotnet", "Nebula.API.dll"]	

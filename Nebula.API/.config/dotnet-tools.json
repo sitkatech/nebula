@@ -6,7 +6,8 @@
       "version": "6.2.3",
       "commands": [
         "swagger"
-      ]
+      ],
+      "rollForward": false
     }
   }
 }

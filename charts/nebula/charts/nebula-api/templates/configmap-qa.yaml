@@ -10,7 +10,6 @@ data:
   SITKA_EMAIL_REDIRECT: "notifications-qa@sitkatech.com"
   WEB_URL: "https://{{ .Values.global.domains.web }}"
   LeadOrganizationEmail: ""
-  APPINSIGHTS_INSTRUMENTATIONKEY: "{{ .Values.global.env.appInsightsInstrumentationKey }}"
   KEYSTONE_HOST: "https://identity-qa.sitkatech.com"
   KEYSTONE_REDIRECT_URL: "https://{{ .Values.global.domains.web }}/create-user-callback"
 {{ end }}

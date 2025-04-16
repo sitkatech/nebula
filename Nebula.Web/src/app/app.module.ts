@@ -31,7 +31,6 @@ import { FieldDefinitionListComponent } from './pages/field-definition-list/fiel
 import { FieldDefinitionEditComponent } from './pages/field-definition-edit/field-definition-edit.component';
 import { TimeSeriesAnalysisComponent } from './pages/time-series-analysis/time-series-analysis.component';
 import { environment } from 'src/environments/environment';
-import { AppInsightsService } from './shared/services/app-insights.service';
 import { GlobalErrorHandlerService } from './shared/services/global-error-handler.service';
 import { PairedRegressionAnalysisComponent } from './pages/paired-regression-analysis/paired-regression-analysis.component';
 import { DiversionScenarioComponent } from './pages/diversion-scenario/diversion-scenario.component';
@@ -44,11 +43,8 @@ import { CustomPageEditPropertiesComponent } from './pages/custom-page-edit-prop
 import { ApiModule, Configuration } from './shared/generated';
 
 
-export function init_app(appLoadService: AppInitService, appInsightsService:  AppInsightsService) {
+export function init_app(appLoadService: AppInitService) {
   return () => appLoadService.init().then(() => {
-    if (environment.appInsightsInstrumentationKey) {
-      appInsightsService.initAppInsights();
-    }
   });
 }
 
@@ -98,7 +94,7 @@ export function init_app(appLoadService: AppInitService, appInsightsService:  Ap
   providers: [
     CookieService,
     AppInitService,
-    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService, AppInsightsService], multi: true },
+    { provide: APP_INITIALIZER, useFactory: init_app, deps: [AppInitService], multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     {
       provide: ErrorHandler,
