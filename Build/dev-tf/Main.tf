@@ -168,7 +168,7 @@ resource "azurerm_role_assignment" "dev_group_rg_reader" {
 
 # --- Seeded secrets ----------------------------------------------------------
 # Azure DevOps substitutes an UNDEFINED $(name) macro as the LITERAL text "$(name)" rather
-# than as an empty string, and dev-terraform.yml passes this var unconditionally. A bare
+# than as an empty string, and dev-terraform.yml passes these vars unconditionally. A bare
 # `!= ""` guard therefore passes for a variable never defined on the pipeline definition,
 # and Terraform seeds that literal into the vault as a junk secret. The guard below also
 # rejects anything still shaped like a macro, so an undefined variable is skipped exactly
